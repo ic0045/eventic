@@ -1,7 +1,6 @@
 # EventosComp
 
 ## Sobre o projeto
-aahaoiaopdhdpohadpoadh
 
 
 ### Membros
