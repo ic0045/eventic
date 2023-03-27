@@ -44,10 +44,21 @@
 1. Cloud
 - Vercel
 ### Requisitos
-[Documento de requisitos] (./Requisitos.pdf)
+[Documento de requisitos](./Requisitos.pdf)
 ### Arquiterua
 ### Diagrama ER
 ### Prototipos
+#### Tela de Login
+
+![](prototipo_tela_login.jpeg)
+
+#### Tela de Eventos em Card
+![](prototipo_tela_eventos_cards.jpeg)
+
+
+### Tela de Eventos em Lista
+![](prototipo_tela_eventos_listas.jpeg)
+
 
 
 
