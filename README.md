@@ -43,6 +43,8 @@
 - Postgresql
 1. Cloud
 - Vercel
+### Requisitos
+[Documento de requisitos] (./Requisitos.pdf)
 ### Arquiterua
 ### Diagrama ER
 ### Prototipos
