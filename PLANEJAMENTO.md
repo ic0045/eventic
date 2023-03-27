@@ -1,5 +1,5 @@
-### Experiencias
-
+# ATA DE REUNIAO - 25/03 as 09:00
+### Entrevistas
 **isaque - 8 semestre**
 
  - react 
@@ -36,21 +36,19 @@ restapi - todos
 
 
 
-ETAPAS: 
-- Entrevistas
-- Levantamento das experiencias
-- Definição da ferramenta de gestão
- - github.com
+### Levantamento das experiencias
+### Definição da ferramenta de gestão
+ ### github.com
 -Processo de Desenvolvimento
- - Seguiremos o processo do scrum com reunioes de planejamento semanais e de acompanhamento diarias.
-- Requisitos
-- Tecnologias
-- sugestao de nomes:
+ ### Seguiremos o processo do scrum com reunioes de planejamento semanais e de acompanhamento diarias.
+### Requisitos
+### Tecnologias
+
+### Sugestao de nomes:
 
 O que esta acontecendo
 O que ta rolando
 O que tem de bom
 O que ta pegano 
-
 OQACONTECE
 "Eventiva" - um nome que combina as palavras "evento" e "ativa", transmitindo a ideia de um site dinâmico e engajado com a organização de eventos.
