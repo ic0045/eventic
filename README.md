@@ -1,18 +1,22 @@
 # EventosComp
 
 ## Sobre o projeto
-
+<div align="justify">
 Atualmente o Instituto da Computação não possui nenhum sistema de controle dos seus eventos acadêmicos. O que se vê no Instituto atualmente, são divulgações descentralizadas, as quais são feitas a partir de e-mails, sites, grupos de pesquisa, listas específicas, dificultando a ciência e participação da comunidade nesses eventos.
+</div>
+
+<div align="justify">
 Visando solucionar esse problema e atender a demanda do Instituto da Computação para a gestão e divulgação dos eventos acadêmicos, o objetivo do projeto é desenvolver um sistema web de eventos acadêmicos, gerido pelos administradores, professores, técnicos e utilizado por toda a comunidade acadêmica.
+</div>
 
 ### Membros e papeis
 
--	Vinícius Trindade - g/ft
--	Cristhian Oliveira Carvalho - b
--	Diego Carapiá da Costa- f
--	Isaque Santana Copque - b
--	Pablo Marcos Barbosa Souza - b
--	Pedro João Beckhauser Neto  - f
+-	Vinícius Trindade - GESTAO/FULLSTACK
+-	Cristhian Oliveira Carvalho - BACKEND
+-	Diego Carapiá da Costa- FRONTEND
+-	Isaque Santana Copque - BACKEND
+-	Pablo Marcos Barbosa Souza - BACKEND
+-	Pedro João Beckhauser Neto  - FRONTEND
 
 ### Definição da ferramenta de gestão
 
@@ -22,11 +26,11 @@ Visando solucionar esse problema e atender a demanda do Instituto da Computaçã
  - Sprint semanal
  - Um dia para cada task
  - Reunioes de Planejamento Semanais 
-    - as tercas 21:00
+    - terça 21:00h
  - Reunioes diarias 
-    - segunda 20:00
-    - quinta: 21:00
-    - sabado 10:00
+    - segunda 20:00h
+    - quinta: 21:00h
+    - sabado 10:00h
 ### Requisitos minimos
 1. Mural de eventos e atividades do IC
 1. Cadastro de eventos e atividades com atributos detalhados.
@@ -50,6 +54,7 @@ Visando solucionar esse problema e atender a demanda do Instituto da Computaçã
 - NextJS - https://nextjs.org/
 #### Banco de dados
 - Postgresql
+- DBeaver (gerenciador de banco de dados)
 #### Cloud
 - Vercel
 ### Requisitos
