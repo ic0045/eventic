@@ -66,9 +66,36 @@ Visando solucionar esse problema e atender a demanda do Instituto da Computaçã
 - [Versão Web](https://www.figma.com/file/3ILo3QsC6TPdy4VOiiMoJt/Eventos-Comp?node-id=0%3A1&t=tCzSxbbYrjfWyZQc-1)
 - [Versão Mobile](https://www.figma.com/file/xLgt4T2XivyfJlt7WlePwk/Untitled?node-id=0%3A1&t=O2nxvHh3li4Y3JHA-1)
 
----------
-<!-- ### Arquitetura
 ### Diagrama ER
+
+- [Termo de Abertura](./docs/diagrama.png)
+
+---------
+
+## Instalação
+
+
+```bash
+npm install
+# or
+yarn install
+# or
+pnpm install
+```
+
+## Execução
+
+
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+```
+
+
+<!-- ### Arquitetura
 ## Install
 ## Usage -->
 
