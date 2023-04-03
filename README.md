@@ -68,7 +68,7 @@ Visando solucionar esse problema e atender a demanda do Instituto da Computaçã
 
 ### Diagrama ER
 
-- [Termo de Abertura](./docs/diagrama.png)
+- [Diagrama ER](./docs/diagrama.png)
 
 ---------
 
