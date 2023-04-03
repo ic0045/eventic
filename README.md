@@ -44,7 +44,7 @@ Visando solucionar esse problema e atender a demanda do Instituto da Computaçã
 - [Requisitos](https://docs.google.com/spreadsheets/d/15ZO1JtwPHYhsB4rp6Ko_rEEBG1fMr6Br-LRbo9UJFr8/edit?usp=sharing)
 
 ## Tarefas
-[Tarefas](https://github.com/orgs/ic0045/projects/1/views/1)
+- [Tarefas](https://github.com/orgs/ic0045/projects/1/views/1)
 
 ## Tecnologias
 #### Frontend
