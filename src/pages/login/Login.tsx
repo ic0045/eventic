@@ -7,18 +7,17 @@ export const Login: NextPage = () => {
 
     return (
         <div className={styles.login}>
-           
-        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-            <Grid item md={6}>
-                <div className={styles.bgred}></div>
+            <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                <Grid item md={6}>
+                    <div></div>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <div className={styles.login__form}>
+                        <h2>Login</h2>
+                        <LoginForm />
+                    </div>
+                </Grid>
             </Grid>
-            <Grid item xs={12} md={6}>
-                <div className={styles.login__form}>
-                    <h2>Login</h2>
-                    <LoginForm />
-                </div>
-            </Grid>
-        </Grid>
         </div>
 
     )
