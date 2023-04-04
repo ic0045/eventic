@@ -1,4 +1,22 @@
-.login {
-    display: flex;
-    flex-direction: column;   
+.login__form{
+    padding: 1rem;
+    background-color: white;    
+    margin: 1rem;
 }
+
+.bgred{
+    background-color: red;
+}
+
+.login{
+    background-color: brown;
+    height: 100%;
+}
+
+@media (min-width: 801px) {
+    .login__form{
+        padding: 2rem;
+        background-color: white;
+        margin:5rem;
+    }
+  }
