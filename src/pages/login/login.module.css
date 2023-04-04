@@ -2,12 +2,9 @@
     padding: 1rem;
     background-color: white;    
     margin: 1rem;
+    border-radius: .3rem;
 }
 
-.login{
-    background-color: brown;
-    height: 100%;
-}
 
 @media (min-width: 801px) {
     .login__form{
