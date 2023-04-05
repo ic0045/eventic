@@ -19,7 +19,6 @@ Visando solucionar esse problema e atender a demanda do Instituto da Computaçã
 | Diego Carapiá da Costa | FRONTEND / DESIGN|
 | Isaque Santana Copque  | BACKEND|
 | Pablo Marcos Barbosa Souza  | BACKEND|
-| Pedro João Beckhauser Neto   | FRONTEND|
 | - | -|
 
 
