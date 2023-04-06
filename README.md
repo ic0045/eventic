@@ -53,7 +53,7 @@ Visando solucionar esse problema e atender a demanda do Instituto da Computaçã
 - [FlexboxGrid](http://flexboxgrid.com/)
 #### Backend
 - [NodeJS 18](https://nodejs.org/en/download) 
-- [Sequelize](https://sequelize.org)
+- [TypeOrm](https://typeorm.io/)
 - [Typescript](https://www.typescriptlang.org)
 - [Docker](https://www.docker.com)
 - [NextJS](https://nextjs.org/)
