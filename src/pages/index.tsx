@@ -1,10 +1,7 @@
 import Head from 'next/head'
-import styles from '@/styles/Home.module.css'
-import { dbInitialize } from './api/db/index'
+import styles from '@app/styles/Home.module.css'
 
-export default function Home() {
-
-  dbInitialize();
+export default  function Home() {
 
   return (
     <>
