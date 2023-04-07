@@ -5,6 +5,29 @@ import { PreferenciasUsuario } from "./PreferenciasUsuario";
 
 @Entity("usuario", { schema: "public" })
 export class Usuario {
+
+/**
+ * Cria Usuario a partir de objeto
+ */
+ public static createFromObj(obj : any){
+    const usuario = new Usuario();
+    const {primeiro_nome, segundo_nome, email, senha, permissao,
+      celular, foto_perfil, cpf, email_confirmado } = obj;
+
+      usuario.primeiroNome = primeiro_nome;
+      usuario.segundoNome = segundo_nome;
+      usuario.email = email;
+      usuario.senha = senha;
+      usuario.permissao = permissao;
+      if(celular) usuario.celular = celular;
+      if(foto_perfil) usuario.fotoPerfil = foto_perfil;
+      if(cpf) usuario.cpf = cpf;
+      if(email_confirmado) usuario.emailConfirmado = email_confirmado;
+      usuario.createdAt = new Date();
+
+      return usuario;
+ }
+
   @PrimaryGeneratedColumn("uuid", {name: "id"})
   id: string;
 
@@ -14,7 +37,7 @@ export class Usuario {
   @Column("character varying", { name: "segundo_nome", length: 200 })
   segundoNome: string;
 
-  @Column("character varying", { name: "email", length: 100 })
+  @Column("character varying", { name: "email", length: 100, unique: true })
   email: string;
 
   @Column("character varying", { name: "celular", nullable: true, length: 100 })
