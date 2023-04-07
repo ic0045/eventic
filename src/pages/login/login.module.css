@@ -1,15 +1,20 @@
-.login__form{
+.login__form {
     padding: 1rem;
-    background-color: white;    
+    background-color: white;
     margin: 1rem;
     border-radius: .3rem;
 }
 
 
 @media (min-width: 801px) {
-    .login__form{
+    .login__form {
         padding: 2rem;
         background-color: white;
-        margin:5rem;
+        margin: 5rem;
+        padding-bottom: 10rem;
     }
-  }
+
+    .imagem {
+
+    }
+}
