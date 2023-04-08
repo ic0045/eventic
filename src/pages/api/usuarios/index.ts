@@ -1,8 +1,8 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { UsuarioRepo } from '@app/database'
 import { Usuario } from '@app/entities/Usuario'
 import { validateNotNullFields} from './util'
+import { hashPassword } from '../auth'
 
 export default async function handler(
   req: NextApiRequest,
@@ -10,17 +10,19 @@ export default async function handler(
 ) {
     if(req.method === 'POST'){
         const [valid, errorMsg] = validateNotNullFields(req.body);
-
         if(valid){
-            let usuario = Usuario.createFromObj(req.body);
             try{
-                usuario = await UsuarioRepo.save(usuario);
-                res.status(200).json({usuario});
+                const existingUsuario = await UsuarioRepo.findOne({where: {email: req.body.email}});
+                if(!existingUsuario){
+                    let usuario = Usuario.createFromObj(req.body);
+                    usuario.permissao = "usuario"; //admins não são criados por esta rota
+                    usuario.senha = await hashPassword(usuario.senha);
+                    usuario = await UsuarioRepo.save(usuario);
+                    res.status(200).json({usuario});
+                }
+                else{ res.status(400).json("Já existe um usuario de email: "+req.body.email)}
             }catch(e){res.status(500).json(e)}
-
-        }else{
-            res.status(400).json({errorMsg})
-        }
+        }else{ res.status(400).json({errorMsg})}
     }
     
     else if(req.method === 'GET'){
