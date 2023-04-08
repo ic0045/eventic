@@ -2,7 +2,8 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { UsuarioRepo } from '@app/database'
 import { Usuario } from '@app/entities/Usuario'
 import { validateNotNullFields} from './util'
-import { hashPassword } from '../auth'
+import { hashPassword } from '../login/validator'
+import { AcessLevel } from '@app/utils/auth'
 
 export default async function handler(
   req: NextApiRequest,
@@ -15,7 +16,7 @@ export default async function handler(
                 const existingUsuario = await UsuarioRepo.findOne({where: {email: req.body.email}});
                 if(!existingUsuario){
                     let usuario = Usuario.createFromObj(req.body);
-                    usuario.permissao = "usuario"; //admins não são criados por esta rota
+                    usuario.permissao = AcessLevel.visitante; //admins não são criados por esta rota
                     usuario.senha = await hashPassword(usuario.senha);
                     usuario = await UsuarioRepo.save(usuario);
                     res.status(200).json({usuario});
