@@ -5,6 +5,14 @@
     border-radius: .3rem;
 }
 
+.loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 200px;
+}
+
 
 @media (min-width: 801px) {
     .login__form {

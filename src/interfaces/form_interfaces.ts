@@ -1,6 +1,11 @@
 export interface FormFieldState { 
     value?: string; 
-    validators?: Function[]; 
+    validators?: any[]; 
     valid?: boolean; 
     errorMessage?: string 
+}
+
+export interface ValidatorResponse {
+    isValid: boolean;
+    errorMessage: string;
 }
