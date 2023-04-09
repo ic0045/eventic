@@ -59,3 +59,11 @@ body {
     line-height: 1;
     background-color: #F5F5F5;
 }
+
+.loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 200px;
+}

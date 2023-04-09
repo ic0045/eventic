@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 import { LoginForm } from "@/components/login/LoginForm";
-import styles from "./login.module.css";
+import styles from "./login.module.css"
 import { CircularProgress, Grid } from "@mui/material";
 import { useState } from "react";
 import { CustomForm } from "@/helpers/CustomForm";
@@ -42,15 +42,15 @@ export const Login: NextPage = () => {
     }
 
     setIsLoading(true);
+    setLoginSuccess(true);
 
     LoginAPI.login({
         email: formInstance.getValue('email'),
         password: formInstance.getValue('senha')
     }).catch((erro) => {
-        console.log('entrou aqui erro');
         setLoginSuccess(false)
     }).then((response) => {
-        console.log('response', response)
+      
     }).finally(() => {
         setIsLoading(false);
     })
@@ -66,7 +66,7 @@ export const Login: NextPage = () => {
           <div className={styles.login__form}>
             <h2>Login</h2>
             {isLoading ? (
-              <div className={styles.loader}>
+              <div className="loader">
                 <CircularProgress />
               </div>
             ) : (

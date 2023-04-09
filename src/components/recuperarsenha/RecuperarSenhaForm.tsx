@@ -1,35 +1,43 @@
-import { Button, TextField } from "@mui/material"
-import styles from './recuperarsenhaform.module.css'
-import { FunctionComponent, useEffect, useState } from "react"
-import {Validator} from '../../helpers/Validator'
-import { FormFieldState } from "@/interfaces/form_interfaces"
-import { CustomForm } from "@/helpers/CustomForm"
+import { Alert, Button, TextField } from "@mui/material";
+import styles from "./recuperarsenhaform.module.css";
+import { FunctionComponent } from "react";
+import { CustomForm } from "@/helpers/CustomForm";
 
-export const RecuperarSenhaForm: FunctionComponent = () => {
-
-    let formFields: Map<string, FormFieldState> = new Map([
-        ['email', {
-            value: '',
-            validators: [Validator.required, Validator.email],
-            valid: true,
-            errorMessage: ''
-        }]
-    ])
-
-    const [formState, setFormState] = useState(formFields)
-
-    const formInstance = new CustomForm(formState, setFormState);
-
-    const onLoginSubmit = (e: any) => {
-        if(!formInstance.validateForm()){
-            return false;
-        }
-    }
-
-    return(
-        <div className={styles.recuperarsenha}>
-            <TextField error={!formInstance.isValid("email")} id="email" label="E-mail" value={formInstance.getValue('email')} onChange={formInstance.onInputChange} helperText={formInstance.getErrorMessage('email')} />
-            <Button variant="contained" color="success" onClick={onLoginSubmit}> Recuperar senha </Button>
-        </div>
-    )
+interface RecuperarSenhaFormProps {
+  formInstance: CustomForm;
+  isFormSuccess: boolean;
+  onRecuperarSenhaSubmit: any;
 }
+
+export const RecuperarSenhaForm: FunctionComponent<RecuperarSenhaFormProps> = (
+  props: RecuperarSenhaFormProps
+) => {
+  return (
+    <>
+      {!props.isFormSuccess && (
+        <Alert severity="error">Erro</Alert>
+      )}
+      <div className={styles.recuperarsenha}>
+        <p>
+          Insira o e-mail cadastrado na sua conta para enviarmos um link de
+          redefinição de senha
+        </p>
+        <TextField
+          error={!props.formInstance.isValid("email")}
+          id="email"
+          label="E-mail"
+          value={props.formInstance.getValue("email")}
+          onChange={props.formInstance.onInputChange}
+          helperText={props.formInstance.getErrorMessage("email")}
+        />
+        <Button
+          variant="contained"
+          color="success"
+          onClick={props.onRecuperarSenhaSubmit}
+        >
+          Recuperar senha
+        </Button>
+      </div>
+    </>
+  );
+};
