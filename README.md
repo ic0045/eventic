@@ -73,7 +73,7 @@ Visando solucionar esse problema e atender a demanda do Instituto da Computaçã
 - [Diagrama ER](./docs/diagrama.png)
 
 ## Diagrama de Arquitetura
-- [Diagrama] (https://drive.google.com/file/d/10-xVgrojvI21lgaq-59pYKtRhihIcOBN/view?usp=sharing)
+- [Diagrama](https://drive.google.com/file/d/10-xVgrojvI21lgaq-59pYKtRhihIcOBN/view?usp=sharing)
 
 ---------
 
