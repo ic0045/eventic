@@ -16,6 +16,10 @@ export class PreferenciasUsuario {
   updatedAt: Date | null;
 
   @ManyToOne(() => Usuario, (usuario) => usuario.preferenciasUsuarios)
-  @JoinColumn([{ name: "usuario_id", referencedColumnName: "id" }])
+  @JoinColumn([{ 
+    name: "usuario_id",
+    referencedColumnName: "id",
+    foreignKeyConstraintName: "usuario_fk"
+  }])
   usuario: Relation<Usuario>[];
 }

@@ -5,6 +5,7 @@ import { Usuario } from "../entities/Usuario"
 import { Evento } from "../entities/Evento"
 import { Inscricao } from "../entities/Inscricao"
 import { PreferenciasUsuario } from "../entities/PreferenciasUsuario"
+import { Categoria } from "../entities/Categoria"
 
 dotenv.config();
 
@@ -17,7 +18,7 @@ const datasource = new DataSource({
     database: process.env.DB_NAME,
     synchronize: true,
     logging: false,
-    entities: [Usuario, Evento, Inscricao, PreferenciasUsuario],
+    entities: [Usuario, Evento, Categoria, Inscricao, PreferenciasUsuario],
     migrations: [],
     subscribers: [],
 })
@@ -35,3 +36,4 @@ export const UsuarioRepo = datasource.getRepository(Usuario);
 export const EventoRepo = datasource.getRepository(Evento);
 export const InscricaoRepo = datasource.getRepository(Inscricao);
 export const PrefsUsuarioRepo = datasource.getRepository(PreferenciasUsuario);
+export const CategoriaRepo = datasource.getRepository(Categoria);

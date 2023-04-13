@@ -9,6 +9,7 @@ import {
 } from "typeorm";
 import { Usuario } from "./Usuario";
 import { Inscricao } from "./Inscricao";
+import { Categoria } from "./Categoria";
 
 @Entity("evento", { schema: "public" })
 export class Evento {
@@ -58,8 +59,18 @@ export class Evento {
   linkMaisInformacoes: string | null;
 
   @ManyToOne(() => Usuario, (usuario) => usuario.eventos)
-  @JoinColumn([{ name: "criador_id", referencedColumnName: "id" }])
+  @JoinColumn([{ 
+    name: "criador_id", 
+    referencedColumnName: "id", 
+    foreignKeyConstraintName: "usuario_fk" }])
   criador: Relation<Usuario>[];
+
+  @ManyToOne(() => Categoria, (categoria) => categoria.eventos)
+  @JoinColumn([{ 
+    name: "categoria_id", 
+    referencedColumnName: "id",
+    foreignKeyConstraintName: "categoria_fk" }])
+  categoria: Categoria;
 
   @OneToMany(() => Inscricao, (inscricao) => inscricao.evento)
   inscricaos: Relation<Inscricao>[];

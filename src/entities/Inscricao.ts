@@ -27,10 +27,18 @@ export class Inscricao {
   updatedAt: Date | null;
 
   @ManyToOne(() => Evento, (evento) => evento.inscricaos)
-  @JoinColumn([{ name: "evento_id", referencedColumnName: "id" }])
+  @JoinColumn([{ 
+    name: "evento_id", 
+    referencedColumnName: "id",
+    foreignKeyConstraintName: "evento_fk"
+  }])
   evento: Relation<Evento>[];
 
   @ManyToOne(() => Usuario, (usuario) => usuario.inscricaos)
-  @JoinColumn([{ name: "usuario_id", referencedColumnName: "id" }])
+  @JoinColumn([{ 
+    name: "usuario_id", 
+    referencedColumnName: "id",
+    foreignKeyConstraintName: "usuario_fk"
+   }])
   usuario: Relation<Usuario>[];
 }

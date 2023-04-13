@@ -2,12 +2,18 @@ import jwt from 'jsonwebtoken'
 import * as dotenv from 'dotenv'
 dotenv.config();
 
+/*
+*  Níveis de permissão de usuário
+*/
 export enum AcessLevel{
     admin = 'admin',
     tecnico = 'tecnico',
     visitante = 'visitante',
 }
 
+/*
+*  Payload para token
+*/
 type payloadObj = {
     userId: string,
     userLevel: AcessLevel.admin | AcessLevel.tecnico | AcessLevel.visitante,
@@ -17,7 +23,6 @@ type payloadObj = {
 *  Gera token a partir de payload;
 */
 export function generateToken(payload : payloadObj){
-    console.log("TOKEN SECRET = ", process.env.TOKENSECRET);
     return jwt.sign(payload, process.env.TOKENSECRET);
 }
 
