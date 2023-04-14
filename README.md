@@ -1,4 +1,4 @@
-# EventosComp
+# SEICOMP - Sistema de Eventos do Instituto de Computação da UFBA 
 
 ## Sobre o projeto
 <div align="justify">
@@ -37,8 +37,14 @@ Visando solucionar esse problema e atender a demanda do Instituto da Computaçã
     - quinta: 21:00h
     - sabado 10:00h
 
+## Termo de Abertura
+- [Termo de Abertura](./docs/termo_abertura.pdf)
+
 ## Requisitos
-- [Documento de requisitos](./docs/equisitos.pdf)
+- [Requisitos](https://docs.google.com/spreadsheets/d/15ZO1JtwPHYhsB4rp6Ko_rEEBG1fMr6Br-LRbo9UJFr8/edit?usp=sharing)
+
+## Tarefas
+- [Tarefas](https://github.com/orgs/ic0045/projects/1/views/1)
 
 ## Tecnologias
 #### Frontend
@@ -47,7 +53,7 @@ Visando solucionar esse problema e atender a demanda do Instituto da Computaçã
 - [FlexboxGrid](http://flexboxgrid.com/)
 #### Backend
 - [NodeJS 18](https://nodejs.org/en/download) 
-- [Sequelize](https://sequelize.org)
+- [TypeOrm](https://typeorm.io/)
 - [Typescript](https://www.typescriptlang.org)
 - [Docker](https://www.docker.com)
 - [NextJS](https://nextjs.org/)
@@ -59,20 +65,42 @@ Visando solucionar esse problema e atender a demanda do Instituto da Computaçã
 - [Render](https://render.com)
 
 ## Protótipos
-#### Tela de Login
-![](./docs/prototipos/prototipo_tela_login.jpeg)
 
-#### Tela de Eventos em Card
-![](./docs/prototipos/prototipo_tela_eventos_cards.jpeg)
+- [Versão Web](https://www.figma.com/file/3ILo3QsC6TPdy4VOiiMoJt/Eventos-Comp?node-id=0%3A1&t=tCzSxbbYrjfWyZQc-1)
+- [Versão Mobile](https://www.figma.com/file/xLgt4T2XivyfJlt7WlePwk/Untitled?node-id=0%3A1&t=O2nxvHh3li4Y3JHA-1)
 
+### Diagrama ER
 
-### Tela de Eventos em Lista
-![](./docs/prototipos/prototipo_tela_eventos_listas.jpeg)
+- [Diagrama ER](./docs/diagrama.png)
 
 ---------
+
+## Instalação
+
+
+```bash
+npm install
+# or
+yarn install
+# or
+pnpm install
+```
+
+## Execução
+
+
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+```
+
+
 <!-- ### Arquitetura
-### Diagrama ER
 ## Install
 ## Usage -->
+
 
 
