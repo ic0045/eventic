@@ -31,7 +31,7 @@ export default async function handler(
         const where : { [key:string]: any} = {};
         
         if(id) where.id = id;
-        if(primeiro_nome) where.primeiroNome = primeiro_nome;
+        if(primeiro_nome) where.name = primeiro_nome;
         if(segundo_nome) where.segundoNome = segundo_nome;
         if(email) where.email = email;
         if(permissao) where.permissao = permissao;
@@ -57,16 +57,14 @@ export default async function handler(
                     res.status(400).json(`Não foi encontrado usuário de id: ${req.body.id}`);
                 }else{
                     const {primeiro_nome, segundo_nome, email, celular,
-                        cpf, foto_perfil, email_confirmado} = req.body;
+                        cpf, foto_perfil} = req.body;
 
-                    if(primeiro_nome) usuario.primeiroNome = primeiro_nome;
+                    if(primeiro_nome) usuario.name = primeiro_nome;
                     if(segundo_nome) usuario.segundoNome = segundo_nome;
                     if(celular)usuario.celular = celular;
                     if(email) usuario.email = email;
                     if(cpf) usuario.cpf = cpf;
-                    if(foto_perfil) usuario.fotoPerfil = foto_perfil;
-                    if(email_confirmado != undefined || (email_confirmado === 'true' || email_confirmado === 'false')) 
-                        usuario.emailConfirmado = email_confirmado;
+                    if(foto_perfil) usuario.image = foto_perfil;
                     usuario.updatedAt = new Date();
 
                     usuario = await UsuarioRepo.save(usuario);

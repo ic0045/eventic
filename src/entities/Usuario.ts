@@ -1,7 +1,20 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn, ValueTransformer } from "typeorm";
 import { Evento } from "./Evento";
 import { Inscricao } from "./Inscricao";
 import { PreferenciasUsuario } from "./PreferenciasUsuario";
+import { Conta } from "./Conta";
+import { Sessao } from "./Secao";
+
+const transformer: Record<"date" | "bigint", ValueTransformer> = {
+  date: {
+      from: (date: string | null) => date && new Date(parseInt(date, 10)),
+      to: (date?: Date) => date?.valueOf().toString(),
+  },
+  bigint: {
+      from: (bigInt: string | null) => bigInt && parseInt(bigInt, 10),
+      to: (bigInt?: number) => bigInt?.toString(),
+  },
+}
 
 @Entity("usuario", { schema: "public" })
 export class Usuario {
@@ -12,31 +25,33 @@ export class Usuario {
  public static createFromObj(obj : any){
     const usuario = new Usuario();
     const {primeiro_nome, segundo_nome, email, senha, permissao,
-      celular, foto_perfil, cpf, email_confirmado } = obj;
+      celular, foto_perfil, cpf } = obj;
 
-      usuario.primeiroNome = primeiro_nome;
+      usuario.name = primeiro_nome;
       usuario.segundoNome = segundo_nome;
       usuario.email = email;
       usuario.senha = senha;
       usuario.permissao = permissao;
       if(celular) usuario.celular = celular;
-      if(foto_perfil) usuario.fotoPerfil = foto_perfil;
+      if(foto_perfil) usuario.image = foto_perfil;
       if(cpf) usuario.cpf = cpf;
-      if(email_confirmado) usuario.emailConfirmado = email_confirmado;
       usuario.createdAt = new Date();
 
       return usuario;
  }
 
+  //nextAuth entity field
   @PrimaryGeneratedColumn("uuid", {name: "id"})
   id: string;
 
+  //nextAuth entity field
   @Column("character varying", { name: "primeiro_nome", length: 200 })
-  primeiroNome: string;
+  name: string;
 
   @Column("character varying", { name: "segundo_nome", length: 200 })
   segundoNome: string;
 
+  //nextAuth entity field
   @Column("character varying", { name: "email", length: 100, unique: true })
   email: string;
 
@@ -49,12 +64,13 @@ export class Usuario {
   @Column("character varying", { name: "permissao", length: 100 })
   permissao: string;
 
+  //nextAuth entity field
   @Column("character varying", {
     name: "foto_perfil",
     nullable: true,
     length: 100,
   })
-  fotoPerfil: string | null;
+  image: string | null;
 
   @Column("character varying", { name: "cpf", nullable: true, length: 100 })
   cpf: string | null;
@@ -65,8 +81,9 @@ export class Usuario {
   @Column("timestamp without time zone", { name: "updated_at", nullable: true })
   updatedAt: Date | null;
 
-  @Column("boolean", { name: "email_confirmado", default: false })
-  emailConfirmado: boolean;
+  //nextAuth entity field
+  @Column({ type: "varchar", nullable: true, transformer: transformer.date })
+  emailVerified!: string | null
 
   @OneToMany(() => Evento, (evento) => evento.criador)
   eventos: Evento[];
@@ -79,4 +96,12 @@ export class Usuario {
     (preferenciasUsuario) => preferenciasUsuario.usuario
   )
   preferenciasUsuarios: PreferenciasUsuario[];
+
+  //nextAuth entity field
+  @OneToMany(() => Sessao, (session) => session.userId)
+  sessions!: Sessao[]
+
+  //nextAuth entity field
+  @OneToMany(() => Conta, (account) => account.userId)
+  accounts!: Conta[]
 }

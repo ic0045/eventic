@@ -6,10 +6,13 @@ import { Evento } from "../entities/Evento"
 import { Inscricao } from "../entities/Inscricao"
 import { PreferenciasUsuario } from "../entities/PreferenciasUsuario"
 import { Categoria } from "../entities/Categoria"
+import { Sessao } from "@app/entities/Secao"
+import { Conta } from "@app/entities/Conta"
+import { TokenVerificacao } from "@app/entities/TokenVerificacao"
 
 dotenv.config();
 
-const datasource = new DataSource({
+export const datasource = new DataSource({
     type: "postgres",
     host: process.env.DB_HOST,
     port: Number(process.env.DB_PORT),
@@ -18,7 +21,15 @@ const datasource = new DataSource({
     database: process.env.DB_NAME,
     synchronize: true,
     logging: false,
-    entities: [Usuario, Evento, Categoria, Inscricao, PreferenciasUsuario],
+    entities: [Usuario, 
+        Evento, 
+        Categoria, 
+        Inscricao, 
+        PreferenciasUsuario,
+        Conta,
+        Sessao,
+        TokenVerificacao
+    ],
     migrations: [],
     subscribers: [],
 })
