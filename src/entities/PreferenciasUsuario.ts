@@ -3,7 +3,7 @@ import { Usuario } from "./Usuario";
 
 @Entity("preferencias_usuario", { schema: "public" })
 export class PreferenciasUsuario {
-  @PrimaryGeneratedColumn("uuid", {name: "id"})
+  @PrimaryGeneratedColumn("uuid", {name: "id", primaryKeyConstraintName: "preferencias_usuario_pkey"})
   id: string;
 
   @Column("boolean", { name: "notificar_novos_eventos", default: () => "true" })

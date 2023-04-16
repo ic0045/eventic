@@ -1,11 +1,15 @@
 import NextAuth, { NextAuthOptions } from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
+import CredentialsProvider from "next-auth/providers/credentials"
 import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter"
-import { datasource } from "@app/database"
+import { datasource, UsuarioRepo } from "@app/database"
 import { Usuario } from "@app/entities/Usuario"
 import { Conta } from "@app/entities/Conta"
-import { Sessao } from "@app/entities/Secao"
+import { Sessao } from "@app/entities/Sessao"
 import { TokenVerificacao } from "@app/entities/TokenVerificacao"
+
+console.log("NEXT AUTH OPTIONS CALLED")
+console.log("IS initialized? ", datasource.isInitialized)
 
 export const authOptions : NextAuthOptions = {
   // Configure one or more authentication providers
@@ -14,12 +18,27 @@ export const authOptions : NextAuthOptions = {
         clientId: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET
       })
+    // CredentialsProvider({
+    //     name: "Credenciais",
+    //     credentials: {
+    //       email: {label:"E-mail", type: "text", placeholder: "seuemail@dom.com"},
+    //       password: { label: "Senha", type: "password" }
+    //     },
+    //     async authorize(credentials, req) {
+            
+    //     }
+    // })
+
   ],
   adapter: TypeORMLegacyAdapter(datasource.options, { 
     entities: {
+    //@ts-ignore
     UserEntity: Usuario,
+    //@ts-ignore
     AccountEntity: Conta,
+    //@ts-ignore
     SessionEntity: Sessao,
+    //@ts-ignore
     VerificationTokenEntity: TokenVerificacao
     } 
   }),
@@ -65,6 +84,14 @@ export const authOptions : NextAuthOptions = {
         console.log('updateUser', message);
         return Promise.resolve() 
     },
+  },
+  logger:{
+    error(code, metadata){
+      console.log("ERRO AO LOGIN --> ");
+      console.log("IS initialized? ", datasource.isInitialized)
+      console.log(code);
+      console.log(metadata);
+    }
   },
   debug: process.env.DEBUG==='true' && (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test'),
   useSecureCookies: false //disable before production

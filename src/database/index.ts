@@ -1,12 +1,12 @@
 import "reflect-metadata"
 import { DataSource } from "typeorm"
 import * as dotenv from 'dotenv'
-import { Usuario } from "../entities/Usuario"
-import { Evento } from "../entities/Evento"
-import { Inscricao } from "../entities/Inscricao"
-import { PreferenciasUsuario } from "../entities/PreferenciasUsuario"
-import { Categoria } from "../entities/Categoria"
-import { Sessao } from "@app/entities/Secao"
+import { Usuario } from "@app/entities/Usuario"
+import { Evento } from "@app/entities/Evento"
+import { Inscricao } from "@app/entities/Inscricao"
+import { PreferenciasUsuario } from "@app/entities/PreferenciasUsuario"
+import { Categoria } from "@app/entities/Categoria"
+import { Sessao } from "@app/entities/Sessao"
 import { Conta } from "@app/entities/Conta"
 import { TokenVerificacao } from "@app/entities/TokenVerificacao"
 
@@ -19,10 +19,11 @@ export const datasource = new DataSource({
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    synchronize: true,
+    synchronize: true, //disable before production
     logging: false,
-    entities: [Usuario, 
-        Evento, 
+    entities: [
+        Usuario, 
+        Evento,
         Categoria, 
         Inscricao, 
         PreferenciasUsuario,
@@ -38,6 +39,28 @@ try{
     if(!datasource.isInitialized){
         await datasource.initialize();
         console.log("Data base connected successfully.")
+        console.log("===================================================")
+        console.log("===================================================")
+        console.log("Metadatas -->")
+        for(let entmtd of datasource.entityMetadatas){
+            console.log("\n" + entmtd.inheritanceTree);
+            console.log("-->COLUNAS");
+            for(let col of entmtd.columns){
+                console.log(col.propertyName+" -> "+col.databaseName)
+            }
+            console.log("-->InverseColumns")
+            for(let col of entmtd.inverseColumns){
+                console.log(col.propertyName+" -> "+col.databaseName)
+            }
+            console.log("-->One To Many")
+            for(let col of entmtd.oneToManyRelations){
+                console.log(col.propertyName+" -> "+ col.type)
+            }
+
+        }
+        console.log("===================================================")
+        console.log("===================================================")
+        console.log("===================================================")
     }
 }catch(e){
     throw new Error("Unable to connected to database: " +e)

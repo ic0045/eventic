@@ -21,7 +21,7 @@ const transformer: Record<"date" | "bigint", ValueTransformer> = {
 
 @Entity({ name: "conta" }) //Entidade para nextAuth
 export class Conta {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryGeneratedColumn("uuid", {name: "id", primaryKeyConstraintName: "conta_pkey"})
   id!: string
 
   @Column({ type: "uuid" })

@@ -10,7 +10,7 @@ import { Usuario } from "./Usuario";
 
 @Entity("inscricao", { schema: "public" })
 export class Inscricao {
-  @PrimaryGeneratedColumn("uuid", {name: "id"})
+  @PrimaryGeneratedColumn("uuid", {name: "id", primaryKeyConstraintName: "inscricao_pkey"})
   id: string;
 
   @Column("character varying", {

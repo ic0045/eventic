@@ -1,9 +1,9 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn, ValueTransformer } from "typeorm";
-import { Evento } from "./Evento";
-import { Inscricao } from "./Inscricao";
-import { PreferenciasUsuario } from "./PreferenciasUsuario";
-import { Conta } from "./Conta";
-import { Sessao } from "./Secao";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Relation, ValueTransformer, JoinColumn, Unique } from "typeorm";
+import { Evento } from "@app/entities/Evento"
+import { Inscricao } from "@app/entities/Inscricao";
+import { PreferenciasUsuario } from "@app/entities/PreferenciasUsuario";
+import { Conta } from "@app/entities/Conta";
+import { Sessao } from "@app/entities/Sessao";
 
 const transformer: Record<"date" | "bigint", ValueTransformer> = {
   date: {
@@ -17,8 +17,8 @@ const transformer: Record<"date" | "bigint", ValueTransformer> = {
 }
 
 @Entity("usuario", { schema: "public" })
+@Unique('email_unique', ['email'])
 export class Usuario {
-
 /**
  * Cria Usuario a partir de objeto
  */
@@ -41,7 +41,7 @@ export class Usuario {
  }
 
   //nextAuth entity field
-  @PrimaryGeneratedColumn("uuid", {name: "id"})
+  @PrimaryGeneratedColumn("uuid", {name: "id", primaryKeyConstraintName: "usuario_pkey"})
   id: string;
 
   //nextAuth entity field
@@ -86,7 +86,7 @@ export class Usuario {
   emailVerified!: string | null
 
   @OneToMany(() => Evento, (evento) => evento.criador)
-  eventos: Evento[];
+  eventos: Relation<Evento>[];
 
   @OneToMany(() => Inscricao, (inscricao) => inscricao.usuario)
   inscricaos: Inscricao[];
