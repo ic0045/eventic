@@ -78,11 +78,11 @@ Visando solucionar esse problema e atender a demanda do Instituto da Computaçã
 ## Ambientes
 - Produção
 
-´https://seicomp.onrender.com´
+https://seicomp.onrender.com
 
 - Desenvolvimento
 
-´https://seicomp-dev.onrender.com´
+https://seicomp-dev.onrender.com
 
 ---------
 
