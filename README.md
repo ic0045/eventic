@@ -68,21 +68,15 @@ Visando solucionar esse problema e atender a demanda do Instituto da Computaçã
 - [Versão Web](https://www.figma.com/file/3ILo3QsC6TPdy4VOiiMoJt/Eventos-Comp?node-id=0%3A1&t=tCzSxbbYrjfWyZQc-1)
 - [Versão Mobile](https://www.figma.com/file/xLgt4T2XivyfJlt7WlePwk/Untitled?node-id=0%3A1&t=O2nxvHh3li4Y3JHA-1)
 
-### Diagrama ER
+### Diagramas
 
 - [Diagrama ER](./docs/diagrama.png)
-
-## Diagrama de Arquitetura
-- [Diagrama](https://drive.google.com/file/d/10-xVgrojvI21lgaq-59pYKtRhihIcOBN/view?usp=sharing)
+- [Diagrama de Arquitetura](https://drive.google.com/file/d/10-xVgrojvI21lgaq-59pYKtRhihIcOBN/view?usp=sharing)
 
 ## Ambientes
-- Produção
 
-https://seicomp.onrender.com
-
-- Desenvolvimento
-
-https://seicomp-dev.onrender.com
+- [Produção](https://seicomp.onrender.com)
+- [Desenvolvimento](https://seicomp-dev.onrender.com)
 
 ---------
 
