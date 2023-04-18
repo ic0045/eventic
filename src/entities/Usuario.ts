@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Relation, ValueTransformer, JoinColumn, Unique } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Relation, ValueTransformer, Unique } from "typeorm";
 import { Evento } from "@app/entities/Evento"
 import { Inscricao } from "@app/entities/Inscricao";
 import { PreferenciasUsuario } from "@app/entities/PreferenciasUsuario";
@@ -52,7 +52,7 @@ export class Usuario {
   segundoNome: string;
 
   //nextAuth entity field
-  @Column("character varying", { name: "email", length: 100, unique: true })
+  @Column("character varying", { name: "email", unique: true, length: 100 })
   email: string;
 
   @Column("character varying", { name: "celular", nullable: true, length: 100 })

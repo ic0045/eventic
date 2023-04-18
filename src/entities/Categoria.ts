@@ -3,6 +3,7 @@ import {
     Entity,
     OneToMany,
     PrimaryGeneratedColumn,
+    Unique
 } from "typeorm";
 import { Evento } from "./Evento";
 
@@ -16,6 +17,7 @@ type CategoriaObj = {
 }
 
 @Entity("categoria", { schema: "public" })
+@Unique('nome_unique', ['nome'])
 export class Categoria{
 
     static DEFAULT_CATEGORIA_ICON_PATH = "/path_para_icone_padrao";
@@ -44,7 +46,7 @@ export class Categoria{
     @PrimaryGeneratedColumn("uuid", {name: "id", primaryKeyConstraintName: "categoria_pkey"})
     id: string;     
 
-    @Column("character varying", { name: "nome", length: 100 })
+    @Column("character varying", { name: "nome",  unique: true, length: 100 })
     nome: string;
 
     @Column("character varying", { name: "icone", nullable: true })
