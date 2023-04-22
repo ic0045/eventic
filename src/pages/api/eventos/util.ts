@@ -1,7 +1,7 @@
 /**
  * Campos necessários para se criar evento
  */
- const requiredFields = ["descricao","localizacao","data_inicial","titulo","imagem_url"];
+ const requiredFields = ["descricao","localizacao","data_inicial","titulo","imagem_url","usuario_id"];
 
 export function validateNotNullFields(body : any) : [boolean,string] {
     var missingFields = "";

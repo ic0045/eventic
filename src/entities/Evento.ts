@@ -99,7 +99,7 @@ export class Evento {
   })
   linkMaisInformacoes: string | null;
 
-  @ManyToOne(() => Usuario, (usuario) => usuario.eventos)
+  @ManyToOne(() => Usuario, (usuario) => usuario.eventos, {nullable: false} )
   @JoinColumn([{ 
     name: "criador_id", 
     referencedColumnName: "id", 
