@@ -1,4 +1,4 @@
-import { ValidatorResponse } from "@/interfaces/form_interfaces";
+import { ValidatorResponse } from "@app/interfaces/form_interfaces";
 
 export class Validator {
   static required(value: string, errorMessageToBeShown?: string): ValidatorResponse {
