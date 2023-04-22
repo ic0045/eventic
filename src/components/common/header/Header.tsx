@@ -2,10 +2,11 @@ import styles from "./header.module.css";
 import { FunctionComponent } from "react";
 import Image from "next/image";
 import { Button, makeStyles } from "@mui/material";
+import { useSession } from "next-auth/react";
 
 export const Header: FunctionComponent = () => {
-  const isLogado = true;
-
+  const {data: session} = useSession();
+  
   return (
     <div className={styles.header}>
       <div className={styles.header__logo}>
@@ -19,7 +20,7 @@ export const Header: FunctionComponent = () => {
         />
       </div>
       <div className={styles.header__session}>
-        {isLogado ? (
+        {session ? (
           <div className={styles.header__usuario}>
             <Image
               src="/avatar.png"
