@@ -36,6 +36,14 @@
     padding: 1rem;
 }
 
+.header__usuario {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
 @media (min-width: 801px) {
     .header__logo {
         width: 20%;
