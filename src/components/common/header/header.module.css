@@ -1,4 +1,47 @@
 .header {
-    height:5rem;
+    height:5.5rem;
     width: 100%;
+    display: flex;
+}
+
+.header__login__button {
+
+}
+
+.header__logo{
+    display: flex;
+    justify-content: center;
+    width: 40%;
+    height: 100%;
+    align-items: center;
+    padding: 1rem;
+}
+
+.header__logo__img {
+    width: 100%;
+    height: auto;
+}
+
+.header__session {
+    width: 60%;
+    display: flex;
+    justify-content: right;
+}
+
+.header__login {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+@media (min-width: 801px) {
+    .header__logo {
+        width: 20%;
+    }
+
+    .header__session {
+        width: 80%;
+    }
 }

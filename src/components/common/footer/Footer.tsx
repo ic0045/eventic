@@ -1,7 +1,7 @@
-import styles from './header.module.css'
+import styles from './footer.module.css'
 import { FunctionComponent } from "react"
 
-export const LoginForm: FunctionComponent = () => {
+export const Footer: FunctionComponent = () => {
 
     return (
             <div className={styles.header}>Header</div>
