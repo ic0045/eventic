@@ -1,57 +1,61 @@
 import NextAuth, { NextAuthOptions } from "next-auth"
-import GoogleProvider from "next-auth/providers/google"
-import CredentialsProvider from "next-auth/providers/credentials"
-import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter"
-import { datasource, UsuarioRepo } from "@app/database"
-import { Usuario } from "@app/entities/Usuario"
-import { Conta } from "@app/entities/Conta"
-import { Sessao } from "@app/entities/Sessao"
-import { TokenVerificacao } from "@app/entities/TokenVerificacao"
-
-console.log("NEXT AUTH OPTIONS CALLED")
-console.log("IS initialized? ", datasource.isInitialized)
+import CredentialsProvider  from "next-auth/providers/credentials"
+import { checkPassword } from "./auth"
+import { UsuarioRepo } from "@app/database"
 
 export const authOptions : NextAuthOptions = {
-  // Configure one or more authentication providers
   providers: [
-    GoogleProvider({
-        clientId: process.env.GOOGLE_CLIENT_ID,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET
-      })
-    // CredentialsProvider({
-    //     name: "Credenciais",
-    //     credentials: {
-    //       email: {label:"E-mail", type: "text", placeholder: "seuemail@dom.com"},
-    //       password: { label: "Senha", type: "password" }
-    //     },
-    //     async authorize(credentials, req) {
-            
-    //     }
-    // })
+    CredentialsProvider({
+        name: "Credenciais",
+        credentials: {
+          email: {label:"E-mail", type: "text", placeholder: "seuemail@dom.com"},
+          password: { label: "Senha", type: "password" }
+        },
+        async authorize(credentials, req) {
+          const { email, password } = credentials as {
+            email: string,
+            password: string
+          }
 
+          if(email === undefined || password === undefined)
+            return null;
+
+          try{
+            const usuario = await UsuarioRepo.findOne({
+              where: {email: email.toLocaleLowerCase()}
+            });
+
+            if(usuario == null)
+              throw new Error("Não existe um cadastro para o e-mail informado.");
+            if(!await checkPassword(password, usuario.senha))
+              throw new Error("Credenciais inválidas.");
+              
+            const data = {
+              id: usuario.id,
+              nome: usuario.primeiroNome,
+              permissao: usuario.permissao,
+              fotoPerfil: usuario.fotoPerfil
+            }
+            return data;
+        }catch(e){console.log(e); throw new Error("Erro ao buscar usuário.");}
+        }   
+    })
   ],
-  adapter: TypeORMLegacyAdapter(datasource.options, { 
-    entities: {
-    //@ts-ignore
-    UserEntity: Usuario,
-    //@ts-ignore
-    AccountEntity: Conta,
-    //@ts-ignore
-    SessionEntity: Sessao,
-    //@ts-ignore
-    VerificationTokenEntity: TokenVerificacao
-    } 
-  }),
+  pages:{
+    signIn: "/login"
+  },
   session: {
     strategy: "jwt",
     // Seconds - How long until an idle session expires and is no longer valid.
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
-  pages:{
-
-  },
   callbacks:{
-
+    // async signIn(data){
+    //   console.log("---SIGNIN---")
+    //   console.log(data)
+    //   console.log("---SIGNIN END---")
+    //   return true;
+    // }
   },
   events:{
     createUser: async (message: any) => {
@@ -85,12 +89,17 @@ export const authOptions : NextAuthOptions = {
         return Promise.resolve() 
     },
   },
-  logger:{
-    error(code, metadata){
-      console.log("ERRO AO LOGIN --> ");
-      console.log("IS initialized? ", datasource.isInitialized)
-      console.log(code);
-      console.log(metadata);
+  logger: {
+    error(code, ...message) {
+        console.error(code, message)
+    },
+    warn(code, ...message) {
+        if (process.env.DEBUG==='true' && (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test'))
+            console.warn(code, message)
+    },
+    debug(code, ...message) {
+        if (process.env.DEBUG==='true' && process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test')
+            console.warn(code, message)
     }
   },
   debug: process.env.DEBUG==='true' && (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test'),

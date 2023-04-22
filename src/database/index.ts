@@ -6,9 +6,6 @@ import { Evento } from "@app/entities/Evento"
 import { Inscricao } from "@app/entities/Inscricao"
 import { PreferenciasUsuario } from "@app/entities/PreferenciasUsuario"
 import { Categoria } from "@app/entities/Categoria"
-import { Sessao } from "@app/entities/Sessao"
-import { Conta } from "@app/entities/Conta"
-import { TokenVerificacao } from "@app/entities/TokenVerificacao"
 
 dotenv.config();
 
@@ -27,9 +24,6 @@ export const datasource = new DataSource({
         Categoria, 
         Inscricao, 
         PreferenciasUsuario,
-        Conta,
-        Sessao,
-        TokenVerificacao
     ],
     migrations: [],
     subscribers: [],
@@ -39,28 +33,6 @@ try{
     if(!datasource.isInitialized){
         await datasource.initialize();
         console.log("Data base connected successfully.")
-        console.log("===================================================")
-        console.log("===================================================")
-        console.log("Metadatas -->")
-        for(let entmtd of datasource.entityMetadatas){
-            console.log("\n" + entmtd.inheritanceTree);
-            console.log("-->COLUNAS");
-            for(let col of entmtd.columns){
-                console.log(col.propertyName+" -> "+col.databaseName)
-            }
-            console.log("-->InverseColumns")
-            for(let col of entmtd.inverseColumns){
-                console.log(col.propertyName+" -> "+col.databaseName)
-            }
-            console.log("-->One To Many")
-            for(let col of entmtd.oneToManyRelations){
-                console.log(col.propertyName+" -> "+ col.type)
-            }
-
-        }
-        console.log("===================================================")
-        console.log("===================================================")
-        console.log("===================================================")
     }
 }catch(e){
     throw new Error("Unable to connected to database: " +e)

@@ -114,5 +114,5 @@ export class Evento {
   categoria: Relation<Categoria>[];
 
   @OneToMany(() => Inscricao, (inscricao) => inscricao.evento)
-  inscricaos: Relation<Inscricao>[];
+  inscricoes: Relation<Inscricao>[];
 }
