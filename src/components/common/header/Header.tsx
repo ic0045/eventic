@@ -6,20 +6,21 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 
 export const Header: FunctionComponent = () => {
-  const {data: session} = useSession();
-  
+  const { data: session } = useSession();
+
   return (
     <div className={styles.header}>
       <div className={styles.header__logo}>
-        <Link href="/login">
-        <Image
-          src="/logo.png"
-          alt="logo"
-          width="0"
-          height="0"
-          sizes="100vw"
-          style={{ width: "100%", height: "auto" }}
-        /></Link>
+        <Link href="/">
+          <Image
+            src="/logo.png"
+            alt="logo"
+            width="0"
+            height="0"
+            sizes="100vw"
+            style={{ width: "100%", height: "auto" }}
+          />
+        </Link>
       </div>
       <div className={styles.header__session}>
         {session ? (
@@ -29,7 +30,7 @@ export const Header: FunctionComponent = () => {
               alt="avatar"
               width="30"
               height="30"
-              style={{ borderRadius: "5rem", marginRight: "0.5rem"}}
+              style={{ borderRadius: "5rem", marginRight: "0.5rem" }}
             />
             <p>Cristhian Carvalho</p>
           </div>
