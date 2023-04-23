@@ -8,6 +8,7 @@ import { Validator } from "@app/helpers/Validator";
 import { FormFieldState } from "@app/interfaces/form_interfaces";
 import { LoginForm } from "@app/components/login/LoginForm";
 import { Layout } from "@app/components/common/layout/Layout";
+import Image from "next/image";
 
 export const Login: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -62,8 +63,17 @@ export const Login: NextPage = () => {
     <Layout>
       <div className={styles.login}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-          <Grid item md={6}>
-            <div className={styles.imagem}></div>
+          <Grid item md={6} xs={0}>
+            <div className={styles.imagem}>
+              <Image
+                src="/login.png"
+                alt="login"
+                width="0"
+                height="0"
+                sizes="100vw"
+                style={{ width: "70%", height: "auto" }}
+              />
+            </div>
           </Grid>
           <Grid item xs={12} md={6}>
             <div className={styles.login__form}>
