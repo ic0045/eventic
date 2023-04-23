@@ -3,6 +3,7 @@ import { FunctionComponent } from "react";
 import Image from "next/image";
 import { Button, makeStyles } from "@mui/material";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 export const Header: FunctionComponent = () => {
   const {data: session} = useSession();
@@ -10,6 +11,7 @@ export const Header: FunctionComponent = () => {
   return (
     <div className={styles.header}>
       <div className={styles.header__logo}>
+        <Link href="/login">
         <Image
           src="/logo.png"
           alt="logo"
@@ -17,7 +19,7 @@ export const Header: FunctionComponent = () => {
           height="0"
           sizes="100vw"
           style={{ width: "100%", height: "auto" }}
-        />
+        /></Link>
       </div>
       <div className={styles.header__session}>
         {session ? (

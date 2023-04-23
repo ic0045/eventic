@@ -4,6 +4,6 @@ import { FunctionComponent } from "react"
 export const Footer: FunctionComponent = () => {
 
     return (
-            <div className={styles.header}>Header</div>
+            <div className={styles.footer}>Footer</div>
     )
 } 
