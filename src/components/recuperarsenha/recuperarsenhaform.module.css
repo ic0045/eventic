@@ -1,0 +1,8 @@
+.recuperarsenha {
+    display: flex;
+    flex-direction: column;   
+}
+
+.recuperarsenha > * {
+    margin-top: 1rem;
+}
