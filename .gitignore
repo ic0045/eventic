@@ -36,3 +36,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 src/pages/api/login/index.ts
+
+# lock files
+package-lock.json
+yarn.lock
