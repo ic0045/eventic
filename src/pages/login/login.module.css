@@ -9,7 +9,7 @@
     display: none;
 }
 
-@media (min-width: 801px) {
+@media (min-width: 900px) {
     .login__form {
         padding: 2rem;
         background-color: white;
