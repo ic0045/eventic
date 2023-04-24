@@ -1,4 +1,4 @@
-import { LoginRequest } from "@/interfaces/login_interfaces";
+import { LoginRequest } from "@app/interfaces/login_interfaces";
 import api from "./config/axiosConfig";
 
 export class LoginAPI {

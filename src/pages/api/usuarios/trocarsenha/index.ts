@@ -33,6 +33,7 @@ export default async function handler(
                 const user = await UsuarioRepo.findOne({where: {id: req.body.id}});
                 if(user){
                     user.senha = await hashPassword(req.body.senha);
+                    await UsuarioRepo.save(user);
                     res.status(200).json("Senha alterada com sucesso");
                 }else{ res.status(400).json("Nenhum usuário encontrado para o id: "+req.body.id)}
             }catch(e){res.status(500).json(e)}

@@ -1,10 +1,8 @@
 import { Alert, Button, TextField } from "@mui/material"
 import styles from './loginform.module.css'
-import { Dispatch, FunctionComponent, SetStateAction, useEffect, useState } from "react"
-import {Validator} from '../../helpers/Validator'
-import { FormFieldState } from "@/interfaces/form_interfaces"
-import { CustomForm } from "@/helpers/CustomForm"
-import { LoginAPI } from "@/apis/LoginAPI"
+import Link from "next/link"
+import { CustomForm } from "@app/helpers/CustomForm"
+import { FunctionComponent } from "react"
 
 interface LoginFormProps {
     formInstance: CustomForm
@@ -24,7 +22,7 @@ export const LoginForm: FunctionComponent<LoginFormProps> = (props: LoginFormPro
                 <TextField error={!props.formInstance.isValid("email")} id="email" label="E-mail" value={props.formInstance.getValue('email')} onChange={props.formInstance.onInputChange} helperText={props.formInstance.getErrorMessage('email')} /> 
                 <TextField error={!props.formInstance.isValid("senha")} type="password" label="Senha" id="senha" value={props.formInstance.getValue('senha')} onChange={props.formInstance.onInputChange} helperText={props.formInstance.getErrorMessage('senha')} />
                 <Button variant="contained" color="success" onClick={props.onLoginSubmit}>Login</Button>
-                <a href="/recuperarsenha">Esqueceu sua senha?</a>
+                <Link href="/recuperarsenha">Esqueceu sua senha?</Link>
             </div>
         </>
     )

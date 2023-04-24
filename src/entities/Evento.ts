@@ -7,13 +7,54 @@ import {
   PrimaryGeneratedColumn,
   Relation
 } from "typeorm";
-import { Usuario } from "./Usuario";
-import { Inscricao } from "./Inscricao";
-import { Categoria } from "./Categoria";
+import { Usuario } from "@app/entities/Usuario";
+import { Inscricao } from "@app/entities/Inscricao";
+import { Categoria } from "@app/entities/Categoria";
+
+/*
+* Tipo do corpo de requisição para criação de evento
+*/
+type CreationReqBody = {
+  descricao: string,
+  localizacao: string,
+  titulo: string,
+  imagem_url: string,
+  tipo: string | null,
+  link_imagem:  string | null,
+  link_titulo: string | null,
+  link_mais_informacoes: string | null,
+  data_inicial: Date,
+  data_final: Date | null,
+  categoria: Categoria | null,
+  criador: Usuario
+}
 
 @Entity("evento", { schema: "public" })
 export class Evento {
-  @PrimaryGeneratedColumn("uuid", {name: "id"})
+
+  /**
+  * Cria Evento a partir de objeto
+  */
+  public static createFromObj(obj : CreationReqBody) : Evento{
+    const evento = new Evento();
+    evento.titulo = obj.titulo;
+    evento.descricao = obj.descricao;
+    evento.localizacao = obj.localizacao;
+    evento.imagemUrl = obj.imagem_url;
+    evento.tipo = obj.tipo;
+    evento.linkImagem = obj.link_imagem;
+    evento.linkMaisInformacoes = obj.link_mais_informacoes;
+    evento.dataInicial = obj.data_inicial;
+    evento.datafinal = obj.data_final;
+    if(obj.categoria)
+      evento.categoria = [obj.categoria];
+    evento.criador = [obj.criador];
+    evento.createdAt = new Date();
+    return evento;
+  }
+
+
+  @PrimaryGeneratedColumn("uuid", {name: "id", primaryKeyConstraintName: "evento_pkey"})
   id: string;
 
   @Column("character varying", { name: "descricao", length: 1000 })
@@ -23,7 +64,7 @@ export class Evento {
   localizacao: string;
 
   @Column("timestamp without time zone", { name: "datainicial" })
-  datainicial: Date;
+  dataInicial: Date;
 
   @Column("character varying", { name: "titulo", length: 200 })
   titulo: string;
@@ -33,9 +74,6 @@ export class Evento {
 
   @Column("character varying", { name: "imagem_url" })
   imagemUrl: string;
-
-  @Column("character varying", { name: "tipo" })
-  tipo: string;
 
   @Column("timestamp without time zone", { name: "created_at" })
   createdAt: Date;
@@ -52,13 +90,16 @@ export class Evento {
   @Column("character varying", { name: "link_titulo", nullable: true })
   linkTitulo: string | null;
 
+  @Column("character varying", {name: "tipo", nullable: true})
+  tipo: string | null; //Categoria informada pelo usuário, caso não se adeque a nenhuma categoria
+
   @Column("character varying", {
     name: "link_mais_informacoes",
     nullable: true,
   })
   linkMaisInformacoes: string | null;
 
-  @ManyToOne(() => Usuario, (usuario) => usuario.eventos)
+  @ManyToOne(() => Usuario, (usuario) => usuario.eventos, {nullable: false} )
   @JoinColumn([{ 
     name: "criador_id", 
     referencedColumnName: "id", 
@@ -70,8 +111,8 @@ export class Evento {
     name: "categoria_id", 
     referencedColumnName: "id",
     foreignKeyConstraintName: "categoria_fk" }])
-  categoria: Categoria;
+  categoria: Relation<Categoria>[];
 
   @OneToMany(() => Inscricao, (inscricao) => inscricao.evento)
-  inscricaos: Relation<Inscricao>[];
+  inscricoes: Relation<Inscricao>[];
 }

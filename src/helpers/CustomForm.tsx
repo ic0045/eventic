@@ -1,4 +1,4 @@
-import { FormFieldState } from "@/interfaces/form_interfaces";
+import { FormFieldState } from "@app/interfaces/form_interfaces";
 
 
 export class CustomForm{

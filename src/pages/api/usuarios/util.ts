@@ -1,5 +1,3 @@
-import type { NextApiRequest } from "next";
-
 /**
  * Campos não nulos da entidade usuário
  */

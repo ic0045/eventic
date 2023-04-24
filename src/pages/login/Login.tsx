@@ -1,12 +1,14 @@
 import { NextPage } from "next";
-import { LoginForm } from "@/components/login/LoginForm";
-import styles from "./login.module.css"
+import styles from "./login.module.css";
 import { CircularProgress, Grid } from "@mui/material";
 import { useState } from "react";
-import { CustomForm } from "@/helpers/CustomForm";
-import { Validator } from "@/helpers/Validator";
-import { FormFieldState } from "@/interfaces/form_interfaces";
-import { LoginAPI } from "@/apis/LoginAPI";
+import { LoginAPI } from "@app/apis/LoginAPI";
+import { CustomForm } from "@app/helpers/CustomForm";
+import { Validator } from "@app/helpers/Validator";
+import { FormFieldState } from "@app/interfaces/form_interfaces";
+import { LoginForm } from "@app/components/login/LoginForm";
+import { Layout } from "@app/components/common/layout/Layout";
+import Image from "next/image";
 
 export const Login: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -37,44 +39,60 @@ export const Login: NextPage = () => {
   const formInstance = new CustomForm(formState, setFormState);
 
   const onLoginSubmit = (e: any) => {
-    if(!formInstance.validateForm()){
-        return;
+    if (!formInstance.validateForm()) {
+      return;
     }
 
     setIsLoading(true);
     setLoginSuccess(true);
 
     LoginAPI.login({
-        email: formInstance.getValue('email'),
-        password: formInstance.getValue('senha')
-    }).catch((erro) => {
-        setLoginSuccess(false)
-    }).then((response) => {
-      
-    }).finally(() => {
-        setIsLoading(false);
+      email: formInstance.getValue("email"),
+      password: formInstance.getValue("senha"),
     })
-}
+      .catch((erro) => {
+        setLoginSuccess(false);
+      })
+      .then((response) => {})
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
 
   return (
-    <div className={styles.login}>
-      <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-        <Grid item md={6}>
-          <div className={styles.imagem}></div>
+    <Layout>
+      <div className={styles.login}>
+        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+          <Grid item md={6} xs={0}>
+            <div className={styles.imagem}>
+              <Image
+                src="/login.png"
+                alt="login"
+                width="0"
+                height="0"
+                sizes="100vw"
+                style={{ width: "70%", height: "auto" }}
+              />
+            </div>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <div className={styles.login__form}>
+              <h2>Login</h2>
+              {isLoading ? (
+                <div className="loader">
+                  <CircularProgress />
+                </div>
+              ) : (
+                <LoginForm
+                  formInstance={formInstance}
+                  onLoginSubmit={onLoginSubmit}
+                  isLoginSuccess={loginSuccess}
+                />
+              )}
+            </div>
+          </Grid>
         </Grid>
-        <Grid item xs={12} md={6}>
-          <div className={styles.login__form}>
-            <h2>Login</h2>
-            {isLoading ? (
-              <div className="loader">
-                <CircularProgress />
-              </div>
-            ) : (
-              <LoginForm formInstance={formInstance} onLoginSubmit={onLoginSubmit} isLoginSuccess={loginSuccess} />
-            )}
-          </div>
-        </Grid>
-      </Grid>
-    </div>
+      </div>
+    </Layout>
   );
 };

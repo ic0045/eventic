@@ -1,24 +1,30 @@
 import "reflect-metadata"
 import { DataSource } from "typeorm"
 import * as dotenv from 'dotenv'
-import { Usuario } from "../entities/Usuario"
-import { Evento } from "../entities/Evento"
-import { Inscricao } from "../entities/Inscricao"
-import { PreferenciasUsuario } from "../entities/PreferenciasUsuario"
-import { Categoria } from "../entities/Categoria"
+import { Usuario } from "@app/entities/Usuario"
+import { Evento } from "@app/entities/Evento"
+import { Inscricao } from "@app/entities/Inscricao"
+import { PreferenciasUsuario } from "@app/entities/PreferenciasUsuario"
+import { Categoria } from "@app/entities/Categoria"
 
 dotenv.config();
 
-const datasource = new DataSource({
+export const datasource = new DataSource({
     type: "postgres",
     host: process.env.DB_HOST,
     port: Number(process.env.DB_PORT),
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    synchronize: true,
+    synchronize: true, //disable before production
     logging: false,
-    entities: [Usuario, Evento, Categoria, Inscricao, PreferenciasUsuario],
+    entities: [
+        Usuario, 
+        Evento,
+        Categoria, 
+        Inscricao, 
+        PreferenciasUsuario,
+    ],
     migrations: [],
     subscribers: [],
 })

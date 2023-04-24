@@ -1,7 +1,7 @@
 import { Alert, Button, TextField } from "@mui/material";
 import styles from "./recuperarsenhaform.module.css";
 import { FunctionComponent } from "react";
-import { CustomForm } from "@/helpers/CustomForm";
+import { CustomForm } from "@app/helpers/CustomForm";
 
 interface RecuperarSenhaFormProps {
   formInstance: CustomForm;
