@@ -1,3 +1,3 @@
-import { RecuperarSenha } from './RecuperarSenha';
+import { RecuperarSenha } from '../../components/RecuperarSenha';
 
 export default RecuperarSenha;

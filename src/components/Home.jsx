@@ -1,5 +1,5 @@
 import { Box, Container, Grid } from "@mui/material";
-import EventCard from "../../components/eventcard/EventCard";
+import EventCard from "./eventcard/EventCard";
 
 export default function Home() {
     return (

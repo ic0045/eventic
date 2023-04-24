@@ -1,3 +1,3 @@
-import EventDetails from "./EventDetails.jsx";
+import EventDetails from "../../components/EventDetails.jsx";
 
 export default EventDetails
