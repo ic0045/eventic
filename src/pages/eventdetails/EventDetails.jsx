@@ -1,8 +1,16 @@
 import { Box, Container, Grid } from "@mui/material";
 import styles from './eventdetails.module.css'
 import Typography from "@mui/material/Typography";
+import IconButton from '@mui/material/IconButton';
+import ShareIcon from '@mui/icons-material/Share';
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
+import EventIcon from '@mui/icons-material/Event';
+import PlaceIcon from '@mui/icons-material/Place';
+import { useState } from "react";
 
 function EventDetails() {
+  const [subscribed, setSubscribed] = useState(false)
+
   return (
     <Container maxWidth="xl" className={styles.mt}>
       <Typography variant="h5" mb={3}>
@@ -10,14 +18,17 @@ function EventDetails() {
       </Typography>
       <Grid container spacing={3}>
         <Grid item md={4}>
-          <img
-            className={styles.img}
-            src='/images/evento1.jpg'
-            alt='Evento 1'
-          />
-          <Box mt={2} sx={{ borderRadius: '0.3rem', backgroundColor: 'white' }}>
+          <Box sx={{ boxShadow: 0 }}>
+            <img
+              className={styles.img}
+              src='/images/evento1.jpg'
+              alt='Evento 1'
+            />
+          </Box>
+
+          <Box mt={2} sx={{ borderRadius: '0.3rem', backgroundColor: 'white', boxShadow: 3 }}>
             <Typography variant="h4" align="center" >
-              151
+              {subscribed ? 152 : 151}
             </Typography>
             <Typography variant="body1" gutterBottom align="center" >
               Inscritos
@@ -25,7 +36,7 @@ function EventDetails() {
           </Box>
         </Grid>
         <Grid item md={8}>
-          <Box sx={{ borderRadius: '0.3rem', backgroundColor: 'white', padding: '1rem' }}>
+          <Box sx={{ borderRadius: '0.3rem', backgroundColor: 'white', padding: '1rem', boxShadow: 3 }}>
             <Typography variant="h6" gutterBottom>
               Descrição
             </Typography>
@@ -37,22 +48,38 @@ function EventDetails() {
             </Typography>
           </Box >
 
-          <Box mt={3} mb={3} sx={{ borderRadius: '0.3rem', backgroundColor: 'white', padding: '1rem' }}>
+          <Box mt={3} mb={3} sx={{ borderRadius: '0.3rem', backgroundColor: 'white', padding: '1rem', boxShadow: 3 }}>
             <Typography variant="h6" gutterBottom>
               Detalhes
             </Typography>
             <Typography variant="body2" gutterBottom>
               Início: 30 - março | 08:00
+              <IconButton target="_blank" href="https://calendar.google.com/" aria-label="calendar">
+                <EventIcon />
+              </IconButton>
             </Typography>
             <Typography variant="body2" gutterBottom>
               Final: 31 - março | 20:00
             </Typography>
             <Typography variant="body2" gutterBottom>
               Local: Instituto de Geociências da UFBA
+
+              <IconButton target="_blank" href="https://www.google.com/maps/place/Instituto+de+Geoci%C3%AAncias+da+UFBA/@-12.9980058,-38.5097059,17z/data=!3m1!4b1!4m6!3m5!1s0x716049f49530915:0xeee17285dd935415!8m2!3d-12.9980058!4d-38.5071256!16s%2Fg%2F1q5bwgf_d" aria-label="location ">
+                <PlaceIcon />
+              </IconButton>
+
             </Typography>
             <Typography variant="body2" gutterBottom>
-              Mais informacoes: <a href="https://sites.google.com/view/shctbr?pli=1">https://sites.google.com/view/shctbr?pli=1</a> 
+              Mais informacoes: <a href="https://sites.google.com/view/shctbr?pli=1">https://sites.google.com/view/shctbr?pli=1</a>
             </Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <IconButton onClick={() => setSubscribed(!subscribed)} aria-label="notification">
+                <NotificationsActiveIcon sx={subscribed? {color:'#FFCB00'}:undefined} />
+              </IconButton>
+              <IconButton aria-label="share">
+                <ShareIcon />
+              </IconButton>
+            </Box>
           </Box>
 
         </Grid>
