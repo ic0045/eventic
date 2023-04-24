@@ -3,7 +3,7 @@ import { UsuarioRepo } from '@app/database'
 import { Usuario } from '@app/entities/Usuario'
 import { validateNotNullFields} from './util'
 import { hashPassword } from '../login/validator'
-import { AcessLevel } from '@app/utils/auth'
+import { AcessLevel } from '../auth/auth'
 
 export default async function handler(
   req: NextApiRequest,
@@ -13,7 +13,8 @@ export default async function handler(
         const [valid, errorMsg] = validateNotNullFields(req.body);
         if(valid){
             try{
-                const existingUsuario = await UsuarioRepo.findOne({where: {email: req.body.email}});
+                const existingUsuario = await UsuarioRepo.findOne(
+                    {where: {email: req.body.email.toLocaleLowerCase()}});
                 if(!existingUsuario){
                     let usuario = Usuario.createFromObj(req.body);
                     usuario.permissao = AcessLevel.visitante; //admins não são criados por esta rota
@@ -31,13 +32,18 @@ export default async function handler(
         const where : { [key:string]: any} = {};
         
         if(id) where.id = id;
-        if(primeiro_nome) where.primeiroNome = primeiro_nome;
+        if(primeiro_nome) where.name = primeiro_nome;
         if(segundo_nome) where.segundoNome = segundo_nome;
-        if(email) where.email = email;
+        if(email){
+            if(typeof email === 'string') where.email = email.toLocaleLowerCase();
+            else where.email = email[0].toLocaleLowerCase();
+        }
         if(permissao) where.permissao = permissao;
 
         try{
-            const usuarios = await UsuarioRepo.find({where: where})
+            const usuarios = await UsuarioRepo.find({where: where, relations:{
+                eventos: true
+            }});
             res.status(200).json(usuarios);
         }catch(e){res.status(500).json(e) }
     }
@@ -57,7 +63,7 @@ export default async function handler(
                     res.status(400).json(`Não foi encontrado usuário de id: ${req.body.id}`);
                 }else{
                     const {primeiro_nome, segundo_nome, email, celular,
-                        cpf, foto_perfil, email_confirmado} = req.body;
+                        cpf, foto_perfil} = req.body;
 
                     if(primeiro_nome) usuario.primeiroNome = primeiro_nome;
                     if(segundo_nome) usuario.segundoNome = segundo_nome;
@@ -65,8 +71,6 @@ export default async function handler(
                     if(email) usuario.email = email;
                     if(cpf) usuario.cpf = cpf;
                     if(foto_perfil) usuario.fotoPerfil = foto_perfil;
-                    if(email_confirmado != undefined || (email_confirmado === 'true' || email_confirmado === 'false')) 
-                        usuario.emailConfirmado = email_confirmado;
                     usuario.updatedAt = new Date();
 
                     usuario = await UsuarioRepo.save(usuario);

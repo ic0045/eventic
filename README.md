@@ -18,8 +18,6 @@ Visando solucionar esse problema e atender a demanda do Instituto da Computaçã
 | Cristhian Oliveira Carvalho  | BACKEND|
 | Diego Carapiá da Costa | FRONTEND / DESIGN|
 | Isaque Santana Copque  | BACKEND|
-| Pablo Marcos Barbosa Souza  | BACKEND|
-| Pedro João Beckhauser Neto   | FRONTEND|
 | - | -|
 
 
@@ -37,43 +35,53 @@ Visando solucionar esse problema e atender a demanda do Instituto da Computaçã
     - quinta: 21:00h
     - sabado 10:00h
 
-## Termo de Abertura
+## Documentos
+
 - [Termo de Abertura](./docs/termo_abertura.pdf)
-
-## Requisitos
 - [Requisitos](https://docs.google.com/spreadsheets/d/15ZO1JtwPHYhsB4rp6Ko_rEEBG1fMr6Br-LRbo9UJFr8/edit?usp=sharing)
-
-## Tarefas
 - [Tarefas](https://github.com/orgs/ic0045/projects/1/views/1)
-
-## Tecnologias
-#### Frontend
-- [MaterialUI](https://mui.com/)
-- [ReactJS](https://pt-br.reactjs.org/)
-- [FlexboxGrid](http://flexboxgrid.com/)
-#### Backend
-- [NodeJS 18](https://nodejs.org/en/download) 
-- [TypeOrm](https://typeorm.io/)
-- [Typescript](https://www.typescriptlang.org)
-- [Docker](https://www.docker.com)
-- [NextJS](https://nextjs.org/)
-#### Banco de dados
-- [Postgresql](https://www.postgresql.org)
-- [DBeaver](https://dbeaver.io/download/) (gerenciador de banco de dados)
-#### Cloud
-- [Vercel](https://vercel.com/dashboard)
-- [Render](https://render.com)
+- [Rotas de API](https://isaquecopque.stoplight.io/docs/seicomp/branches/main/oneg2aiu3tl21-seicomp)
 
 ## Protótipos
 
 - [Versão Web](https://www.figma.com/file/3ILo3QsC6TPdy4VOiiMoJt/Eventos-Comp?node-id=0%3A1&t=tCzSxbbYrjfWyZQc-1)
 - [Versão Mobile](https://www.figma.com/file/xLgt4T2XivyfJlt7WlePwk/Untitled?node-id=0%3A1&t=O2nxvHh3li4Y3JHA-1)
 
-### Diagrama ER
+## Diagramas
 
 - [Diagrama ER](./docs/diagrama.png)
+- [Diagrama de Arquitetura](https://drive.google.com/file/d/10-xVgrojvI21lgaq-59pYKtRhihIcOBN/view?usp=sharing)
 
----------
+## Ambientes
+
+- [Produção](https://seicomp.onrender.com)
+- [Desenvolvimento](https://seicomp-dev.onrender.com)
+
+## Tecnologias
+
+### Frontend
+
+- [MaterialUI](https://mui.com/)
+- [ReactJS](https://pt-br.reactjs.org/)
+- [FlexboxGrid](http://flexboxgrid.com/)
+
+### Backend
+
+- [NodeJS 18](https://nodejs.org/en/download) 
+- [TypeOrm](https://typeorm.io/)
+- [Typescript](https://www.typescriptlang.org)
+- [Docker](https://www.docker.com)
+- [NextJS](https://nextjs.org/)
+
+### Banco de dados
+
+- [Postgresql](https://www.postgresql.org)
+- [DBeaver](https://dbeaver.io/download/) (gerenciador de banco de dados)
+
+### Cloud
+
+- [Vercel](https://vercel.com/dashboard)
+- [Render](https://render.com)
 
 ## Instalação
 
@@ -95,6 +103,9 @@ npm run dev
 yarn dev
 # or
 pnpm dev
+<<<<<<< HEAD
+```
+=======
 ```
 
 

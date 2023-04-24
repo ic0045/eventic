@@ -6,7 +6,11 @@ declare global{
             DB_PASSWORD: string,
             DB_PORT: string,
             DB_USERNAME: string,
-            TOKENSECRET: string
+            TOKENSECRET: string,
+            GOOGLE_CLIENT_ID: string,
+            GOOGLE_CLIENT_SECRET: string,
+            DEBUG: string,
+            NODE_ENV: string
         }
     }
 }
