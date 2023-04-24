@@ -26,7 +26,7 @@ export class Inscricao {
   @Column("timestamp without time zone", { name: "updated_at", nullable: true })
   updatedAt: Date | null;
 
-  @ManyToOne(() => Evento, (evento) => evento.inscricaos)
+  @ManyToOne(() => Evento, (evento) => evento.inscricoes)
   @JoinColumn([{ 
     name: "evento_id", 
     referencedColumnName: "id",
