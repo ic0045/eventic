@@ -8,10 +8,13 @@ import EventIcon from '@mui/icons-material/Event';
 import PlaceIcon from '@mui/icons-material/Place';
 import { useState } from "react";
 
+import { Layout } from "@app/components/common/layout/Layout";
+
 function EventDetails() {
   const [subscribed, setSubscribed] = useState(false)
 
   return (
+    <Layout >
     <Container maxWidth="xl" className={styles.mt}>
       <Typography variant="h5" mb={3}>
         PALESTRA “PESQUISA EM PSICOLOGIA ANALÍTICA: O OLHAR SIMBÓLICO NO CONTEXTO ACADÊMICO”
@@ -86,6 +89,7 @@ function EventDetails() {
       </Grid>
 
     </Container>
+    </Layout>
   );
 };
 
