@@ -6,11 +6,11 @@ import { LoginAPI } from "@app/apis/LoginAPI";
 import { CustomForm } from "@app/helpers/CustomForm";
 import { Validator } from "@app/helpers/Validator";
 import { FormFieldState } from "@app/interfaces/form_interfaces";
-import { LoginForm } from "@app/components/login/LoginForm";
+import LoginForm from "@app/components/loginform";
 import { Layout } from "@app/components/common/layout/Layout";
 import Image from "next/image";
 
-export const Login: NextPage = () => {
+const Login: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   let formFields: Map<string, FormFieldState> = new Map([
@@ -96,3 +96,5 @@ export const Login: NextPage = () => {
     </Layout>
   );
 };
+
+export default Login

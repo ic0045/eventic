@@ -2,14 +2,14 @@ import { NextPage } from "next";
 import styles from "./recuperarsenha.module.css";
 import { CircularProgress, Grid } from "@mui/material";
 import { RecuperarSenhaAPI } from "@app/apis/RecuperarSenhaAPI";
-import { RecuperarSenhaForm } from "@app/components/recuperarsenha/RecuperarSenhaForm";
+import { RecuperarSenhaForm } from "@app/components/recuperarsenhaform";
 import { CustomForm } from "@app/helpers/CustomForm";
 import { Validator } from "@app/helpers/Validator";
 import { FormFieldState } from "@app/interfaces/form_interfaces";
 import { useState } from "react";
 import { Layout } from "@app/components/common/layout/Layout";
 
-export const RecuperarSenha: NextPage = () => {
+const RecuperarSenha: NextPage = () => {
   let formFields: Map<string, FormFieldState> = new Map([
     [
       "email",
@@ -78,3 +78,4 @@ export const RecuperarSenha: NextPage = () => {
     </Layout>
   );
 };
+export default RecuperarSenha;

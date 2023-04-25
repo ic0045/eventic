@@ -11,7 +11,7 @@ interface LoginFormProps {
      
 }
 
-export const LoginForm: FunctionComponent<LoginFormProps> = (props: LoginFormProps) => {
+ const LoginForm: FunctionComponent<LoginFormProps> = (props: LoginFormProps) => {
 
     return (
         <>
@@ -27,3 +27,5 @@ export const LoginForm: FunctionComponent<LoginFormProps> = (props: LoginFormPro
         </>
     )
 } 
+
+export default LoginForm;
