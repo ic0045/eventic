@@ -9,6 +9,7 @@ import { FormFieldState } from "@app/interfaces/form_interfaces";
 import { LoginForm } from "@app/components/login/LoginForm";
 import { Layout } from "@app/components/common/layout/Layout";
 import Image from "next/image";
+import { signIn } from "next-auth/react";
 
 export const Login: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -46,17 +47,22 @@ export const Login: NextPage = () => {
     setIsLoading(true);
     setLoginSuccess(true);
 
-    LoginAPI.login({
+    signIn("credentials", {
       email: formInstance.getValue("email"),
       password: formInstance.getValue("senha"),
+    }).catch((erro) => {
+      setLoginSuccess(false);
     })
-      .catch((erro) => {
-        setLoginSuccess(false);
-      })
-      .then((response) => {})
-      .finally(() => {
-        setIsLoading(false);
-      });
+    .then((response) => { console.log(response)})
+    .finally(() => {
+      setIsLoading(false);
+    });
+    
+    // LoginAPI.login({
+    //   email: formInstance.getValue("email"),
+    //   password: formInstance.getValue("senha"),
+    // })
+
   };
 
   return (
