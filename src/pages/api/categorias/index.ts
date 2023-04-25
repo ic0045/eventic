@@ -21,9 +21,12 @@ export default async function handler(
     if(req.method === 'POST'){
         if(validateReqBody(req.body)){
             try{
-                let categoria = Categoria.createFromObject(req.body);
-                categoria = await CategoriaRepo.save(categoria);
-                res.status(200).json(categoria);
+                let categoria = await CategoriaRepo.findOne({where: {nome: req.body.nome}})
+                if(categoria == null){
+                    categoria = Categoria.createFromObject(req.body);
+                    categoria = await CategoriaRepo.save(categoria);
+                    res.status(200).json(categoria);
+                }else{ res.status(400).json("Já existe uma categoria de nome "+req.body.nome)}
             }catch(e){res.status(500).json(e)}
         }else{res.status(400).json("Nome de categoria inválido")}
     }
@@ -40,17 +43,24 @@ export default async function handler(
     }
 
     else if(req.method === 'PUT'){
-        const {id} = req.body.id;
-        if(id || !validateReqBody(req.body)){
-            try{
-                let categoria = await CategoriaRepo.findOne({where: {id: id}})
-                if(categoria == null)
-                    res.status(400).json("Nenhuma categoria encontrada para id "+id);
-                else{
-                    categoria = await CategoriaRepo.save(categoria);
-                    res.status(200).json(categoria);
-                }
-            }catch(e){res.status(500).json(e)}
+        const {id, nome, icone} = req.body;
+        if(id){
+            if(nome && req.body.nome.length < 2){
+                res.status(400).json("Nome de categoria inválido");
+            }
+            else{
+                try{
+                    let categoria = await CategoriaRepo.findOne({where: {id: id}})
+                    if(categoria == null)
+                        res.status(400).json("Nenhuma categoria encontrada para id "+id);
+                    else{
+                        if(nome) categoria.nome = nome;
+                        if(icone) categoria.icone = icone;
+                        categoria = await CategoriaRepo.save(categoria);
+                        res.status(200).json(categoria);
+                    }
+                }catch(e){res.status(500).json(e)}
+            }
         }else(res.status(400).json("Parâmetros inválidos."))
     }
 
@@ -59,8 +69,8 @@ export default async function handler(
         if(id){
             try{
                 await CategoriaRepo.delete(id);
-                res.status(200).json("Usuario deletado com sucesso");
+                res.status(200).json("Categoria deletada com sucesso");
             }catch(e){ res.status(500).json(e); }
-        }else{ res.status(400).json("Faltando id de usuário")}
+        }else{ res.status(400).json("Faltando id de categoria")}
     }
 }
