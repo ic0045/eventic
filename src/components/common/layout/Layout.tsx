@@ -1,4 +1,4 @@
-import styles from './layout.module.css'
+// import styles from './layout.module.css'
 import { FunctionComponent } from "react"
 import { Header } from '../header/Header'
 import { Footer } from '../footer/Footer'

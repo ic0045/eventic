@@ -28,7 +28,7 @@ const RecuperarSenha: NextPage = () => {
 
   const formInstance = new CustomForm(formState, setFormState);
 
-  const onRecuperarSenhaSubmit = (e: any) => {
+  const onRecuperarSenhaSubmit = () => {
     if (!formInstance.validateForm()) {
       return false;
     }
@@ -38,10 +38,10 @@ const RecuperarSenha: NextPage = () => {
     RecuperarSenhaAPI.enviarLink({
       email: formInstance.getValue("email"),
     })
-      .catch((erro) => {
+      .catch(() => {
         setIsRecuperarSenhaSuccess(false);
       })
-      .then((response) => {})
+      .then(() => {})
       .finally(() => {
         setIsLoading(false);
       });

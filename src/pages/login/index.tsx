@@ -38,7 +38,7 @@ const Login: NextPage = () => {
 
   const formInstance = new CustomForm(formState, setFormState);
 
-  const onLoginSubmit = (e: any) => {
+  const onLoginSubmit = () => {
     if (!formInstance.validateForm()) {
       return;
     }
@@ -50,10 +50,10 @@ const Login: NextPage = () => {
       email: formInstance.getValue("email"),
       password: formInstance.getValue("senha"),
     })
-      .catch((erro) => {
+      .catch(() => {
         setLoginSuccess(false);
       })
-      .then((response) => {})
+      .then(() => {})
       .finally(() => {
         setIsLoading(false);
       });

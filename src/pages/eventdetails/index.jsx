@@ -2,6 +2,7 @@ import { Box, Container, Grid } from "@mui/material";
 import styles from './eventdetails.module.css'
 import Typography from "@mui/material/Typography";
 import IconButton from '@mui/material/IconButton';
+import Image from 'next/image';
 import ShareIcon from '@mui/icons-material/Share';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import EventIcon from '@mui/icons-material/Event';
@@ -19,7 +20,7 @@ function EventDetails() {
       <Grid container spacing={3}>
         <Grid item md={4}>
           <Box sx={{ boxShadow: 0 }}>
-            <img
+            <Image
               className={styles.img}
               src='/images/evento1.jpg'
               alt='Evento 1'

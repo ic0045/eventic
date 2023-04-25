@@ -3,10 +3,10 @@ import bcrypt from 'bcrypt'
 /*
 *  Níveis de permissão de usuário
 */
-export enum AcessLevel{
-    admin = 'admin',
-    tecnico = 'tecnico',
-    visitante = 'visitante',
+export enum AcessLevel {
+    admin = 'admin', // eslint-disable-line
+    tecnico = 'tecnico',// eslint-disable-line
+    visitante = 'visitante',// eslint-disable-line
 }
 
 const salt = await bcrypt.genSalt(10);

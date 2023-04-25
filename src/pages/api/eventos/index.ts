@@ -2,7 +2,6 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { CategoriaRepo, EventoRepo, UsuarioRepo } from '@app/database'
 import { validateNotNullFields } from './util';
 import { Evento } from '@app/entities/Evento';
-import { link } from 'fs';
 
 export default async function handler(
     req : NextApiRequest,

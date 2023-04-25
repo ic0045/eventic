@@ -46,7 +46,7 @@ export class Categoria{
     @PrimaryGeneratedColumn("uuid", {name: "id", primaryKeyConstraintName: "categoria_pkey"})
     id: string;     
 
-    @Column("character varying", { name: "nome",  unique: true, length: 100 })
+    @Column("character varying", { name: "nome", unique: true, length: 100 })
     nome: string;
 
     @Column("character varying", { name: "icone", nullable: true })

@@ -13,7 +13,7 @@ export class CustomForm{
 
     addFormField(fieldId: string, validators: any[]){
         let formStateMap = new Map(this.formState);  
-        const currentValue = this.formState.get(fieldId);
+        // const currentValue = this.formState.get(fieldId);
         formStateMap.set(fieldId, {value: '', validators: validators, valid: true, errorMessage: '', })
     }
 

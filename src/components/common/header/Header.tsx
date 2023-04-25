@@ -1,7 +1,7 @@
 import styles from "./header.module.css";
 import { FunctionComponent } from "react";
 import Image from "next/image";
-import { Button, makeStyles } from "@mui/material";
+import { Button } from "@mui/material";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 
