@@ -1,0 +1,8 @@
+.cadastro {
+    display: flex;
+    flex-direction: column;   
+}
+
+.cadastro > * {
+    margin-top: 1rem;
+}
