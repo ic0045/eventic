@@ -2,12 +2,13 @@ import { NextPage } from "next";
 import styles from "./login.module.css";
 import { CircularProgress, Grid } from "@mui/material";
 import { useState } from "react";
-import { LoginAPI } from "@app/apis/LoginAPI";
+// import { LoginAPI } from "@app/apis/LoginAPI";
 import { CustomForm } from "@app/helpers/CustomForm";
 import { Validator } from "@app/helpers/Validator";
 import { FormFieldState } from "@app/interfaces/form_interfaces";
 import LoginForm from "@app/components/loginform";
 import { Layout } from "@app/components/common/layout/Layout";
+import {signIn} from 'next-auth/react';
 import Image from "next/image";
 
 const Login: NextPage = () => {
@@ -46,17 +47,23 @@ const Login: NextPage = () => {
     setIsLoading(true);
     setLoginSuccess(true);
 
-    LoginAPI.login({
+    signIn('credentials',{
       email: formInstance.getValue("email"),
       password: formInstance.getValue("senha"),
+      callbackUrl: 'http://localhost:3000/home'
+    }).catch(() => {
+      setLoginSuccess(false);
     })
-      .catch(() => {
-        setLoginSuccess(false);
-      })
-      .then(() => {})
-      .finally(() => {
-        setIsLoading(false);
-      });
+    .then(() => {})
+    .finally(() => {
+      setIsLoading(false);
+    });
+
+    // LoginAPI.login({
+    //   email: formInstance.getValue("email"),
+    //   password: formInstance.getValue("senha"),
+    // })
+      
   };
 
   return (
