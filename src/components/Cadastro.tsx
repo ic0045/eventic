@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-import styles from "./login.module.css";
+import styles from "./cadastro.module.css";
 import { CircularProgress, Grid } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Layout } from "@app/components/common/layout/Layout";
@@ -18,7 +18,7 @@ export const Cadastro: NextPage = () => {
 
   let formFields: Map<string, FormFieldState> = new Map([
     [
-      "email",
+      "titulo",
       {
         value: "",
         validators: [Validator.required],
@@ -27,7 +27,7 @@ export const Cadastro: NextPage = () => {
       },
     ],
     [
-      "senha",
+      "local",
       {
         value: "",
         validators: [Validator.required],
@@ -35,16 +35,75 @@ export const Cadastro: NextPage = () => {
         errorMessage: "",
       },
     ],
+    [
+        "dataInicio",
+        {
+          value: new Date(),
+          validators: [Validator.required],
+          valid: true,
+          errorMessage: "",
+        },
+      ],
+      [
+        "horarioInicio",
+        {
+          value: "",
+          validators: [Validator.required],
+          valid: true,
+          errorMessage: "",
+        },
+      ],
+      [
+        "dataFim",
+        {
+          value: "",
+          validators: [Validator.required],
+          valid: true,
+          errorMessage: "",
+        },
+      ],
+      [
+        "horarioFim",
+        {
+          value: "",
+          validators: [Validator.required],
+          valid: true,
+          errorMessage: "",
+        },
+      ],
+      [
+        "tipo",
+        {
+          value: "",
+          validators: [Validator.required],
+          valid: true,
+          errorMessage: "",
+        },
+      ],
+      [
+        "descricao",
+        {
+          value: "",
+          validators: [Validator.required],
+          valid: true,
+          errorMessage: "",
+        },
+      ],
   ]);
+
   const [formState, setFormState] = useState(formFields);
-  const [loginSuccess, setLoginSuccess] = useState(true);
+  const [cadastroSuccess, setCadastroSuccess] = useState(true);
 
   const formInstance = new CustomForm(formState, setFormState);
+
+  const onCadastroSubmit = (e) => {
+    console.log(formInstance.getValue('titulo'));
+  }
 
 
   return (
     <Layout>
-      <div className={styles.login}>
+      <div className={styles.cadastro}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item md={6} xs={0}>
             <div className={styles.imagem}>
@@ -54,19 +113,19 @@ export const Cadastro: NextPage = () => {
                 width="0"
                 height="0"
                 sizes="100vw"
-                style={{ width: "50%", height: "auto" }}
+                style={{ width: "70%", height: "auto" }}
               />
             </div>
           </Grid>
           <Grid item xs={12} md={6}>
-            <div className={styles.login__form}>
+            <div className={styles.cadastro__form}>
               <h2>Cadastro</h2>
               {isLoading ? (
                 <div className="loader">
                   <CircularProgress />
                 </div>
               ) : (
-                <CadastroForm isLoginSuccess={false} onLoginSubmit={undefined} formInstance={formInstance} /> 
+                <CadastroForm isCadastroSuccess={cadastroSuccess} onCadastroSubmit={onCadastroSubmit} formInstance={formInstance} /> 
               )}
             </div>
           </Grid>
