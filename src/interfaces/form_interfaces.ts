@@ -1,5 +1,5 @@
 export interface FormFieldState { 
-    value?: string; 
+    value?: string | Date; 
     validators?: any[]; 
     valid?: boolean; 
     errorMessage?: string 

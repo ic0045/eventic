@@ -1,4 +1,4 @@
-import { Alert, Button, Grid, TextField, Select } from "@mui/material";
+import { Alert, Button, Grid, TextField, Select, MenuItem } from "@mui/material";
 import styles from "./cadastroform.module.css";
 import { CustomForm } from "@app/helpers/CustomForm";
 import { FunctionComponent } from "react";
@@ -95,10 +95,12 @@ export const CadastroForm: FunctionComponent<CadastroFormProps> = (
         <Select
           label="Tipo"
           error={!props.formInstance.isValid("tipo")}
-          id="tipo"
+          name="tipo"
           value={props.formInstance.getValue("tipo")}
           onChange={props.formInstance.onInputChange}
-        ></Select>
+        >
+          <MenuItem value="Teste">Teste</MenuItem>
+        </Select>
         <TextField
           label="Descrição"
           placeholder="Descrição"

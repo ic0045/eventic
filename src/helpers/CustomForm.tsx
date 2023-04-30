@@ -48,11 +48,11 @@ export class CustomForm{
         const newValue = e.target.value;
         const currentValue = this.formState.get(e.target.id);
         let formStateMap = new Map(this.formState);
-        formStateMap.set(e.target.id, {...currentValue, value: newValue})
+        formStateMap.set(e.target.id ?? e.target.name, {...currentValue, value: newValue})
         this.setFormState(formStateMap)
     }
 
-    getValue = (fieldId: string): string => {
+    getValue = (fieldId: string): string | Date => {
         return this.formState.get(fieldId)?.value ?? ""
     }
 
