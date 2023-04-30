@@ -51,7 +51,9 @@ export const CadastroForm: FunctionComponent<CadastroFormProps> = (
                 format="DD/MM/YYYY"
                 slotProps={{ textField: { className: styles.dataInput } }}
                 defaultValue={dayjs(new Date())}
-                onChange={props.formInstance.onInputChange}
+                onChange={(value) => {
+                  props.formInstance.onDateInputChange(value, 'dataInicio');
+                }}
               />
             </Grid>
             <Grid item className={styles.dataItem}>

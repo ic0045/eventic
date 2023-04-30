@@ -1,17 +1,20 @@
-import { NextPage } from "next";
-import styles from "./cadastro.module.css";
-import { CircularProgress, Grid } from "@mui/material";
-import { useEffect, useState } from "react";
-import { Layout } from "@app/components/common/layout/Layout";
-import Image from "next/image";
-import { signIn, useSession, signOut } from "next-auth/react";
-import { useRouter } from "next/router";
-import { CadastroForm } from "./cadastro/CadastroForm";
 import { CustomForm } from "@app/helpers/CustomForm";
 import { Validator } from "@app/helpers/Validator";
 import { FormFieldState } from "@app/interfaces/form_interfaces";
+import { Grid, CircularProgress } from "@mui/material";
+import styles from "./cadastro.module.css";
+import Image from "next/image";
+import { width, height } from "@mui/system";
+import { NextPage } from "next";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import { Layout } from "@app/components/common/layout/Layout";
+import { CadastroForm } from "@app/components/cadastro/CadastroForm";
+import { EventoAPI } from "@app/apis/EventoAPI";
 
-export const Cadastro: NextPage = () => {
+
+const Cadastro: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const session = useSession();
   const router = useRouter();
@@ -39,7 +42,7 @@ export const Cadastro: NextPage = () => {
         "dataInicio",
         {
           value: new Date(),
-          validators: [Validator.required],
+          validators: [],
           valid: true,
           errorMessage: "",
         },
@@ -48,7 +51,7 @@ export const Cadastro: NextPage = () => {
         "horarioInicio",
         {
           value: "",
-          validators: [Validator.required],
+          validators: [],
           valid: true,
           errorMessage: "",
         },
@@ -96,8 +99,21 @@ export const Cadastro: NextPage = () => {
 
   const formInstance = new CustomForm(formState, setFormState);
 
-  const onCadastroSubmit = (e) => {
-    console.log(formInstance.getValue('titulo'));
+  const onCadastroSubmit = (e: Event) => {
+
+    EventoAPI.cadastrar({
+      titulo: formInstance.getValue('titulo') as string,
+      tipo: formInstance.getValue('tipo') as string,
+      descricao: formInstance.getValue('titulo') as string,
+      localizacao: formInstance.getValue('local') as string,
+      data_inicial: (formInstance.getValue('dataInicio') as Date).toDateString()
+    }).catch((error) => {
+      console.log(error)
+    }).then((response) => {
+      console.log(response)
+    })
+    
+    console.log();
   }
 
 
@@ -134,3 +150,5 @@ export const Cadastro: NextPage = () => {
     </Layout>
   );
 };
+
+export default Cadastro;
