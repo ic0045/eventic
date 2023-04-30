@@ -2,7 +2,6 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { CategoriaRepo, EventoRepo, UsuarioRepo } from '@app/database'
 import { validateNotNullFields } from './util';
 import { Evento } from '@app/entities/Evento';
-import { link } from 'fs';
 
 export default async function handler(
     req : NextApiRequest,
@@ -12,17 +11,20 @@ export default async function handler(
         const [valid, errorMsg] = validateNotNullFields(req.body);
         if(valid){
             try{
+                //(Reminder) obter usuário da sessão
                 let usuario = await UsuarioRepo.findOne({where: {id: req.body.usuario_id}});
 
                 if(usuario != null){
+                    //(Reminder) verificar se usuário na sessão não é visitante
                     let categoria = null;
-                    if(req.body.categoria_id)
+                    if(req.body.categoria_id) //Categoria é opcional, pode se trocar por 'tipo' 
                         categoria = await CategoriaRepo.findOne({where: {id:req.body.categoria_id}});
                     
                     const eventoData = {...req.body,categoria: categoria, criador: usuario};
                     let evento = Evento.createFromObj(eventoData);
-                    evento = await EventoRepo.create(evento);
-                    res.status(200).json({evento});
+
+                    evento = await EventoRepo.save(evento);
+                    res.status(200).json(evento);
 
                 }else{ res.status(400).json("ID de criador de evento inválido.")}
             }catch(e){console.log(e); res.status(500).json({e})}
@@ -79,7 +81,7 @@ export default async function handler(
                     if(categoria_id){
                         let categoria = await CategoriaRepo.findOne({where: {id:categoria_id}});
                         if(categoria)
-                            evento.categoria = [categoria]; //REMINDER: Não está atulizando
+                            evento.categoria = categoria;
                     }
                     evento.updatedAt = new Date();
 
@@ -90,7 +92,7 @@ export default async function handler(
         }else{ res.status(400).json("Falta id de evento.")}
     }
 
-    else if(req.method === 'POST'){
+    else if(req.method === 'DELETE'){
         const {id} = req.query;
         if(id){
             try{

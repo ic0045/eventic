@@ -1,33 +1,23 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { UsuarioRepo } from '@app/database'
-import { Usuario } from '@app/entities/Usuario'
-import { validateNotNullFields} from './util'
-import { hashPassword } from '../login/validator'
-import { AcessLevel } from '../auth/auth'
+import UsuarioValidator from '../util';
+import { hashPassword } from '../../auth/auth';
 
+/*
+*   Rotas para gerência de usuários.
+*   Restrição:       Usuário logado
+*   Nível de acesso: Admin
+*/
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<any>
-) {
-    if(req.method === 'POST'){
-        const [valid, errorMsg] = validateNotNullFields(req.body);
-        if(valid){
-            try{
-                const existingUsuario = await UsuarioRepo.findOne(
-                    {where: {email: req.body.email.toLocaleLowerCase()}});
-                if(!existingUsuario){
-                    let usuario = Usuario.createFromObj(req.body);
-                    usuario.permissao = AcessLevel.visitante; //admins não são criados por esta rota
-                    usuario.senha = await hashPassword(usuario.senha);
-                    usuario = await UsuarioRepo.save(usuario);
-                    res.status(200).json({usuario});
-                }
-                else{ res.status(400).json("Já existe um usuario de email: "+req.body.email)}
-            }catch(e){res.status(500).json(e)}
-        }else{ res.status(400).json({errorMsg})}
-    }
-    
-    else if(req.method === 'GET'){
+) { 
+    /*
+    *   Obtém usuários. Inclui eventos cujo usuário é criador.
+    *   Query Params:   id, primeiro_nome, segundo_nome, email, permissao
+    *   Body:           None
+    */
+    if(req.method === 'GET'){
         const {id, primeiro_nome, segundo_nome, email, permissao} = req.query;
         const where : { [key:string]: any} = {};
         
@@ -48,8 +38,16 @@ export default async function handler(
         }catch(e){res.status(500).json(e) }
     }
 
-    else if(req.method === 'PUT'){ //Não altera senha e nem permissão
-        let [valid, errorMsg] = validateNotNullFields(req.body);
+    /*
+    *   Atualiza o perfil de um usuário.
+    *   Query Params:   None
+    *   Body:           (Required): "id", "primeiro_nome","segundo_nome",
+    *                   "email_confirmado","celular","foto_perfil","cpf"
+    *                   "email","permissao"
+    *                   (Optional): "senha"                       
+    */
+    else if(req.method === 'PUT'){
+        let [valid, errorMsg] = UsuarioValidator.validateAdminPutPerfil(req.body);
 
         if(!req.body.id){
             valid = false;
@@ -62,15 +60,18 @@ export default async function handler(
                 if(usuario == null){
                     res.status(400).json(`Não foi encontrado usuário de id: ${req.body.id}`);
                 }else{
-                    const {primeiro_nome, segundo_nome, email, celular,
-                        cpf, foto_perfil} = req.body;
 
-                    if(primeiro_nome) usuario.primeiroNome = primeiro_nome;
-                    if(segundo_nome) usuario.segundoNome = segundo_nome;
-                    if(celular)usuario.celular = celular;
-                    if(email) usuario.email = email;
-                    if(cpf) usuario.cpf = cpf;
-                    if(foto_perfil) usuario.fotoPerfil = foto_perfil;
+                    const {primeiro_nome, segundo_nome, celular,
+                        cpf, foto_perfil, senha, email, permissao} = req.body;
+
+                    usuario.primeiroNome = primeiro_nome;
+                    usuario.segundoNome = segundo_nome;
+                    usuario.celular = celular;
+                    usuario.email = email;
+                    usuario.cpf = cpf;
+                    usuario.fotoPerfil = foto_perfil;
+                    usuario.permissao = permissao;
+                    if(senha) usuario.senha = await hashPassword(senha);
                     usuario.updatedAt = new Date();
 
                     usuario = await UsuarioRepo.save(usuario);

@@ -2,16 +2,16 @@ import { NextPage } from "next";
 import styles from "./login.module.css";
 import { CircularProgress, Grid } from "@mui/material";
 import { useState } from "react";
-import { LoginAPI } from "@app/apis/LoginAPI";
+// import { LoginAPI } from "@app/apis/LoginAPI";
 import { CustomForm } from "@app/helpers/CustomForm";
 import { Validator } from "@app/helpers/Validator";
 import { FormFieldState } from "@app/interfaces/form_interfaces";
-import { LoginForm } from "@app/components/login/LoginForm";
+import LoginForm from "@app/components/loginform";
 import { Layout } from "@app/components/common/layout/Layout";
 import Image from "next/image";
 import { signIn } from "next-auth/react";
 
-export const Login: NextPage = () => {
+const Login: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   let formFields: Map<string, FormFieldState> = new Map([
@@ -39,7 +39,7 @@ export const Login: NextPage = () => {
 
   const formInstance = new CustomForm(formState, setFormState);
 
-  const onLoginSubmit = (e: any) => {
+  const onLoginSubmit = () => {
     if (!formInstance.validateForm()) {
       return;
     }
@@ -47,22 +47,23 @@ export const Login: NextPage = () => {
     setIsLoading(true);
     setLoginSuccess(true);
 
-    signIn("credentials", {
+    signIn('credentials',{
       email: formInstance.getValue("email"),
       password: formInstance.getValue("senha"),
-    }).catch((erro) => {
+      callbackUrl: 'http://localhost:3000/home'
+    }).catch(() => {
       setLoginSuccess(false);
     })
-    .then((response) => { console.log(response)})
+    .then(() => {})
     .finally(() => {
       setIsLoading(false);
     });
-    
+
     // LoginAPI.login({
     //   email: formInstance.getValue("email"),
     //   password: formInstance.getValue("senha"),
     // })
-
+      
   };
 
   return (
@@ -102,3 +103,5 @@ export const Login: NextPage = () => {
     </Layout>
   );
 };
+
+export default Login

@@ -1,4 +1,4 @@
-import styles from './eventcard.module.css'
+// import styles from './eventcard.module.css'
 import { Box, Card, CardMedia, CardContent, Typography, IconButton } from '@mui/material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';

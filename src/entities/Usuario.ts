@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Relation, ValueTransformer, Unique } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Relation, Unique } from "typeorm";
 import { Evento } from "@app/entities/Evento"
 import { Inscricao } from "@app/entities/Inscricao";
 import { PreferenciasUsuario } from "@app/entities/PreferenciasUsuario";

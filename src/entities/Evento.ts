@@ -47,8 +47,8 @@ export class Evento {
     evento.dataInicial = obj.data_inicial;
     evento.datafinal = obj.data_final;
     if(obj.categoria)
-      evento.categoria = [obj.categoria];
-    evento.criador = [obj.criador];
+      evento.categoria = obj.categoria;
+    evento.criador = obj.criador;
     evento.createdAt = new Date();
     return evento;
   }
@@ -104,14 +104,16 @@ export class Evento {
     name: "criador_id", 
     referencedColumnName: "id", 
     foreignKeyConstraintName: "usuario_fk" }])
-  criador: Relation<Usuario>[];
+  //@ts-ignore
+  criador: Relation<Usuario>;
 
   @ManyToOne(() => Categoria, (categoria) => categoria.eventos)
   @JoinColumn([{ 
     name: "categoria_id", 
     referencedColumnName: "id",
     foreignKeyConstraintName: "categoria_fk" }])
-  categoria: Relation<Categoria>[];
+  //@ts-ignore
+  categoria: Relation<Categoria>;
 
   @OneToMany(() => Inscricao, (inscricao) => inscricao.evento)
   inscricoes: Relation<Inscricao>[];
