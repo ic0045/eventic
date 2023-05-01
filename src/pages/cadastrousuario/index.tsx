@@ -44,7 +44,7 @@ const CadastroUsuario: NextPage = () => {
         "email",
         {
           value: "",
-          validators: [],
+          validators: [Validator.required],
           valid: true,
           errorMessage: "",
         },
@@ -53,7 +53,7 @@ const CadastroUsuario: NextPage = () => {
         "senha",
         {
           value: "",
-          validators: [],
+          validators: [Validator.required],
           valid: true,
           errorMessage: "",
         },
@@ -103,6 +103,12 @@ const CadastroUsuario: NextPage = () => {
 
   const onCadastroSubmit = (e: Event) => {
 
+    if (!formInstance.validateForm()) {
+      return;
+    }
+
+    setIsLoading(true);
+    setCadastroSuccess(true);
     UsuarioAPI.cadastrar({
       primeiro_nome: formInstance.getValue('nome') as string,
       segundo_nome: formInstance.getValue('sobrenome') as string,
@@ -110,12 +116,13 @@ const CadastroUsuario: NextPage = () => {
       senha: formInstance.getValue('senha') as string,
       permissao: "visitante"
     }).catch((error) => {
-      console.log(error)
+      setCadastroSuccess(false);
     }).then((response) => {
-      console.log(response)
       if(response){
         router.push('/login')
       }
+    }).finally(() =>{
+      setIsLoading(false);
     })
     
     console.log();
