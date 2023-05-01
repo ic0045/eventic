@@ -33,7 +33,6 @@ export default async function handler(
                     else{
                         usuario.primeiroNome = req.body.primeiro_nome;
                         usuario.segundoNome = req.body.segundo_nome;
-                        usuario.emailConfirmado = req.body.email_confirmado;
                         usuario.celular = req.body.celular;
                         usuario.fotoPerfil = req.body.foto_perfil;
                         usuario.cpf = req.body.cpf;

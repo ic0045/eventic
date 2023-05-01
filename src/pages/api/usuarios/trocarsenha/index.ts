@@ -19,21 +19,16 @@ export default async function handler(
             res.status(401).send("É necessário estar autenticado.");
         else{
             let valid = UsuarioValidator.validatePassword(req.body.senha);
-            let errorMsg = "";
-            if(!req.body.id){
-                valid = false;
-                errorMsg = "Atributo pendente: id.";
-            }
             if(valid){
                 try{
-                    const user = await UsuarioRepo.findOne({where: {id: req.body.id}});
+                    const user = await UsuarioRepo.findOne({where: {id: token.id}});
                     if (user) {
                         user.senha = await hashPassword(req.body.senha);
                         await UsuarioRepo.save(user);
                         res.status(200).json("Senha alterada com sucesso");
-                    } else { res.status(400).json("Nenhum usuário encontrado para o id: " + req.body.id) }
+                    } else { res.status(400).json("Nenhum usuário encontrado para o id: " + token.id) }
                 } catch (e) { res.status(500).json(e) }
-            }else{res.status(400).send(errorMsg + " Senha inválida.")}
+            }else{res.status(400).send(" Senha inválida.")}
         }       
     }
 }

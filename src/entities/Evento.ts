@@ -11,31 +11,13 @@ import { Usuario } from "@app/entities/Usuario";
 import { Inscricao } from "@app/entities/Inscricao";
 import { Categoria } from "@app/entities/Categoria";
 
-/*
-* Tipo do corpo de requisição para criação de evento
-*/
-type CreationReqBody = {
-  descricao: string,
-  localizacao: string,
-  titulo: string,
-  imagem_url: string,
-  tipo: string | null,
-  link_imagem:  string | null,
-  link_titulo: string | null,
-  link_mais_informacoes: string | null,
-  data_inicial: Date,
-  data_final: Date | null,
-  categoria: Categoria | null,
-  criador: Usuario
-}
-
 @Entity("evento", { schema: "public" })
 export class Evento {
 
   /**
   * Cria Evento a partir de objeto
   */
-  public static createFromObj(obj : CreationReqBody) : Evento{
+  public static createFromObj(obj : any) : Evento{
     const evento = new Evento();
     evento.titulo = obj.titulo;
     evento.descricao = obj.descricao;
