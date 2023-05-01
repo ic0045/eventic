@@ -43,7 +43,7 @@ const CadastroUsuario: NextPage = () => {
     [
         "email",
         {
-          value: dayjs(new Date()),
+          value: "",
           validators: [],
           valid: true,
           errorMessage: "",
