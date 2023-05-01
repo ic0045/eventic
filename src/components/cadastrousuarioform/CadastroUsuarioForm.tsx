@@ -69,7 +69,7 @@ export const CadastroUsuarioForm: FunctionComponent<
           label="Senha"
           type="password"
         />
-        <TextField
+        {/* <TextField
           error={!props.formInstance.isValid("celular")}
           id="celular"
           value={props.formInstance.getValue("celular")}
@@ -92,7 +92,7 @@ export const CadastroUsuarioForm: FunctionComponent<
           onChange={props.formInstance.onInputChange}
           helperText={props.formInstance.getErrorMessage("cep")}
           label="CEP"
-        />
+        /> */}
         <div className={styles.data}>
           <h4>Upload de imagem</h4>
           <input type="file" className={styles.fileInput} />

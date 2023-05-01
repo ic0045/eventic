@@ -13,6 +13,7 @@ import { Layout } from "@app/components/common/layout/Layout";
 import { EventoAPI } from "@app/apis/EventoAPI";
 import dayjs from "dayjs";
 import { CadastroUsuarioForm } from "@app/components/cadastrousuarioform/CadastroUsuarioForm";
+import { UsuarioAPI } from "@app/apis/UsuarioAPI";
 
 
 const CadastroUsuario: NextPage = () => {
@@ -22,7 +23,7 @@ const CadastroUsuario: NextPage = () => {
 
   let formFields: Map<string, FormFieldState> = new Map([
     [
-      "titulo",
+      "nome",
       {
         value: "",
         validators: [Validator.required],
@@ -31,7 +32,7 @@ const CadastroUsuario: NextPage = () => {
       },
     ],
     [
-      "local",
+      "sobrenome",
       {
         value: "",
         validators: [Validator.required],
@@ -40,7 +41,7 @@ const CadastroUsuario: NextPage = () => {
       },
     ],
     [
-        "dataInicio",
+        "email",
         {
           value: dayjs(new Date()),
           validators: [],
@@ -49,7 +50,7 @@ const CadastroUsuario: NextPage = () => {
         },
       ],
       [
-        "horarioInicio",
+        "senha",
         {
           value: "",
           validators: [],
@@ -58,7 +59,7 @@ const CadastroUsuario: NextPage = () => {
         },
       ],
       [
-        "dataFim",
+        "celular",
         {
           value: "",
           validators: [Validator.required],
@@ -67,7 +68,7 @@ const CadastroUsuario: NextPage = () => {
         },
       ],
       [
-        "horarioFim",
+        "cpf",
         {
           value: "",
           validators: [Validator.required],
@@ -76,7 +77,7 @@ const CadastroUsuario: NextPage = () => {
         },
       ],
       [
-        "tipo",
+        "cep",
         {
           value: "",
           validators: [Validator.required],
@@ -102,18 +103,19 @@ const CadastroUsuario: NextPage = () => {
 
   const onCadastroSubmit = (e: Event) => {
 
-    EventoAPI.cadastrar({
-      titulo: formInstance.getValue('titulo') as string,
-      tipo: formInstance.getValue('tipo') as string,
-      descricao: formInstance.getValue('titulo') as string,
-      localizacao: formInstance.getValue('local') as string,
-      data_inicial: (formInstance.getValue('dataInicio') as dayjs.Dayjs).toString(),
-      usuario_id: session.data?.user.id ?? "1",
-      imagem_url: "teste"
+    UsuarioAPI.cadastrar({
+      primeiro_nome: formInstance.getValue('nome') as string,
+      segundo_nome: formInstance.getValue('sobrenome') as string,
+      email: formInstance.getValue('email') as string,
+      senha: formInstance.getValue('senha') as string,
+      permissao: "visitante"
     }).catch((error) => {
       console.log(error)
     }).then((response) => {
       console.log(response)
+      if(response){
+        router.push('/login')
+      }
     })
     
     console.log();
