@@ -5,7 +5,7 @@ export class EventoAPI {
 
     static async cadastrar(evento: EventoPostRequest){
         const response = await api.request({
-            url: '/eventos',
+            url: '/api/eventos',
             method: 'POST',
             data: evento
         })
