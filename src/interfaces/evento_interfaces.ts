@@ -10,6 +10,7 @@ export interface EventoPostRequest {
     link_imagem?: string,
     link_titulo?: string,
     tipo: string,
+    usuario_id: string,
     link_mais_informacoes?: string,
     categoria_id?: number    
 }

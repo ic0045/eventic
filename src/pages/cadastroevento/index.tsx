@@ -2,7 +2,7 @@ import { CustomForm } from "@app/helpers/CustomForm";
 import { Validator } from "@app/helpers/Validator";
 import { FormFieldState } from "@app/interfaces/form_interfaces";
 import { Grid, CircularProgress } from "@mui/material";
-import styles from "./cadastro.module.css";
+import styles from "./cadastroevento.module.css";
 import Image from "next/image";
 import { width, height } from "@mui/system";
 import { NextPage } from "next";
@@ -10,11 +10,12 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { Layout } from "@app/components/common/layout/Layout";
-import { CadastroForm } from "@app/components/cadastro/CadastroForm";
+import { CadastroEventoForm } from "@app/components/cadastro/CadastroEventoForm";
 import { EventoAPI } from "@app/apis/EventoAPI";
+import dayjs from "dayjs";
 
 
-const Cadastro: NextPage = () => {
+const CadastroEvento: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const session = useSession();
   const router = useRouter();
@@ -41,7 +42,7 @@ const Cadastro: NextPage = () => {
     [
         "dataInicio",
         {
-          value: new Date(),
+          value: dayjs(new Date()),
           validators: [],
           valid: true,
           errorMessage: "",
@@ -106,7 +107,9 @@ const Cadastro: NextPage = () => {
       tipo: formInstance.getValue('tipo') as string,
       descricao: formInstance.getValue('titulo') as string,
       localizacao: formInstance.getValue('local') as string,
-      data_inicial: (formInstance.getValue('dataInicio') as Date).toDateString()
+      data_inicial: (formInstance.getValue('dataInicio') as dayjs.Dayjs).toString(),
+      usuario_id: session.data?.user.id ?? "1",
+      imagem_url: "teste"
     }).catch((error) => {
       console.log(error)
     }).then((response) => {
@@ -135,13 +138,13 @@ const Cadastro: NextPage = () => {
           </Grid>
           <Grid item xs={12} md={6}>
             <div className={styles.cadastro__form}>
-              <h2>Cadastro</h2>
+              <h2>Cadastrar Evento</h2>
               {isLoading ? (
                 <div className="loader">
                   <CircularProgress />
                 </div>
               ) : (
-                <CadastroForm isCadastroSuccess={cadastroSuccess} onCadastroSubmit={onCadastroSubmit} formInstance={formInstance} /> 
+                <CadastroEventoForm isCadastroSuccess={cadastroSuccess} onCadastroSubmit={onCadastroSubmit} formInstance={formInstance} /> 
               )}
             </div>
           </Grid>
@@ -151,4 +154,4 @@ const Cadastro: NextPage = () => {
   );
 };
 
-export default Cadastro;
+export default CadastroEvento;

@@ -1,19 +1,19 @@
 import { Alert, Button, Grid, TextField, Select, MenuItem } from "@mui/material";
-import styles from "./cadastroform.module.css";
+import styles from "./cadastroeventoform.module.css";
 import { CustomForm } from "@app/helpers/CustomForm";
 import { FunctionComponent } from "react";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import dayjs from 'dayjs'
 
-interface CadastroFormProps {
+interface CadastroEventoFormProps {
   formInstance: CustomForm;
   isCadastroSuccess: boolean;
   onCadastroSubmit: any;
 }
 
-export const CadastroForm: FunctionComponent<CadastroFormProps> = (
-  props: CadastroFormProps
+export const CadastroEventoForm: FunctionComponent<CadastroEventoFormProps> = (
+  props: CadastroEventoFormProps
 ) => {
   return (
     <>
@@ -58,11 +58,14 @@ export const CadastroForm: FunctionComponent<CadastroFormProps> = (
             </Grid>
             <Grid item className={styles.dataItem}>
               <TimePicker
-                label="Horário"
+                label="Horário 2"
                 format="hh:mm"
                 slotProps={{ textField: { className: styles.dataInput } }}
-                value={props.formInstance.getValue("horarioInicio")}
-                onChange={props.formInstance.onInputChange}
+                value={props.formInstance.getValue("dataInicio")}
+                onChange={(value) => {
+                  console.log(value);
+                  props.formInstance.onDateInputChange(dayjs(value), 'dataInicio');
+                }}
               />
             </Grid>
           </Grid>
