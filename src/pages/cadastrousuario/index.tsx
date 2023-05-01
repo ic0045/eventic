@@ -2,7 +2,7 @@ import { CustomForm } from "@app/helpers/CustomForm";
 import { Validator } from "@app/helpers/Validator";
 import { FormFieldState } from "@app/interfaces/form_interfaces";
 import { Grid, CircularProgress } from "@mui/material";
-import styles from "./cadastroevento.module.css";
+import styles from "./cadastrousuario.module.css";
 import Image from "next/image";
 import { width, height } from "@mui/system";
 import { NextPage } from "next";
@@ -10,12 +10,12 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { Layout } from "@app/components/common/layout/Layout";
-import { CadastroEventoForm } from "@app/components/cadastroeventoform/CadastroEventoForm";
 import { EventoAPI } from "@app/apis/EventoAPI";
 import dayjs from "dayjs";
+import { CadastroUsuarioForm } from "@app/components/cadastrousuarioform/CadastroUsuarioForm";
 
 
-const CadastroEvento: NextPage = () => {
+const CadastroUsuario: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const session = useSession();
   const router = useRouter();
@@ -127,7 +127,7 @@ const CadastroEvento: NextPage = () => {
           <Grid item md={6} xs={0}>
             <div className={styles.imagem}>
               <Image
-                src="/pana.png"
+                src="/amico.png"
                 alt="login"
                 width="0"
                 height="0"
@@ -138,13 +138,13 @@ const CadastroEvento: NextPage = () => {
           </Grid>
           <Grid item xs={12} md={6}>
             <div className={styles.cadastro__form}>
-              <h2>Cadastrar Evento</h2>
+              <h2>Cadastrar Usuario</h2>
               {isLoading ? (
                 <div className="loader">
                   <CircularProgress />
                 </div>
               ) : (
-                <CadastroEventoForm isCadastroSuccess={cadastroSuccess} onCadastroSubmit={onCadastroSubmit} formInstance={formInstance} /> 
+                <CadastroUsuarioForm isCadastroSuccess={cadastroSuccess} onCadastroSubmit={onCadastroSubmit} formInstance={formInstance} /> 
               )}
             </div>
           </Grid>
@@ -154,4 +154,4 @@ const CadastroEvento: NextPage = () => {
   );
 };
 
-export default CadastroEvento;
+export default CadastroUsuario;
