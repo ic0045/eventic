@@ -26,13 +26,13 @@ export const Header: FunctionComponent = () => {
         {session ? (
           <div className={styles.header__usuario}>
             <Image
-              src="/avatar.png"
+              src={session.user.fotoPerfil ??  "/avatar.png" } 
               alt="avatar"
               width="30"
               height="30"
               style={{ borderRadius: "5rem", marginRight: "0.5rem" }}
             />
-            <p>Cristhian Carvalho</p>
+            {`${session.user.primeiroNome} ${session.user.segundoNome}`}
           </div>
         ) : (
           <div className={styles.header__login}>
@@ -45,6 +45,7 @@ export const Header: FunctionComponent = () => {
                 backgroundColor: "#76D104",
                 marginLeft: "0.5rem",
               }}
+              href="/cadastrousuario"
             >
               Cadastro
             </Button>
