@@ -107,7 +107,7 @@ const CadastroEvento: NextPage = () => {
       tipo: formInstance.getValue('tipo') as string,
       descricao: formInstance.getValue('titulo') as string,
       localizacao: formInstance.getValue('local') as string,
-      data_inicial: (formInstance.getValue('dataInicio') as dayjs.Dayjs).toString(),
+      data_inicial: (formInstance.getValue('dataInicio') as dayjs.Dayjs).toISOString(),
       usuario_id: session.data?.user.id ?? "1",
       imagem_url: "teste"
     }).catch((error) => {
