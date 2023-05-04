@@ -1,5 +1,5 @@
 import styles from './home.module.css'
-import { Box, Container, Grid, FormControl, InputLabel, Select, MenuItem, Button, IconButton } from "@mui/material";
+import { Box, Container, Grid, FormControl, InputLabel, Select, MenuItem, TextField, InputAdornment, Button, IconButton } from "@mui/material";
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
@@ -9,6 +9,7 @@ import Typography from "@mui/material/Typography";
 import { useState } from "react";
 import ViewListIcon from '@mui/icons-material/ViewList';
 import ViewModuleIcon from '@mui/icons-material/ViewModule';
+import SearchIcon from '@mui/icons-material/Search';
 
 export default function Home() {
 
@@ -60,12 +61,26 @@ export default function Home() {
                         </Select>
                     </FormControl>
 
-                    <ViewModuleIcon onClick={() => setListView(false)} sx={{ color: 'black', opacity: listView ? 0.5 : 1, alignSelf: 'center', cursor: 'pointer', border: '1px solid', marginRight: '0.5rem', borderColor: listView ? 'gray' : 'black',borderRadius:'4px' }} fontSize="large" />
+                    <ViewModuleIcon onClick={() => setListView(false)} sx={{ color: 'black', opacity: listView ? 0.5 : 1, alignSelf: 'center', cursor: 'pointer', border: '1px solid', marginRight: '0.5rem', borderColor: listView ? 'gray' : 'black', borderRadius: '4px' }} fontSize="large" />
 
-                    <ViewListIcon onClick={() => setListView(true)} sx={{ color: 'black', opacity: listView ? 1 : 0.5, alignSelf: 'center', cursor: 'pointer', border: '1px solid', marginRight: '0.5rem', borderColor: listView ? 'black' : 'gray' ,borderRadius:'4px'}} fontSize="large" />
+                    <ViewListIcon onClick={() => setListView(true)} sx={{ color: 'black', opacity: listView ? 1 : 0.5, alignSelf: 'center', cursor: 'pointer', border: '1px solid', marginRight: '0.5rem', borderColor: listView ? 'black' : 'gray', borderRadius: '4px' }} fontSize="large" />
 
                 </Box>
 
+                <TextField 
+                    sx={{margin:'2rem auto'}}
+                    fullWidth
+                    placeholder='Pesquisar eventos e atividades'
+                    id="input-with-icon-textfield"
+                    InputProps={{
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <SearchIcon />
+                            </InputAdornment>
+                        ),
+                    }}
+                    variant="outlined"
+                />
 
 
                 <Box>
