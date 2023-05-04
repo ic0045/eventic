@@ -14,20 +14,12 @@ export default function EventCard() {
         <Card sx={{ display: 'flex' }}>
             <CardMedia
                 component="img"
-                sx={{ width: 150, height: 150, objectFit: 'contain' }}
+                sx={{ width: 150, height: 150, objectFit: 'contain', margin: 'auto' }}
                 image="/images/evento1.jpg"
                 alt="evento1"
             />
             <Box >
                 <CardContent>
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                        <IconButton onClick={() => setSubscribed(!subscribed)} aria-label="notification">
-                            <NotificationsActiveIcon sx={subscribed ? { color: '#FFCB00' } : undefined} />
-                        </IconButton>
-                        <IconButton aria-label="share">
-                            <ShareIcon />
-                        </IconButton>
-                    </Box>
                     <Typography component="div" variant="h5">
                         Simpósio Nacional
                     </Typography>
@@ -53,6 +45,14 @@ export default function EventCard() {
                     </Box>
 
                 </CardContent>
+                <Box mb={1} sx={{ display: 'flex', justifyContent: 'flex-end'}}>
+                    <IconButton onClick={() => setSubscribed(!subscribed)} aria-label="notification">
+                        <NotificationsActiveIcon fontSize='small' sx={subscribed ? { color: '#FFCB00' } : undefined} />
+                    </IconButton>
+                    <IconButton aria-label="share">
+                        <ShareIcon fontSize='small' />
+                    </IconButton>
+                </Box>
             </Box>
 
         </Card>
