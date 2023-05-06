@@ -22,7 +22,9 @@ function EventDetails() {
         <Grid container spacing={3}>
           <Grid item md={4}>
             <Box sx={{ boxShadow: 0 }}>
-              <img
+              <Image
+                width={600}
+                height={600}
                 className={styles.img}
                 src='/images/evento1.jpg'
                 alt='Evento 1'

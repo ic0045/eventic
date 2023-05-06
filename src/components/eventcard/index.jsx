@@ -6,40 +6,40 @@ import ShareIcon from '@mui/icons-material/Share';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import { useState } from "react";
 
-export default function EventCard() {
+export default function EventCard(props) {
 
     const [subscribed, setSubscribed] = useState(false)
 
     return (
-        <Card sx={{ display: 'flex' }}>
+        <Card sx={{ display: 'flex' , maxWidth:'500px' }}>
             <CardMedia
                 component="img"
                 sx={{ width: 150, height: 150, objectFit: 'contain', margin: 'auto' }}
-                image="/images/evento1.jpg"
-                alt="evento1"
+                image={props.image}
+                alt="evento-image"
             />
             <Box >
                 <CardContent>
                     <Typography component="div" variant="h5">
-                        Simpósio Nacional
+                        {props.title}
                     </Typography>
 
                     <Box mt={2} sx={{ display: 'flex', gap: '1rem' }}>
                         <Box>
                             <Typography variant="h5" align="center" >
-                                1
+                                {props.day}
                             </Typography>
                             <Typography variant="body1" gutterBottom align="center" >
-                                Abril
+                                {props.month}
                             </Typography>
                         </Box>
                         <Box>
 
                             <Typography variant="subtitle1" color="text.secondary" component="div">
-                                <LocationOnIcon fontSize='4px' /> Instituto de Matemática
+                                <LocationOnIcon fontSize='4px' /> {props.locaction}
                             </Typography>
                             <Typography variant="subtitle1" color="text.secondary" component="div">
-                                <AccessTimeIcon fontSize='4px' /> Sábado, 14h
+                                <AccessTimeIcon fontSize='4px' /> {props.time}
                             </Typography>
                         </Box>
                     </Box>

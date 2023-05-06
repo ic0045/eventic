@@ -6,7 +6,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import { useState } from "react";
 
-export default function ListCard() {
+export default function ListCard(props) {
 
     const [subscribed, setSubscribed] = useState(false)
 
@@ -14,22 +14,22 @@ export default function ListCard() {
         <Box m={2} sx={{ display: 'flex', borderRadius: '0.3rem', backgroundColor: 'white', boxShadow: 3,padding:'1rem' }}>
             <Box mr={10} sx={{ alignSelf: 'center' }}>
                 <Typography variant="h5" align="center" >
-                    1
+                    {props.day}
                 </Typography>
                 <Typography variant="body1" gutterBottom align="center" >
-                    Abril
+                    {props.month}
                 </Typography>
             </Box>
 
             <Box>
                 <Typography component="div" variant="h5">
-                    Simpósio Nacional
+                    {props.title}
                 </Typography>
                 <Typography variant="subtitle1" color="text.secondary" component="div">
-                    <LocationOnIcon fontSize='4px' /> Instituto de Matemática
+                    <LocationOnIcon fontSize='4px' /> {props.location}
                 </Typography>
                 <Typography variant="subtitle1" color="text.secondary" component="div">
-                    <AccessTimeIcon fontSize='4px' /> Sábado, 14h
+                    <AccessTimeIcon fontSize='4px' /> {props.time}
                 </Typography>
             </Box>
 

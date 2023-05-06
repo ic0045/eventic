@@ -15,6 +15,15 @@ import SearchIcon from '@mui/icons-material/Search';
 
 export default function Home() {
 
+    const cards = [
+        { id: 0,image: "/images/evento1.jpg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
+        { id: 1,image: "/images/evento1.jpg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
+        { id: 2,image: "/images/evento1.jpg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
+        { id: 3,image: "/images/evento1.jpg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
+        { id: 4,image: "/images/evento1.jpg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
+        { id: 5,image: "/images/evento1.jpg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
+    ]
+
     const [period, setPeriod] = useState(1);
     const [category, setCategory] = useState(1);
 
@@ -31,7 +40,21 @@ export default function Home() {
         <Layout>
             <Container maxWidth="xl" sx={{ marginTop: '5rem' }}>
                 <Box mt={2} sx={{ borderRadius: '0.3rem', backgroundColor: 'white', padding: '1rem', boxShadow: 3 }}>
-                    <Typography variant="h3" mb={3}>Eventos</Typography>
+                    <Typography variant="h3" mb={1}>Eventos</Typography>
+                    <TextField
+                        sx={{ margin: '2rem auto' }}
+                        fullWidth
+                        placeholder='Pesquisar eventos e atividades'
+                        id="input-with-icon-textfield"
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <SearchIcon />
+                                </InputAdornment>
+                            ),
+                        }}
+                        variant="outlined"
+                    />
                     <Box sx={{ display: 'flex', justifyContent: "flex-end" }} ml={5}>
                         <FormControl variant="standard" sx={{ m: 1, minWidth: 150 }}>
                             <InputLabel id="demo-simple-select-label">Período</InputLabel>
@@ -67,23 +90,6 @@ export default function Home() {
                         <ViewListIcon onClick={() => setListView(true)} sx={{ color: 'black', opacity: listView ? 1 : 0.5, alignSelf: 'center', cursor: 'pointer', border: '1px solid', marginRight: '0.5rem', borderColor: listView ? 'black' : 'gray', borderRadius: '4px' }} fontSize="large" />
 
                     </Box>
-
-                    <TextField
-                        sx={{ margin: '2rem auto' }}
-                        fullWidth
-                        placeholder='Pesquisar eventos e atividades'
-                        id="input-with-icon-textfield"
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <SearchIcon />
-                                </InputAdornment>
-                            ),
-                        }}
-                        variant="outlined"
-                    />
-
-
                     <Box>
                         <TabContext value={value}>
                             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -97,26 +103,17 @@ export default function Home() {
                                 <Typography variant="h5" mb={3}>Semana de 2 a 8 de abril</Typography>
                                 {listView ?
                                     <>
-                                        <EventList></EventList>
-                                        <EventList></EventList>
-                                        <EventList></EventList>
-                                        <EventList></EventList>
-
+                                        {cards.map((card) =>
+                                            <EventList key={card.id} title={card.title} day={card.day} month={card.month} location={card.location} time={card.time} />
+                                        )}
                                     </> :
                                     <>
                                         <Grid container spacing={2}>
-                                            <Grid item xl={4} lg={6}>
-                                                <EventCard></EventCard>
-                                            </Grid>
-                                            <Grid item xl={4} lg={6}>
-                                                <EventCard></EventCard>
-                                            </Grid>
-                                            <Grid item xl={4} lg={6}>
-                                                <EventCard></EventCard>
-                                            </Grid>
-                                            <Grid item xl={4} lg={6}>
-                                                <EventCard></EventCard>
-                                            </Grid>
+                                            {cards.map((card) =>
+                                                <Grid key={card.id} item xl={4} lg={6}>
+                                                    <EventCard  image={card.image} title={card.title} day={card.day} month={card.month} location={card.location} time={card.time} />
+                                                </Grid>
+                                            )}
                                         </Grid>
                                     </>}
 
@@ -125,18 +122,17 @@ export default function Home() {
                                 <Typography variant="h5" mb={3}>Semana de 22 a 30 de março</Typography>
                                 {listView ?
                                     <>
-                                        <EventList></EventList>
-                                        <EventList></EventList>
-
+                                        {cards.map((card) =>
+                                            <EventList key={card.id} title={card.title} day={card.day} month={card.month} location={card.location} time={card.time} />
+                                        )}
                                     </> :
                                     <>
                                         <Grid container spacing={2}>
-                                            <Grid item xl={4} lg={6}>
-                                                <EventCard></EventCard>
-                                            </Grid>
-                                            <Grid item xl={4} lg={6}>
-                                                <EventCard></EventCard>
-                                            </Grid>
+                                            {cards.map((card) =>
+                                                <Grid key={card.id} item xl={4} lg={6}>
+                                                    <EventCard image={card.image} title={card.title} day={card.day} month={card.month} location={card.location} time={card.time} />
+                                                </Grid>
+                                            )}
                                         </Grid>
                                     </>}
 
