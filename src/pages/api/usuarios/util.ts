@@ -3,14 +3,14 @@
 */
 export default class UsuarioValidator{
     /*
-    * Campos não nulos da entidade usuário
+    * Campos não nulos para cadastro de usuário
     */
-    static notNullFields = ["primeiro_nome","segundo_nome","email","senha","permissao"]; 
+    static notNullFields = ["primeiro_nome","segundo_nome","email","senha"]; 
    
     /*
     * Campos para corpo de requisição alterar perfil
     */
-    static perfilBodyFields = ["primeiro_nome","segundo_nome","email_confirmado",
+    static perfilBodyFields = ["primeiro_nome","segundo_nome",
     "celular","foto_perfil","cpf"]
    
     /*

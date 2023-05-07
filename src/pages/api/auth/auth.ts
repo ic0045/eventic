@@ -9,11 +9,10 @@ export enum AcessLevel {
     visitante = 'visitante',// eslint-disable-line
 }
 
-const salt = await bcrypt.genSalt(10);
-
 /*
 *  Faz o hash de senha
 */
+const salt = await bcrypt.genSalt(10);
 export function hashPassword(password: string) : Promise<string>{
     return bcrypt.hash(password, salt);
 }

@@ -32,7 +32,8 @@ export class Inscricao {
     referencedColumnName: "id",
     foreignKeyConstraintName: "evento_fk"
   }])
-  evento: Relation<Evento>[];
+  //@ts-ignore
+  evento: Relation<Evento>;
 
   @ManyToOne(() => Usuario, (usuario) => usuario.inscricaos)
   @JoinColumn([{ 
@@ -40,5 +41,6 @@ export class Inscricao {
     referencedColumnName: "id",
     foreignKeyConstraintName: "usuario_fk"
    }])
-  usuario: Relation<Usuario>[];
+   //@ts-ignore
+  usuario: Relation<Usuario>;
 }
