@@ -17,6 +17,7 @@ interface CadastroUsuarioFormProps {
   formInstance: CustomForm;
   isCadastroSuccess: boolean;
   onCadastroSubmit: any;
+  errorMessage: string
 }
 
 export const CadastroUsuarioForm: FunctionComponent<
@@ -25,7 +26,7 @@ export const CadastroUsuarioForm: FunctionComponent<
   return (
     <>
       {!props.isCadastroSuccess && (
-        <Alert severity="error">E-mail e/ou senha inválidos</Alert>
+        <Alert severity="error">{props.errorMessage}</Alert>
       )}
       <div className={styles.cadastro}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
