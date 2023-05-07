@@ -53,18 +53,11 @@ export class CustomForm{
         this.setFormState(formStateMap)
     }
 
-    onDateInputChange = (data: Dayjs | null, id: string) => {
+    onDateInputChange = (data: Dayjs, id: string) => {
         const currentValue = this.formState.get(id);
-        console.log(currentValue?.value);
         let formStateMap = new Map(this.formState);
-        const year = data?.year() ?? 0;
-        const month = data?.month() ?? 0;
-        const day = data?.day() ?? 0;
-        const hour = data?.hour() ?? 0;
-        const minute = data?.minute() ?? 0;
-        const newDate =  data?.isValid() ? dayjs(new Date(year, month, day, hour, minute)) : currentValue?.value as dayjs.Dayjs;
-        formStateMap.set(id, {...currentValue, value: newDate})
-        this.setFormState(formStateMap)
+        formStateMap.set(id, {...currentValue, value: data});
+        this.setFormState(formStateMap);
     }
 
     getValue = (fieldId: string): string | dayjs.Dayjs => {

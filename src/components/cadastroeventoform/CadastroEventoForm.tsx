@@ -1,15 +1,23 @@
-import { Alert, Button, Grid, TextField, Select, MenuItem } from "@mui/material";
+import {
+  Alert,
+  Button,
+  Grid,
+  TextField,
+  Select,
+  MenuItem,
+} from "@mui/material";
 import styles from "./cadastroeventoform.module.css";
 import { CustomForm } from "@app/helpers/CustomForm";
 import { FunctionComponent } from "react";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
-import dayjs from 'dayjs'
+import dayjs from "dayjs";
 
 interface CadastroEventoFormProps {
   formInstance: CustomForm;
   isCadastroSuccess: boolean;
   onCadastroSubmit: any;
+  errorMessage: string;
 }
 
 export const CadastroEventoForm: FunctionComponent<CadastroEventoFormProps> = (
@@ -18,7 +26,7 @@ export const CadastroEventoForm: FunctionComponent<CadastroEventoFormProps> = (
   return (
     <>
       {!props.isCadastroSuccess && (
-        <Alert severity="error">E-mail e/ou senha inválidos</Alert>
+        <Alert severity="error">{props.errorMessage}</Alert>
       )}
       <div className={styles.cadastro}>
         <TextField
@@ -49,22 +57,37 @@ export const CadastroEventoForm: FunctionComponent<CadastroEventoFormProps> = (
               <DatePicker
                 label="Data"
                 format="DD/MM/YYYY"
-                slotProps={{ textField: { className: styles.dataInput } }}
+                slotProps={{
+                  textField: {
+                    className: styles.dataInput,
+                    error: !props.formInstance.isValid("dataInicio"),
+                    helperText: props.formInstance.getErrorMessage("dataInicio"),
+                  },
+                }}
                 defaultValue={dayjs(new Date())}
                 onChange={(value) => {
-                  props.formInstance.onDateInputChange(value, 'dataInicio');
+                  props.formInstance.onDateInputChange(
+                    dayjs(value),
+                    "dataInicio"
+                  );
                 }}
               />
             </Grid>
             <Grid item className={styles.dataItem}>
               <TimePicker
-                label="Horário 2"
-                format="hh:mm"
-                slotProps={{ textField: { className: styles.dataInput } }}
-                value={props.formInstance.getValue("dataInicio")}
+                label="Horário"
+                ampm={false}
+                slotProps={{                   textField: {
+                  className: styles.dataInput,
+                  error: !props.formInstance.isValid("horarioInicio"),
+                  helperText: props.formInstance.getErrorMessage("horarioInicio"),
+                }, }}
+                value={props.formInstance.getValue("horarioInicio")}
                 onChange={(value) => {
-                  console.log(value);
-                  props.formInstance.onDateInputChange(dayjs(value), 'dataInicio');
+                  props.formInstance.onDateInputChange(
+                    dayjs(value),
+                    "horarioInicio"
+                  );
                 }}
               />
             </Grid>
@@ -83,16 +106,23 @@ export const CadastroEventoForm: FunctionComponent<CadastroEventoFormProps> = (
                 format="DD/MM/YYYY"
                 slotProps={{ textField: { className: styles.dataInput } }}
                 value={props.formInstance.getValue("dataFim")}
-                onChange={props.formInstance.onInputChange}
+                onChange={(value) => {
+                  props.formInstance.onDateInputChange(dayjs(value), "dataFim");
+                }}
               />
             </Grid>
             <Grid item className={styles.dataItem}>
               <TimePicker
                 label="Horário"
-                format="hh:mm"
+                ampm={false}
                 slotProps={{ textField: { className: styles.dataInput } }}
                 value={props.formInstance.getValue("horarioFim")}
-                onChange={props.formInstance.onInputChange}
+                onChange={(value) => {
+                  props.formInstance.onDateInputChange(
+                    dayjs(value),
+                    "horarioFim"
+                  );
+                }}
               />
             </Grid>
           </Grid>
@@ -104,7 +134,9 @@ export const CadastroEventoForm: FunctionComponent<CadastroEventoFormProps> = (
           value={props.formInstance.getValue("tipo")}
           onChange={props.formInstance.onInputChange}
         >
-          <MenuItem value="Teste">Teste</MenuItem>
+          <MenuItem value="Categoria1" selected={true}>
+            Categoria1
+          </MenuItem>
         </Select>
         <TextField
           label="Descrição"
@@ -121,7 +153,11 @@ export const CadastroEventoForm: FunctionComponent<CadastroEventoFormProps> = (
           <h4>Upload de imagem</h4>
           <input type="file" className={styles.fileInput} />
         </div>
-        <Button variant="contained" color="success" onClick={props.onCadastroSubmit}>
+        <Button
+          variant="contained"
+          color="success"
+          onClick={props.onCadastroSubmit}
+        >
           Cadastrar
         </Button>
       </div>

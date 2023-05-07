@@ -12,11 +12,12 @@ import { useState } from "react";
 import { Layout } from "@app/components/common/layout/Layout";
 import { CadastroEventoForm } from "@app/components/cadastroeventoform/CadastroEventoForm";
 import { EventoAPI } from "@app/apis/EventoAPI";
-import dayjs from "dayjs";
-
+import dayjs, { Dayjs } from "dayjs";
+import { juntarDataHorario } from "@app/helpers/Helpers";
 
 const CadastroEvento: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [formErrorMessage, setFormErrorMessage] = useState("");
   const session = useSession();
   const router = useRouter();
 
@@ -40,59 +41,59 @@ const CadastroEvento: NextPage = () => {
       },
     ],
     [
-        "dataInicio",
-        {
-          value: dayjs(new Date()),
-          validators: [],
-          valid: true,
-          errorMessage: "",
-        },
-      ],
-      [
-        "horarioInicio",
-        {
-          value: "",
-          validators: [],
-          valid: true,
-          errorMessage: "",
-        },
-      ],
-      [
-        "dataFim",
-        {
-          value: "",
-          validators: [Validator.required],
-          valid: true,
-          errorMessage: "",
-        },
-      ],
-      [
-        "horarioFim",
-        {
-          value: "",
-          validators: [Validator.required],
-          valid: true,
-          errorMessage: "",
-        },
-      ],
-      [
-        "tipo",
-        {
-          value: "",
-          validators: [Validator.required],
-          valid: true,
-          errorMessage: "",
-        },
-      ],
-      [
-        "descricao",
-        {
-          value: "",
-          validators: [Validator.required],
-          valid: true,
-          errorMessage: "",
-        },
-      ],
+      "dataInicio",
+      {
+        value: dayjs(new Date()),
+        validators: [Validator.date],
+        valid: true,
+        errorMessage: "",
+      },
+    ],
+    [
+      "horarioInicio",
+      {
+        value: dayjs(new Date()),
+        validators: [Validator.date],
+        valid: true,
+        errorMessage: "",
+      },
+    ],
+    [
+      "dataFim",
+      {
+        value: '',
+        validators: [],
+        valid: true,
+        errorMessage: "",
+      },
+    ],
+    [
+      "horarioFim",
+      {
+        value: '',
+        validators: [],
+        valid: true,
+        errorMessage: "",
+      },
+    ],
+    [
+      "tipo",
+      {
+        value: "",
+        validators: [Validator.required],
+        valid: true,
+        errorMessage: "",
+      },
+    ],
+    [
+      "descricao",
+      {
+        value: "",
+        validators: [Validator.required],
+        valid: true,
+        errorMessage: "",
+      },
+    ],
   ]);
 
   const [formState, setFormState] = useState(formFields);
@@ -101,24 +102,36 @@ const CadastroEvento: NextPage = () => {
   const formInstance = new CustomForm(formState, setFormState);
 
   const onCadastroSubmit = (e: Event) => {
+    if (!formInstance.validateForm()) {
+      console.log(formState);
+      return;
+    }
+
+    setIsLoading(true);
 
     EventoAPI.cadastrar({
-      titulo: formInstance.getValue('titulo') as string,
-      tipo: formInstance.getValue('tipo') as string,
-      descricao: formInstance.getValue('titulo') as string,
-      localizacao: formInstance.getValue('local') as string,
-      data_inicial: (formInstance.getValue('dataInicio') as dayjs.Dayjs).toISOString(),
+      titulo: formInstance.getValue("titulo") as string,
+      tipo: formInstance.getValue("tipo") as string,
+      descricao: formInstance.getValue("titulo") as string,
+      localizacao: formInstance.getValue("local") as string,
+      data_inicial: juntarDataHorario(
+        formInstance.getValue("dataInicio") as Dayjs,
+        formInstance.getValue("horarioInicio") as Dayjs
+      ).toISOString(),
       usuario_id: session.data?.user.id ?? "1",
-      imagem_url: "teste"
-    }).catch((error) => {
-      console.log(error)
-    }).then((response) => {
-      console.log(response)
+      imagem_url: "teste",
     })
-    
-    console.log();
-  }
+      .catch((error) => {
+        setFormErrorMessage(error.response.data.errorMsg);
+        setIsLoading(false);
+      })
+      .then((response) => {
+        if (response) {
+          router.push("/home");
+        }
+      });
 
+  };
 
   return (
     <Layout>
@@ -144,7 +157,12 @@ const CadastroEvento: NextPage = () => {
                   <CircularProgress />
                 </div>
               ) : (
-                <CadastroEventoForm isCadastroSuccess={cadastroSuccess} onCadastroSubmit={onCadastroSubmit} formInstance={formInstance} /> 
+                <CadastroEventoForm
+                  errorMessage={formErrorMessage}
+                  isCadastroSuccess={cadastroSuccess}
+                  onCadastroSubmit={onCadastroSubmit}
+                  formInstance={formInstance}
+                />
               )}
             </div>
           </Grid>
