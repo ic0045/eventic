@@ -17,7 +17,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 export default function Home() {
 
-    const cards = [
+    const cards2 = [
         { id: 0, image: "/images/evento1.jpg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
         { id: 1, image: "/images/evento1.jpg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
         { id: 2, image: "/images/evento1.jpg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
@@ -26,7 +26,16 @@ export default function Home() {
         { id: 5, image: "/images/evento1.jpg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
     ]
 
-    const [period, setPeriod] = useState('1');
+    const cards1 = [
+        { id: 1, image: "/images/evento2.jpeg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
+        { id: 0, image: "/images/evento2.jpeg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
+        { id: 2, image: "/images/evento2.jpeg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
+        { id: 3, image: "/images/evento2.jpeg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
+        { id: 4, image: "/images/evento2.jpeg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
+        { id: 5, image: "/images/evento2.jpeg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
+    ]
+
+    const [period, setPeriod] = useState('2');
     const [category, setCategory] = useState('1');
 
 
@@ -110,69 +119,61 @@ export default function Home() {
                             <Typography variant="h5" mb={3}>Semana de 1 a 7 de maio</Typography>
                             {listView ?
                                 <>
-                                    {cards.map((card) =>
+                                    {cards1.map((card) =>
                                         <EventList key={card.id} title={card.title} day={card.day} month={card.month} location={card.location} time={card.time} />
                                     )}
                                 </> :
                                 <>
-                                    <Grid container spacing={2}>
-                                        {cards.map((card) =>
-                                            <Grid key={card.id} item xl={4} lg={6}>
-                                                <EventCard image={card.image} title={card.title} day={card.day} month={card.month} location={card.location} time={card.time} />
-                                            </Grid>
+                                    <Box sx={{ display: 'flex',flexWrap:'wrap', gap:'1rem' }}>
+                                        {cards1.map((card) =>
+                                            <EventCard key={card.id} image={card.image} title={card.title} day={card.day} month={card.month} location={card.location} time={card.time} />
                                         )}
-                                    </Grid>
+                                    </Box>
                                 </>}
                             <Typography variant="h5" mb={3} mt={8}>Semana de 24 a 30 de abril</Typography>
                             {listView ?
                                 <>
-                                    {cards.map((card) =>
+                                    {cards1.map((card) =>
                                         <EventList key={card.id} title={card.title} day={card.day} month={card.month} location={card.location} time={card.time} />
                                     )}
                                 </> :
                                 <>
-                                    <Grid container spacing={2}>
-                                        {cards.map((card) =>
-                                            <Grid key={card.id} item xl={4} lg={6}>
-                                                <EventCard image={card.image} title={card.title} day={card.day} month={card.month} location={card.location} time={card.time} />
-                                            </Grid>
+                                    <Box sx={{ display: 'flex',flexWrap:'wrap', gap:'1rem' }}>
+                                        {cards1.map((card) =>
+                                            <EventCard key={card.id} image={card.image} title={card.title} day={card.day} month={card.month} location={card.location} time={card.time} />
                                         )}
-                                    </Grid>
+                                    </Box>
                                 </>}
                         </TabPanel>
                         <TabPanel value='1'>
                             <Typography variant="h5" mb={3}>Semana de 8 a 14 de maio</Typography>
                             {listView ?
                                 <>
-                                    {cards.map((card) =>
+                                    {cards2.map((card) =>
                                         <EventList key={card.id} title={card.title} day={card.day} month={card.month} location={card.location} time={card.time} />
                                     )}
                                 </> :
                                 <>
-                                    <Grid container spacing={2}>
-                                        {cards.map((card) =>
-                                            <Grid key={card.id} item xl={4} lg={6}>
-                                                <EventCard image={card.image} title={card.title} day={card.day} month={card.month} location={card.location} time={card.time} />
-                                            </Grid>
+                                    <Box sx={{ display: 'flex',flexWrap:'wrap', gap:'1rem' }}>
+                                        {cards2.map((card) =>
+                                            <EventCard key={card.id} image={card.image} title={card.title} day={card.day} month={card.month} location={card.location} time={card.time} />
                                         )}
-                                    </Grid>
+                                    </Box>
                                 </>}
 
-                                <Typography variant="h5" mb={3} mt={8}>Semana de 15 a 21 de maio</Typography>
+                            <Typography variant="h5" mb={3} mt={8}>Semana de 15 a 21 de maio</Typography>
                             {listView ?
                                 <>
-                                    {cards.map((card) =>
+                                    {cards2.map((card) =>
                                         <EventList key={card.id} title={card.title} day={card.day} month={card.month} location={card.location} time={card.time} />
                                     )}
                                 </> :
                                 <>
-                                    <Grid container spacing={2}>
-                                        {cards.map((card) =>
-                                            <Grid key={card.id} item xl={4} lg={6}>
-                                                <EventCard image={card.image} title={card.title} day={card.day} month={card.month} location={card.location} time={card.time} />
-                                            </Grid>
+                                    <Box sx={{ display: 'flex',flexWrap:'wrap', gap:'1rem' }}>
+                                        {cards2.map((card) =>
+                                            <EventCard key={card.id} image={card.image} title={card.title} day={card.day} month={card.month} location={card.location} time={card.time} />
                                         )}
-                                    </Grid>
+                                    </Box>
                                 </>}
 
                         </TabPanel>
@@ -183,3 +184,13 @@ export default function Home() {
 
     )
 }
+
+// export async function getStaticProps(){
+//     const res = await fetch("http://localhost:3000/eventos/?titulo=Simpósio&destaque=true")
+//     const eventos = await res.json()
+//     return {
+//         props: {
+//             eventos,
+//         },
+//     }
+// }
