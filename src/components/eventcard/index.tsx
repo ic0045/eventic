@@ -6,6 +6,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import { useState } from "react";
 import SubscribeButton from "@app/components/subscribebutton/SubscribeButton"
+import Link from 'next/link';
 
 interface Props {
     image: string
@@ -21,13 +22,19 @@ export default function EventCard(props: Props) {
     const [subscribed, setSubscribed] = useState(false)
 
     return (
-        <Card sx={{ display: 'flex', maxWidth: '420px',boxShadow: 3 }}>
-            <CardMedia
-                component="img"
-                sx={{ width: 150, height: 150, objectFit: 'contain', alignSelf: 'center' }}
-                image={props.image}
-                alt="evento-image"
-            />
+
+        <Card sx={{ display: 'flex', maxWidth: '420px', boxShadow: 3 }}>
+            <Box sx={{alignSelf: 'center'}}>
+                <Link href='/eventdetails'>
+                    <CardMedia
+                        component="img"
+                        sx={{ width: 150, height: 150, objectFit: 'contain' }}
+                        image={props.image}
+                        alt="evento-image"
+                    />
+                </Link>
+            </Box>
+
             <Box >
                 <CardContent>
                     <Typography component="div" variant="h5">
