@@ -5,14 +5,15 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import ShareIcon from '@mui/icons-material/Share';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import { useState } from "react";
+import SubscribeButton from "@app/components/subscribebutton/SubscribeButton"
 
 interface Props {
     image: string
     title: string
-    day:string
-    month:string
-    location:string
-    time:string
+    day: string
+    month: string
+    location: string
+    time: string
 }
 
 export default function EventCard(props: Props) {
@@ -20,10 +21,10 @@ export default function EventCard(props: Props) {
     const [subscribed, setSubscribed] = useState(false)
 
     return (
-        <Card sx={{ display: 'flex' , maxWidth:'500px' }}>
+        <Card sx={{ display: 'flex', maxWidth: '420px',boxShadow: 3 }}>
             <CardMedia
                 component="img"
-                sx={{ width: 150, height: 150, objectFit: 'contain', margin: 'auto' }}
+                sx={{ width: 150, height: 150, objectFit: 'contain', alignSelf: 'center' }}
                 image={props.image}
                 alt="evento-image"
             />
@@ -45,19 +46,17 @@ export default function EventCard(props: Props) {
                         <Box>
 
                             <Typography variant="subtitle1" color="text.secondary" component="div">
-                                <LocationOnIcon sx={{fontSize:'90%'}} fontSize='small' /> {props.location}
+                                <LocationOnIcon sx={{ fontSize: '90%' }} fontSize='small' /> {props.location}
                             </Typography>
                             <Typography variant="subtitle1" color="text.secondary" component="div">
-                                <AccessTimeIcon sx={{fontSize:'90%'}}  fontSize='small' /> {props.time}
+                                <AccessTimeIcon sx={{ fontSize: '90%' }} fontSize='small' /> {props.time}
                             </Typography>
                         </Box>
                     </Box>
 
                 </CardContent>
-                <Box mb={1} sx={{ display: 'flex', justifyContent: 'flex-end'}}>
-                    <IconButton onClick={() => setSubscribed(!subscribed)} aria-label="notification">
-                        <NotificationsActiveIcon fontSize='small' sx={subscribed ? { color: '#FFCB00' } : undefined} />
-                    </IconButton>
+                <Box mb={1} sx={{ display: 'flex', justifyContent: 'flex-end', marginRight: '0.5rem' }}>
+                    <SubscribeButton />
                     <IconButton aria-label="share">
                         <ShareIcon fontSize='small' />
                     </IconButton>

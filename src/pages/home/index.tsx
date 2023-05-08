@@ -40,12 +40,11 @@ export default function Home() {
     return (
         <Container maxWidth="xl">
 
-            <Navbar/>
+            <Navbar />
 
-            <Box mt={2} sx={{ borderRadius: '0.3rem', backgroundColor: 'white', padding: '1rem', boxShadow: 3 }}>
-                <Typography variant="h3" mb={1}>Eventos</Typography>
+            <Box sx={{ borderRadius: '0.3rem', backgroundColor: 'white', padding: '1rem', boxShadow: 3 }}>
                 <TextField
-                    sx={{ margin: '2rem auto' }}
+
                     fullWidth
                     placeholder='Pesquisar eventos e atividades'
                     id="input-with-icon-textfield"
@@ -58,7 +57,11 @@ export default function Home() {
                     }}
                     variant="outlined"
                 />
-                <Box sx={{ display: 'flex', justifyContent: "flex-end" }} ml={5}>
+            </Box>
+
+            <Box mt={2} sx={{ borderRadius: '0.3rem', backgroundColor: 'white', padding: '1rem', boxShadow: 3 }}>
+                <Box mb={2} sx={{ display: 'flex' }}>
+                    <Typography sx={{ marginRight: 'auto' }} variant="h3">Eventos</Typography>
                     <FormControl variant="standard" sx={{ m: 1, minWidth: 150 }}>
                         <InputLabel id="demo-simple-select-label">Período</InputLabel>
                         <Select
@@ -103,7 +106,41 @@ export default function Home() {
 
                         </Box>
                         <TabPanel value='0'>
-                            <Typography variant="h5" mb={3}>Semana de 2 a 8 de abril</Typography>
+                            <Typography variant="h5" mb={3}>Semana de 1 a 7 de maio</Typography>
+                            {listView ?
+                                <>
+                                    {cards.map((card) =>
+                                        <EventList key={card.id} title={card.title} day={card.day} month={card.month} location={card.location} time={card.time} />
+                                    )}
+                                </> :
+                                <>
+                                    <Grid container spacing={2}>
+                                        {cards.map((card) =>
+                                            <Grid key={card.id} item xl={4} lg={6}>
+                                                <EventCard image={card.image} title={card.title} day={card.day} month={card.month} location={card.location} time={card.time} />
+                                            </Grid>
+                                        )}
+                                    </Grid>
+                                </>}
+                            <Typography variant="h5" mb={3} mt={8}>Semana de 24 a 30 de abril</Typography>
+                            {listView ?
+                                <>
+                                    {cards.map((card) =>
+                                        <EventList key={card.id} title={card.title} day={card.day} month={card.month} location={card.location} time={card.time} />
+                                    )}
+                                </> :
+                                <>
+                                    <Grid container spacing={2}>
+                                        {cards.map((card) =>
+                                            <Grid key={card.id} item xl={4} lg={6}>
+                                                <EventCard image={card.image} title={card.title} day={card.day} month={card.month} location={card.location} time={card.time} />
+                                            </Grid>
+                                        )}
+                                    </Grid>
+                                </>}
+                        </TabPanel>
+                        <TabPanel value='1'>
+                            <Typography variant="h5" mb={3}>Semana de 8 a 14 de maio</Typography>
                             {listView ?
                                 <>
                                     {cards.map((card) =>
@@ -120,9 +157,7 @@ export default function Home() {
                                     </Grid>
                                 </>}
 
-                        </TabPanel>
-                        <TabPanel value='1'>
-                            <Typography variant="h5" mb={3}>Semana de 22 a 30 de março</Typography>
+                                <Typography variant="h5" mb={3} mt={8}>Semana de 15 a 21 de maio</Typography>
                             {listView ?
                                 <>
                                     {cards.map((card) =>

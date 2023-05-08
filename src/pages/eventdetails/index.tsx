@@ -4,14 +4,15 @@ import Typography from "@mui/material/Typography";
 import IconButton from '@mui/material/IconButton';
 import Image from 'next/image';
 import ShareIcon from '@mui/icons-material/Share';
-import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import EventIcon from '@mui/icons-material/Event';
 import PlaceIcon from '@mui/icons-material/Place';
 import { useState } from "react";
 import { Layout } from "@app/components/common/layout/Layout";
+import SubscribeButton from "@app/components/subscribebutton/SubscribeButton"
 import Navbar from "@app/components/common/navbar/Navbar";
 
 function EventDetails() {
+
 
   const event = {
     image: "/images/evento1.jpg",
@@ -28,80 +29,79 @@ function EventDetails() {
 
 
   return (
-      <Container maxWidth="xl">
-        <Navbar/>
-        <Typography sx={{ borderRadius: '0.3rem', backgroundColor: 'white', boxShadow: 3 ,padding:'1rem'}} variant="h5" mb={3}>
-          {event.title}
-        </Typography>
-        <Grid container spacing={3}>
-          <Grid item md={4}>
-            <Box sx={{ boxShadow: 0 }}>
-              <Image
-                width={600}
-                height={600}
-                className={styles.img}
-                src={event.image}
-                alt='evento-imagem'
-              />
-            </Box>
 
-            <Box mt={2} sx={{ borderRadius: '0.3rem', backgroundColor: 'white', boxShadow: 3 }}>
-              <Typography variant="h4" align="center" >
-                {subscribed ? event.numberSubs + 1 : event.numberSubs}
-              </Typography>
-              <Typography variant="body1" gutterBottom align="center" >
-                Inscritos
-              </Typography>
-            </Box>
-          </Grid>
-          <Grid item md={8}>
-            <Box sx={{ borderRadius: '0.3rem', backgroundColor: 'white', padding: '1rem', boxShadow: 3 }}>
-              <Typography variant="h6" gutterBottom>
-                Descrição
-              </Typography>
-              <Typography variant="body1" gutterBottom>
-                {event.description}
-              </Typography>
-            </Box >
+    <Container maxWidth="xl">
+      <Navbar />
+      <Typography sx={{ borderRadius: '0.3rem', backgroundColor: 'white', boxShadow: 3, padding: '1rem' }} variant="h5" mb={3}>
+        {event.title}
+      </Typography>
+      <Grid container spacing={3}>
+        <Grid item md={4}>
+          <Box sx={{ boxShadow: 0 }}>
+            <Image
+              width={600}
+              height={600}
+              className={styles.img}
+              src={event.image}
+              alt='evento-imagem'
+            />
+          </Box>
 
-            <Box mt={3} mb={3} sx={{ borderRadius: '0.3rem', backgroundColor: 'white', padding: '1rem', boxShadow: 3 }}>
-              <Typography variant="h6" gutterBottom>
-                Detalhes
-              </Typography>
-              <Typography variant="body2" gutterBottom>
-                {event.start}
-                <IconButton target="_blank" href="https://calendar.google.com/" aria-label="calendar">
-                  <EventIcon />
-                </IconButton>
-              </Typography>
-              <Typography variant="body2" gutterBottom>
-                {event.end}
-              </Typography>
-              <Typography variant="body2" gutterBottom>
-                Local: {event.location}
-
-                <IconButton target="_blank" href="https://www.google.com/maps/place/Instituto+de+Geoci%C3%AAncias+da+UFBA/@-12.9980058,-38.5097059,17z/data=!3m1!4b1!4m6!3m5!1s0x716049f49530915:0xeee17285dd935415!8m2!3d-12.9980058!4d-38.5071256!16s%2Fg%2F1q5bwgf_d" aria-label="location ">
-                  <PlaceIcon />
-                </IconButton>
-
-              </Typography>
-              <Typography variant="body2" gutterBottom>
-                Mais informacoes: <a href={event.moreInformation}>{event.moreInformation}</a>
-              </Typography>
-              <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <IconButton onClick={() => setSubscribed(!subscribed)} aria-label="notification">
-                  <NotificationsActiveIcon sx={subscribed ? { color: '#FFCB00' } : undefined} />
-                </IconButton>
-                <IconButton aria-label="share">
-                  <ShareIcon />
-                </IconButton>
-              </Box>
-            </Box>
-
-          </Grid>
+          <Box mt={2} sx={{ borderRadius: '0.3rem', backgroundColor: 'white', boxShadow: 3 }}>
+            <Typography variant="h4" align="center" >
+              {subscribed ? event.numberSubs + 1 : event.numberSubs}
+            </Typography>
+            <Typography variant="body1" gutterBottom align="center" >
+              Interessados
+            </Typography>
+          </Box>
         </Grid>
+        <Grid item md={8}>
+          <Box sx={{ borderRadius: '0.3rem', backgroundColor: 'white', padding: '1rem', boxShadow: 3 }}>
+            <Typography variant="h6" gutterBottom>
+              Descrição
+            </Typography>
+            <Typography sx={{ textAlign: 'justify' }} variant="body1" gutterBottom>
+              {event.description}
+            </Typography>
+          </Box >
 
-      </Container>
+          <Box mt={3} mb={3} sx={{ borderRadius: '0.3rem', backgroundColor: 'white', padding: '1rem', boxShadow: 3 }}>
+            <Typography variant="h6" gutterBottom>
+              Detalhes
+            </Typography>
+            <Typography variant="body2" gutterBottom>
+              {event.start}
+              <IconButton target="_blank" href="https://calendar.google.com/" aria-label="calendar">
+                <EventIcon />
+              </IconButton>
+            </Typography>
+            <Typography variant="body2" gutterBottom>
+              {event.end}
+            </Typography>
+            <Typography variant="body2" gutterBottom>
+              Local: {event.location}
+
+              <IconButton target="_blank" href="https://www.google.com/maps/place/Instituto+de+Geoci%C3%AAncias+da+UFBA/@-12.9980058,-38.5097059,17z/data=!3m1!4b1!4m6!3m5!1s0x716049f49530915:0xeee17285dd935415!8m2!3d-12.9980058!4d-38.5071256!16s%2Fg%2F1q5bwgf_d" aria-label="location ">
+                <PlaceIcon />
+              </IconButton>
+
+            </Typography>
+            <Typography variant="body2" gutterBottom>
+              Mais informacoes: <a href={event.moreInformation}>{event.moreInformation}</a>
+            </Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <SubscribeButton />
+              <IconButton aria-label="share">
+                <ShareIcon />
+              </IconButton>
+            </Box>
+          </Box>
+
+        </Grid>
+      </Grid>
+
+    </Container>
   );
 };
 
