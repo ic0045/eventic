@@ -11,31 +11,13 @@ import { Usuario } from "@app/entities/Usuario";
 import { Inscricao } from "@app/entities/Inscricao";
 import { Categoria } from "@app/entities/Categoria";
 
-/*
-* Tipo do corpo de requisição para criação de evento
-*/
-type CreationReqBody = {
-  descricao: string,
-  localizacao: string,
-  titulo: string,
-  imagem_url: string,
-  tipo: string | null,
-  link_imagem:  string | null,
-  link_titulo: string | null,
-  link_mais_informacoes: string | null,
-  data_inicial: Date,
-  data_final: Date | null,
-  categoria: Categoria | null,
-  criador: Usuario
-}
-
 @Entity("evento", { schema: "public" })
 export class Evento {
 
   /**
   * Cria Evento a partir de objeto
   */
-  public static createFromObj(obj : CreationReqBody) : Evento{
+  public static createFromObj(obj : any) : Evento{
     const evento = new Evento();
     evento.titulo = obj.titulo;
     evento.descricao = obj.descricao;
@@ -47,8 +29,8 @@ export class Evento {
     evento.dataInicial = obj.data_inicial;
     evento.datafinal = obj.data_final;
     if(obj.categoria)
-      evento.categoria = [obj.categoria];
-    evento.criador = [obj.criador];
+      evento.categoria = obj.categoria;
+    evento.criador = obj.criador;
     evento.createdAt = new Date();
     return evento;
   }
@@ -99,20 +81,22 @@ export class Evento {
   })
   linkMaisInformacoes: string | null;
 
-  @ManyToOne(() => Usuario, (usuario) => usuario.eventos)
+  @ManyToOne(() => Usuario, (usuario) => usuario.eventos, {nullable: false} )
   @JoinColumn([{ 
     name: "criador_id", 
     referencedColumnName: "id", 
     foreignKeyConstraintName: "usuario_fk" }])
-  criador: Relation<Usuario>[];
+  //@ts-ignore
+  criador: Relation<Usuario>;
 
   @ManyToOne(() => Categoria, (categoria) => categoria.eventos)
   @JoinColumn([{ 
     name: "categoria_id", 
     referencedColumnName: "id",
     foreignKeyConstraintName: "categoria_fk" }])
-  categoria: Relation<Categoria>[];
+  //@ts-ignore
+  categoria: Relation<Categoria>;
 
   @OneToMany(() => Inscricao, (inscricao) => inscricao.evento)
-  inscricaos: Relation<Inscricao>[];
+  inscricoes: Relation<Inscricao>[];
 }

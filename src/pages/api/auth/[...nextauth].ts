@@ -1,57 +1,62 @@
 import NextAuth, { NextAuthOptions } from "next-auth"
-import GoogleProvider from "next-auth/providers/google"
-import CredentialsProvider from "next-auth/providers/credentials"
-import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter"
-import { datasource, UsuarioRepo } from "@app/database"
-import { Usuario } from "@app/entities/Usuario"
-import { Conta } from "@app/entities/Conta"
-import { Sessao } from "@app/entities/Sessao"
-import { TokenVerificacao } from "@app/entities/TokenVerificacao"
-
-console.log("NEXT AUTH OPTIONS CALLED")
-console.log("IS initialized? ", datasource.isInitialized)
+import CredentialsProvider  from "next-auth/providers/credentials"
+import { checkPassword } from "./auth"
+import { UsuarioRepo } from "@app/database"
 
 export const authOptions : NextAuthOptions = {
-  // Configure one or more authentication providers
   providers: [
-    GoogleProvider({
-        clientId: process.env.GOOGLE_CLIENT_ID,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET
-      })
-    // CredentialsProvider({
-    //     name: "Credenciais",
-    //     credentials: {
-    //       email: {label:"E-mail", type: "text", placeholder: "seuemail@dom.com"},
-    //       password: { label: "Senha", type: "password" }
-    //     },
-    //     async authorize(credentials, req) {
-            
-    //     }
-    // })
+    CredentialsProvider({
+        name: "Credenciais",
+        credentials: {
+          email: {label:"E-mail", type: "text", placeholder: "seuemail@dom.com"},
+          password: { label: "Senha", type: "password" }
+        },
+        async authorize(credentials) {
+          const { email, password } = credentials as {
+            email: string,
+            password: string
+          }
 
+          if(email === undefined || password === undefined)
+            return null;
+
+          try{
+            const usuario = await UsuarioRepo.findOne({
+              where: {email: email.toLocaleLowerCase()}
+            });
+
+            if(usuario == null)
+              throw new Error("Não existe um cadastro para o e-mail informado.");
+            if(!await checkPassword(password, usuario.senha))
+              throw new Error("Credenciais inválidas.");
+
+            return {
+              id: usuario.id,
+              primeiroNome: usuario.primeiroNome,
+              segundoNome: usuario.segundoNome,
+              fotoPerfil: usuario.fotoPerfil,
+              permissao: usuario.permissao
+            }
+        }catch(e){console.log(e); throw new Error("Erro ao buscar usuário.");}
+        }   
+    })
   ],
-  adapter: TypeORMLegacyAdapter(datasource.options, { 
-    entities: {
-    //@ts-ignore
-    UserEntity: Usuario,
-    //@ts-ignore
-    AccountEntity: Conta,
-    //@ts-ignore
-    SessionEntity: Sessao,
-    //@ts-ignore
-    VerificationTokenEntity: TokenVerificacao
-    } 
-  }),
+  callbacks:{
+    async jwt({ token, user } ) {
+        return {...token, ...user}
+    },
+    async session({session,token}){
+        session.user = token as any;
+        return session;
+    }
+  },
+  pages:{
+    signIn: "/login"
+  },
   session: {
     strategy: "jwt",
     // Seconds - How long until an idle session expires and is no longer valid.
     maxAge: 30 * 24 * 60 * 60, // 30 days
-  },
-  pages:{
-
-  },
-  callbacks:{
-
   },
   events:{
     createUser: async (message: any) => {
@@ -85,12 +90,17 @@ export const authOptions : NextAuthOptions = {
         return Promise.resolve() 
     },
   },
-  logger:{
-    error(code, metadata){
-      console.log("ERRO AO LOGIN --> ");
-      console.log("IS initialized? ", datasource.isInitialized)
-      console.log(code);
-      console.log(metadata);
+  logger: {
+    error(code, ...message) {
+        console.error(code, message)
+    },
+    warn(code, ...message) {
+        if (process.env.DEBUG==='true' && (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test'))
+            console.warn(code, message)
+    },
+    debug(code, ...message) {
+        if (process.env.DEBUG==='true' && process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test')
+            console.warn(code, message)
     }
   },
   debug: process.env.DEBUG==='true' && (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test'),

@@ -1,0 +1,8 @@
+.login {
+    display: flex;
+    flex-direction: column;   
+}
+
+.login > * {
+    margin-top: 1rem;
+}
