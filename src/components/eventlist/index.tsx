@@ -6,7 +6,15 @@ import ShareIcon from '@mui/icons-material/Share';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import { useState } from "react";
 
-export default function ListCard(props) {
+interface Props {
+    title: string
+    day:string
+    month:string
+    location:string
+    time:string
+}
+
+export default function ListCard(props:Props) {
 
     const [subscribed, setSubscribed] = useState(false)
 
@@ -26,10 +34,10 @@ export default function ListCard(props) {
                     {props.title}
                 </Typography>
                 <Typography variant="subtitle1" color="text.secondary" component="div">
-                    <LocationOnIcon fontSize='4px' /> {props.location}
+                    <LocationOnIcon sx={{fontSize:'90%'}} fontSize='small' /> {props.location}
                 </Typography>
                 <Typography variant="subtitle1" color="text.secondary" component="div">
-                    <AccessTimeIcon fontSize='4px' /> {props.time}
+                    <AccessTimeIcon sx={{fontSize:'90%'}} fontSize='small' /> {props.time}
                 </Typography>
             </Box>
 

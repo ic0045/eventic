@@ -1,6 +1,6 @@
 import styles from './home.module.css'
 import Navbar from "@app/components/common/navbar/Navbar";
-import { Box, Container, Grid, FormControl, InputLabel, Select, MenuItem, TextField, InputAdornment, Button, IconButton } from "@mui/material";
+import { Box, Container, Grid, FormControl, InputLabel, MenuItem, TextField, InputAdornment, Button, IconButton } from "@mui/material";
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
@@ -12,6 +12,7 @@ import { useState } from "react";
 import ViewListIcon from '@mui/icons-material/ViewList';
 import ViewModuleIcon from '@mui/icons-material/ViewModule';
 import SearchIcon from '@mui/icons-material/Search';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 export default function Home() {
 
@@ -24,15 +25,15 @@ export default function Home() {
         { id: 5, image: "/images/evento1.jpg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
     ]
 
-    const [period, setPeriod] = useState(1);
-    const [category, setCategory] = useState(1);
+    const [period, setPeriod] = useState('1');
+    const [category, setCategory] = useState('1');
 
 
     const [listView, setListView] = useState(false)
 
     const [value, setValue] = useState('1')
 
-    const handleChange = (e, newValue) => {
+    const handleChange = (event: React.SyntheticEvent, newValue: string) => {
         setValue(newValue)
     }
 
@@ -65,7 +66,7 @@ export default function Home() {
                             id="demo-simple-select"
                             value={period}
                             label="Período"
-                            onChange={(event) => (setPeriod(event.target.value))}
+                            onChange={(event: SelectChangeEvent) => (setPeriod(event.target.value))}
                         >
                             <MenuItem value={1}>Dia</MenuItem>
                             <MenuItem value={2}>Semana</MenuItem>
@@ -79,7 +80,7 @@ export default function Home() {
                             id="demo-simple-select"
                             value={category}
                             label="Categoria"
-                            onChange={(event) => (setCategory(event.target.value))}
+                            onChange={(event: SelectChangeEvent) => (setCategory(event.target.value))}
                         >
                             <MenuItem value={1}>Evento</MenuItem>
                             <MenuItem value={2}>Atividade</MenuItem>

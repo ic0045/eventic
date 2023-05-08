@@ -6,7 +6,16 @@ import ShareIcon from '@mui/icons-material/Share';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import { useState } from "react";
 
-export default function EventCard(props) {
+interface Props {
+    image: string
+    title: string
+    day:string
+    month:string
+    location:string
+    time:string
+}
+
+export default function EventCard(props: Props) {
 
     const [subscribed, setSubscribed] = useState(false)
 
@@ -36,10 +45,10 @@ export default function EventCard(props) {
                         <Box>
 
                             <Typography variant="subtitle1" color="text.secondary" component="div">
-                                <LocationOnIcon fontSize='4px' /> {props.locaction}
+                                <LocationOnIcon sx={{fontSize:'90%'}} fontSize='small' /> {props.location}
                             </Typography>
                             <Typography variant="subtitle1" color="text.secondary" component="div">
-                                <AccessTimeIcon fontSize='4px' /> {props.time}
+                                <AccessTimeIcon sx={{fontSize:'90%'}}  fontSize='small' /> {props.time}
                             </Typography>
                         </Box>
                     </Box>
