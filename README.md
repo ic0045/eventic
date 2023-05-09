@@ -39,7 +39,7 @@ Visando solucionar esse problema e atender a demanda do Instituto da Computaçã
 
 - [Termo de Abertura](./docs/termo_abertura.pdf)
 - [Requisitos](https://docs.google.com/spreadsheets/d/15ZO1JtwPHYhsB4rp6Ko_rEEBG1fMr6Br-LRbo9UJFr8/edit?usp=sharing)
-- [Tarefas](https://github.com/orgs/ic0045/projects/1/views/1)
+- [Tarefas] (https://docs.google.com/document/d/1l0lUObPUr0X5t_yZoVqar-2XRVD2W4d-r4NcgbBl2dY/edit?usp=sharing)
 - [Rotas de API](https://isaquecopque.stoplight.io/docs/seicomp/branches/main/oneg2aiu3tl21-seicomp)
 
 ## Protótipos
