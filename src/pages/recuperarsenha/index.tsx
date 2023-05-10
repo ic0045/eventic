@@ -36,7 +36,7 @@ const RecuperarSenha: NextPage = () => {
     setIsRecuperarSenhaSuccess(true);
 
     RecuperarSenhaAPI.enviarLink({
-      email: formInstance.getValue("email"),
+      email: formInstance.getValue("email") as string,
     })
       .catch(() => {
         setIsRecuperarSenhaSuccess(false);

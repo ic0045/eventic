@@ -1,0 +1,32 @@
+.cadastro {
+    display: flex;
+    flex-direction: column;   
+}
+
+.cadastro > * {
+    margin-top: 1rem;
+}
+
+.data h4{
+    margin-bottom: 1rem;
+}
+
+.dataInput {
+    width: 100%;
+}
+
+.dataItem {
+    width: 100%;
+}
+
+.fileInput {
+    width: 100%;
+    height: 200px;
+    background-color: #F5F5F5;
+}
+
+@media (min-width: 900px) {
+    .dataItem {
+        width: 50%;
+    }
+}

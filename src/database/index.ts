@@ -27,6 +27,9 @@ export const datasource = new DataSource({
     ],
     migrations: [],
     subscribers: [],
+    ssl: { 
+        rejectUnauthorized: false
+    }
 })
 
 try{

@@ -8,8 +8,8 @@ import { Validator } from "@app/helpers/Validator";
 import { FormFieldState } from "@app/interfaces/form_interfaces";
 import LoginForm from "@app/components/loginform";
 import { Layout } from "@app/components/common/layout/Layout";
-import {signIn} from 'next-auth/react';
 import Image from "next/image";
+import { signIn } from "next-auth/react";
 
 const Login: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);

@@ -1,4 +1,5 @@
 import { FormFieldState } from "@app/interfaces/form_interfaces";
+import dayjs, { Dayjs } from "dayjs";
 
 
 export class CustomForm{
@@ -45,14 +46,21 @@ export class CustomForm{
     }
 
     onInputChange = (e: any) => {
-        const newValue = e.target.value;
+        const newValue = e.target?.value ?? e.$d;
         const currentValue = this.formState.get(e.target.id);
         let formStateMap = new Map(this.formState);
-        formStateMap.set(e.target.id, {...currentValue, value: newValue})
+        formStateMap.set(e.target.id ?? e.target.name, {...currentValue, value: newValue})
         this.setFormState(formStateMap)
     }
 
-    getValue = (fieldId: string): string => {
+    onDateInputChange = (data: Dayjs, id: string) => {
+        const currentValue = this.formState.get(id);
+        let formStateMap = new Map(this.formState);
+        formStateMap.set(id, {...currentValue, value: data});
+        this.setFormState(formStateMap);
+    }
+
+    getValue = (fieldId: string): string | dayjs.Dayjs => {
         return this.formState.get(fieldId)?.value ?? ""
     }
 

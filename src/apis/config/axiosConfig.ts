@@ -4,7 +4,7 @@ import axios, { AxiosError } from 'axios';
 const api = axios.create({
   // adding a custom language header   
   headers: {},
-  baseURL: 'https://dummyjson.com'
+  baseURL: 'http://localhost:3000'
 });
 
 const errorHandler = (error: AxiosError) => {

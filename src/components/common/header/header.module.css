@@ -2,6 +2,7 @@
     height:5.5rem;
     width: 100%;
     display: flex;
+    margin-bottom: 3rem;
 }
 
 .header__login__button {

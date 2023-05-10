@@ -1,9 +1,20 @@
 import { ValidatorResponse } from "@app/interfaces/form_interfaces";
+import dayjs, { Dayjs } from "dayjs";
 
 export class Validator {
-  static required(value: string, errorMessageToBeShown?: string): ValidatorResponse {
+  static required(value: string | dayjs.Dayjs, errorMessageToBeShown?: string): ValidatorResponse {
+    let isValid = true;
+
+    if(value == null) { isValid = false }
+
+    if(typeof(value) == "string") {
+      if(!((value as string).trim().length > 0)){
+        isValid = false;
+      }
+     }
+
     return {
-      isValid: value != null && value.trim().length > 0,
+      isValid: isValid,
       errorMessage: errorMessageToBeShown ?? "Preencha esse campo",
     };
   }
@@ -17,6 +28,13 @@ export class Validator {
     return {
         isValid: isValid,
         errorMessage: errorMessageToBeShown ?? "Preencha um e-mail válido",
+    }
+  }
+
+  static date(data: Dayjs, errorMessageToBeShown?: string): ValidatorResponse{
+    return {
+      isValid: data.isValid(),
+      errorMessage: errorMessageToBeShown ?? "Preencha uma data válida",
     }
   }
 }

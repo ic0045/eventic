@@ -1,5 +1,6 @@
+import dayjs from 'dayjs';
 export interface FormFieldState { 
-    value?: string; 
+    value?: string | dayjs.Dayjs; 
     validators?: any[]; 
     valid?: boolean; 
     errorMessage?: string 
