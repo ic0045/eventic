@@ -1,0 +1,7 @@
+.iconButton {
+    color: 'black' !important;
+    background-color: 'white' !important;
+    align-self: 'center' !important;
+    border:'1px solid' !important;
+    cursor: pointer !important;
+}

@@ -5,54 +5,69 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import ShareIcon from '@mui/icons-material/Share';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import { useState } from "react";
+import SubscribeButton from "@app/components/subscribebutton/SubscribeButton"
+import Link from 'next/link';
 
-export default function EventCard() {
+interface Props {
+    image: string
+    title: string
+    day: string
+    month: string
+    location: string
+    time: string
+}
+
+export default function EventCard(props: Props) {
 
     const [subscribed, setSubscribed] = useState(false)
 
     return (
-        <Card sx={{ display: 'flex' }}>
-            <CardMedia
-                component="img"
-                sx={{ width: 150, height: 150, objectFit: 'contain' }}
-                image="/images/evento1.jpg"
-                alt="evento1"
-            />
+
+        <Card sx={{ display: 'flex', maxWidth: '420px', boxShadow: 3 }}>
+            <Box sx={{alignSelf: 'center'}}>
+                <Link href='/eventdetails'>
+                    <CardMedia
+                        component="img"
+                        sx={{ width: 150, height: 150, objectFit: 'contain' }}
+                        image={props.image}
+                        alt="evento-image"
+                    />
+                </Link>
+            </Box>
+
             <Box >
                 <CardContent>
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                        <IconButton onClick={() => setSubscribed(!subscribed)} aria-label="notification">
-                            <NotificationsActiveIcon sx={subscribed ? { color: '#FFCB00' } : undefined} />
-                        </IconButton>
-                        <IconButton aria-label="share">
-                            <ShareIcon />
-                        </IconButton>
-                    </Box>
                     <Typography component="div" variant="h5">
-                        Simpósio Nacional
+                        {props.title}
                     </Typography>
 
                     <Box mt={2} sx={{ display: 'flex', gap: '1rem' }}>
                         <Box>
                             <Typography variant="h5" align="center" >
-                                1
+                                {props.day}
                             </Typography>
                             <Typography variant="body1" gutterBottom align="center" >
-                                Abril
+                                {props.month}
                             </Typography>
                         </Box>
                         <Box>
 
                             <Typography variant="subtitle1" color="text.secondary" component="div">
-                                <LocationOnIcon fontSize='4px' /> Instituto de Matemática
+                                <LocationOnIcon sx={{ fontSize: '90%' }} fontSize='small' /> {props.location}
                             </Typography>
                             <Typography variant="subtitle1" color="text.secondary" component="div">
-                                <AccessTimeIcon fontSize='4px' /> Sábado, 14h
+                                <AccessTimeIcon sx={{ fontSize: '90%' }} fontSize='small' /> {props.time}
                             </Typography>
                         </Box>
                     </Box>
 
                 </CardContent>
+                <Box mb={1} sx={{ display: 'flex', justifyContent: 'flex-end', marginRight: '0.5rem' }}>
+                    <SubscribeButton />
+                    <IconButton aria-label="share">
+                        <ShareIcon fontSize='small' />
+                    </IconButton>
+                </Box>
             </Box>
 
         </Card>

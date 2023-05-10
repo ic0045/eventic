@@ -67,3 +67,7 @@ body {
     width: 100%;
     min-height: 200px;
 }
+
+a:visited {
+    color: inherit;
+ }
