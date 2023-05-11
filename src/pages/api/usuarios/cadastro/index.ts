@@ -26,7 +26,7 @@ export default async function handler(
                     usuario = await UsuarioRepo.save(usuario);
                     res.status(200).json({usuario});
                 }
-                else{ res.status(400).json("Já existe um usuario de email: "+req.body.email)}
+                else{ res.status(400).json({errorMsg: "Já existe um usuario cadastrado para o e-mail informado."})}
             }catch(e){res.status(500).json(e)}
         }else{ res.status(400).json({errorMsg})}
     }

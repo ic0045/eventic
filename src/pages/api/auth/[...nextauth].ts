@@ -18,9 +18,8 @@ export const authOptions : NextAuthOptions = {
           }
 
           if(email === undefined || password === undefined)
-            return null;
+            throw new Error("Dados de login inválidos");
 
-          try{
             const usuario = await UsuarioRepo.findOne({
               where: {email: email.toLocaleLowerCase()}
             });
@@ -37,18 +36,17 @@ export const authOptions : NextAuthOptions = {
               fotoPerfil: usuario.fotoPerfil,
               permissao: usuario.permissao
             }
-        }catch(e){console.log(e); throw new Error("Erro ao buscar usuário.");}
         }   
     })
   ],
   callbacks:{
-    async jwt({ token, user } ) {
-        return {...token, ...user}
-    },
-    async session({session,token}){
-        session.user = token as any;
-        return session;
-    }
+    async signIn({user}){
+      console.log("\n======SIGIn CALLBACK=======")
+      console.log("Parâmetros do token")
+      console.log(user)
+      console.log(".......................\n")
+      return true;
+     }
   },
   pages:{
     signIn: "/login"
