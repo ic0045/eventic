@@ -14,6 +14,7 @@ import { CadastroEventoForm } from "@app/components/cadastroeventoform/CadastroE
 import { EventoAPI } from "@app/apis/EventoAPI";
 import dayjs, { Dayjs } from "dayjs";
 import { juntarDataHorario } from "@app/helpers/Helpers";
+import { getServerSession } from "next-auth";
 
 const CadastroEvento: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -171,5 +172,20 @@ const CadastroEvento: NextPage = () => {
     </Layout>
   );
 };
+
+export const getServerSideProps = async (context: any) => {
+  const session = await getServerSession(context.req, context.res, {});
+  if(!session){
+      return {
+          props: {},
+          redirect: {
+              destination: '/login',
+              permanent: false
+          }
+      }
+  }
+
+  return {props: {}}
+}
 
 export default CadastroEvento;

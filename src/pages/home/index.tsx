@@ -13,6 +13,7 @@ import ViewListIcon from '@mui/icons-material/ViewList';
 import ViewModuleIcon from '@mui/icons-material/ViewModule';
 import SearchIcon from '@mui/icons-material/Search';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { getServerSession } from 'next-auth';
 
 
 export default function Home() {
@@ -184,6 +185,22 @@ export default function Home() {
 
     )
 }
+
+export const getServerSideProps = async (context: any) => {
+    const session = await getServerSession(context.req, context.res, {});
+    if(!session){
+        return {
+            props: {},
+            redirect: {
+                destination: '/login',
+                permanent: false
+            }
+        }
+    }
+  
+    return {props: {}}
+}
+  
 
 // export async function getStaticProps(){
 //     const res = await fetch("http://localhost:3000/eventos/?titulo=Simpósio&destaque=true")
