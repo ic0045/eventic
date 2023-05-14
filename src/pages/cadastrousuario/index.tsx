@@ -10,16 +10,14 @@ import {
 } from "@mui/material";
 import styles from "./cadastrousuario.module.css";
 import Image from "next/image";
-import { width, height } from "@mui/system";
 import { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { Layout } from "@app/components/common/layout/Layout";
-import { EventoAPI } from "@app/apis/EventoAPI";
-import dayjs from "dayjs";
 import { CadastroUsuarioForm } from "@app/components/cadastrousuarioform/CadastroUsuarioForm";
 import { UsuarioAPI } from "@app/apis/UsuarioAPI";
+import { toBase64 } from "@app/helpers/Helpers";
 
 const CadastroUsuario: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -104,19 +102,23 @@ const CadastroUsuario: NextPage = () => {
   const redirectoToLogin = () => {
     router.push("/login");
   };
-  const onCadastroSubmit = (e: Event) => {
+  const onCadastroSubmit = async (e: Event) => {
     if (!formInstance.validateForm()) {
       return;
     }
 
     setIsLoading(true);
     setCadastroSuccess(true);
+
+    const base64 = await toBase64(formInstance.files[0]);
+
     UsuarioAPI.cadastrar({
       primeiro_nome: formInstance.getValue("nome") as string,
       segundo_nome: formInstance.getValue("sobrenome") as string,
       email: formInstance.getValue("email") as string,
       senha: formInstance.getValue("senha") as string,
       permissao: "visitante",
+      imagem: base64 as string
     })
       .catch((error) => {
         setCadastroSuccess(false);

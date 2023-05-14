@@ -1,14 +1,17 @@
 import { FormFieldState } from "@app/interfaces/form_interfaces";
 import dayjs, { Dayjs } from "dayjs";
+import { ChangeEvent } from "react";
 
 
 export class CustomForm{
     formState: Map<string, FormFieldState>;
+    files: File[];
     setFormState: any;
 
     constructor(formState: Map<string, FormFieldState>, setFormState: any){
         this.formState = formState;
         this.setFormState = setFormState;
+        this.files = [];
     }
 
 
@@ -47,7 +50,7 @@ export class CustomForm{
 
     onInputChange = (e: any) => {
         const newValue = e.target?.value ?? e.$d;
-        const currentValue = this.formState.get(e.target.id);
+        const currentValue = this.formState.get(e.target.id ?? e.target.name);
         let formStateMap = new Map(this.formState);
         formStateMap.set(e.target.id ?? e.target.name, {...currentValue, value: newValue})
         this.setFormState(formStateMap)
@@ -58,6 +61,18 @@ export class CustomForm{
         let formStateMap = new Map(this.formState);
         formStateMap.set(id, {...currentValue, value: data});
         this.setFormState(formStateMap);
+    }
+
+    onFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if(!e.target?.files){
+            return;
+        }
+        const newValue = e.target?.files[0]?.name
+        const currentValue = this.formState.get(e.target.id);
+        let formStateMap = new Map(this.formState);
+        formStateMap.set(e.target.id, {...currentValue, value: newValue})
+        this.files.push(e.target?.files[0]);
+        this.setFormState(formStateMap)
     }
 
     getValue = (fieldId: string): string | dayjs.Dayjs => {
