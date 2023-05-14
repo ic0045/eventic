@@ -1,4 +1,6 @@
 import bcrypt from 'bcrypt'
+import { NextRequest, NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
 
 /*
 *  Níveis de permissão de usuário
@@ -22,4 +24,19 @@ export function hashPassword(password: string) : Promise<string>{
 */
 export async function checkPassword(password : string, dbPassword : string) : Promise<boolean>{
     return await bcrypt.compare(password,dbPassword);
+}
+
+/*
+* Função que verifica se usuário possui autorização para acessar um recurso
+*/
+export async function redirectIfNotAuthorized(req : NextRequest, roleRequired : String){
+    const token = await getToken({req});
+
+    if(!token)
+        return NextResponse.redirect(new URL('/login'));
+    
+    if(token?.permissao == roleRequired)
+        return true;
+
+    return NextResponse.redirect(new URL('/accessdenied'));
 }
