@@ -11,8 +11,11 @@ import { Layout } from "@app/components/common/layout/Layout";
 import SubscribeButton from "@app/components/subscribebutton/SubscribeButton"
 import Navbar from "@app/components/common/navbar/Navbar";
 
+import { useSearchParams } from 'next/navigation'
+
 function EventDetails() {
 
+  const searchParams = useSearchParams()
 
   const event = {
     image: "/images/evento1.jpg",
@@ -33,16 +36,16 @@ function EventDetails() {
     <Container maxWidth="xl">
       <Navbar />
       <Typography sx={{ borderRadius: '0.3rem', backgroundColor: 'white', boxShadow: 3, padding: '1rem' }} variant="h5" mb={3}>
-        {event.title}
+        {searchParams.get('title')}
       </Typography>
       <Grid container spacing={3}>
         <Grid item md={4}>
           <Box sx={{ boxShadow: 0 }}>
             <Image
-              width={600}
               height={600}
+              width={600}
               className={styles.img}
-              src={event.image}
+              src={searchParams.get('image') || event.image}
               alt='evento-imagem'
             />
           </Box>
@@ -62,7 +65,7 @@ function EventDetails() {
               Descrição
             </Typography>
             <Typography sx={{ textAlign: 'justify' }} variant="body1" gutterBottom>
-              {event.description}
+              {searchParams.get('description')}
             </Typography>
           </Box >
 
@@ -71,16 +74,16 @@ function EventDetails() {
               Detalhes
             </Typography>
             <Typography variant="body2" gutterBottom>
-              {event.start}
+              {searchParams.get('initialDate')}
               <IconButton target="_blank" href="https://calendar.google.com/" aria-label="calendar">
                 <EventIcon />
               </IconButton>
             </Typography>
             <Typography variant="body2" gutterBottom>
-              {event.end}
+              {searchParams.get('finalDate')}
             </Typography>
             <Typography variant="body2" gutterBottom>
-              Local: {event.location}
+              Local: {searchParams.get('location')}
 
               <IconButton target="_blank" href="https://www.google.com/maps/place/Instituto+de+Geoci%C3%AAncias+da+UFBA/@-12.9980058,-38.5097059,17z/data=!3m1!4b1!4m6!3m5!1s0x716049f49530915:0xeee17285dd935415!8m2!3d-12.9980058!4d-38.5071256!16s%2Fg%2F1q5bwgf_d" aria-label="location ">
                 <PlaceIcon />
@@ -88,7 +91,7 @@ function EventDetails() {
 
             </Typography>
             <Typography variant="body2" gutterBottom>
-              Mais informacoes: <a href={event.moreInformation}>{event.moreInformation}</a>
+              Mais informacoes: <a href={searchParams.get('linkMoreInformation')|| 'www.google.com'}>{searchParams.get('linkMoreInformation')}</a>
             </Typography>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
               <SubscribeButton />
