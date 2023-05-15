@@ -1,4 +1,4 @@
-# SEICOMP - Sistema de Eventos do Instituto de Computação da UFBA 
+# EVENTIC - Sistema de Eventos do Instituto de Computação da UFBA 
 
 ## Sobre o projeto
 <div align="justify">
