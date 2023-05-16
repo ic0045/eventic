@@ -8,14 +8,97 @@ import TabPanel from '@mui/lab/TabPanel';
 import EventList from "@app/components/eventlist";
 import EventCard from "@app/components/eventcard";
 import Typography from "@mui/material/Typography";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ViewListIcon from '@mui/icons-material/ViewList';
 import ViewModuleIcon from '@mui/icons-material/ViewModule';
 import SearchIcon from '@mui/icons-material/Search';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import moment from 'moment';
 
 
-export default function Home() {
+interface Evento {
+    id: string
+    descricao: string
+    localizacao: string
+    dataInicial: string
+    titulo: string
+    destaque: boolean
+    imagemUrl: string
+    createdAt: string
+    updatedAt: string
+    datafinal: string
+    linkImagem: string
+    linkTitulo: string
+    tipo: string
+    linkMaisInfomacoes: string
+}
+
+interface EventoPorSemana {
+    nome: string;
+    eventos: Evento[];
+  }
+
+export default function Home({ data }: { data: Evento[] }) {
+
+    // Ordena os eventos por data
+    data = data.sort((a, b) =>
+        new Date(a.dataInicial).getTime() -
+        new Date(b.dataInicial).getTime()
+    );
+
+    // Separando os eventos em dois arrays: um para as datas que já passaram e outro para as novas datas
+    const eventosAntigos: Evento[] = data.filter(evento => new Date(evento.dataInicial).getTime() < Date.now());
+    const eventosNovos: Evento[] = data.filter(evento => new Date(evento.dataInicial).getTime() >= Date.now());
+
+    function separaEventosSemana(eventos: Evento[]) {
+        const eventosPorSemana: Array<EventoPorSemana>  = [];
+
+        eventos.forEach((evento) => {
+            const semana = moment(evento.dataInicial).week();
+            const dataInicioSemana = moment(evento.dataInicial).startOf('week').format('D [de] MMMM');
+            const dataFimSemana = moment(evento.dataInicial).add(6, 'days').format('D [de] MMMM');
+            const nomeSemana = `Semana de ${dataInicioSemana} a ${dataFimSemana}`;
+
+            if (!eventosPorSemana[semana]) {
+                eventosPorSemana[semana] = {
+                    nome: nomeSemana,
+                    eventos: []
+                };
+            }
+            eventosPorSemana[semana].eventos.push(evento);
+        });
+
+        return eventosPorSemana
+    }
+
+    function separaEventosMes(eventos: Evento[]) {
+        const eventosPorMes: Array<EventoPorSemana> = []
+
+        eventos.forEach((evento) => {
+            const mes = moment(evento.dataInicial).month();
+
+            const nomeMes = moment(evento.dataInicial).format('MMMM YYYY');
+
+            if (!eventosPorMes[mes]) {
+                eventosPorMes[mes] = {
+                    nome: nomeMes,
+                    eventos: [],
+                };
+            }
+            eventosPorMes[mes].eventos.push(evento);
+        });
+        return eventosPorMes
+    }
+
+    const eventosPorDiaAnteriores = [{ nome: '', eventos: [...eventosAntigos] }]
+    const eventosPorDiaNovos = [{ nome: '', eventos: [...eventosNovos] }]
+
+    const eventosPorSemanaAnteriores = separaEventosSemana(eventosAntigos)
+    const eventosPorSemanaNovos = separaEventosSemana(eventosNovos)
+
+    const eventosPorMesAnteriores = separaEventosMes(eventosAntigos)
+    const eventosPorMesNovos = separaEventosMes(eventosNovos)
+
 
     const cards2 = [
         { id: 0, image: "/images/evento1.jpg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
@@ -35,7 +118,7 @@ export default function Home() {
         { id: 5, image: "/images/evento2.jpeg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
     ]
 
-    const [period, setPeriod] = useState('2');
+    const [period, setPeriod] = useState('1');
     const [category, setCategory] = useState('1');
 
 
@@ -43,9 +126,33 @@ export default function Home() {
 
     const [value, setValue] = useState('1')
 
+    const [eventToMapOld, setEventToMapOld] = useState(eventosPorDiaAnteriores)
+    const [eventToMapNew, setEventToMapNew] = useState(eventosPorDiaNovos)
+
+    function handlePeriodChange(event: SelectChangeEvent) {
+        const evento = event.target.value
+        setPeriod(event.target.value)
+        if (evento == '3') {
+            setEventToMapOld(eventosPorMesAnteriores);
+            setEventToMapNew(eventosPorMesNovos);
+        }
+        if (evento == '2') {
+            setEventToMapOld(eventosPorSemanaAnteriores);
+            setEventToMapNew(eventosPorSemanaNovos);
+        }
+        if (evento == '1') {
+            setEventToMapOld(eventosPorDiaAnteriores);
+            setEventToMapNew(eventosPorDiaNovos);
+        }
+
+    }
+
+
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
         setValue(newValue)
     }
+
+
 
     return (
         <Container maxWidth="xl">
@@ -79,7 +186,7 @@ export default function Home() {
                             id="demo-simple-select"
                             value={period}
                             label="Período"
-                            onChange={(event: SelectChangeEvent) => (setPeriod(event.target.value))}
+                            onChange={handlePeriodChange}
                         >
                             <MenuItem value={1}>Dia</MenuItem>
                             <MenuItem value={2}>Semana</MenuItem>
@@ -115,67 +222,57 @@ export default function Home() {
                             </TabList>
 
                         </Box>
+
                         <TabPanel value='0'>
-                            <Typography variant="h5" mb={3}>Semana de 1 a 7 de maio</Typography>
-                            {listView ?
+
+                            {eventToMapOld.map((eventosDaSemana) =>
                                 <>
-                                    {cards1.map((card) =>
-                                        <EventList key={card.id} title={card.title} day={card.day} month={card.month} location={card.location} time={card.time} />
-                                    )}
-                                </> :
-                                <>
-                                    <Box sx={{ display: 'flex',flexWrap:'wrap', gap:'1rem' }}>
-                                        {cards1.map((card) =>
-                                            <EventCard key={card.id} image={card.image} title={card.title} day={card.day} month={card.month} location={card.location} time={card.time} />
-                                        )}
-                                    </Box>
-                                </>}
-                            <Typography variant="h5" mb={3} mt={8}>Semana de 24 a 30 de abril</Typography>
-                            {listView ?
-                                <>
-                                    {cards1.map((card) =>
-                                        <EventList key={card.id} title={card.title} day={card.day} month={card.month} location={card.location} time={card.time} />
-                                    )}
-                                </> :
-                                <>
-                                    <Box sx={{ display: 'flex',flexWrap:'wrap', gap:'1rem' }}>
-                                        {cards1.map((card) =>
-                                            <EventCard key={card.id} image={card.image} title={card.title} day={card.day} month={card.month} location={card.location} time={card.time} />
-                                        )}
-                                    </Box>
-                                </>}
+                                    {listView ?
+                                        <>
+                                            {cards1.map((card) =>
+                                                <EventList key={card.id} title={card.title} day={card.day} month={card.month} location={card.location} time={card.time} />
+                                            )}
+                                        </> :
+                                        <>
+                                            <Typography variant="h5" mt={8} mb={3}>{eventosDaSemana.nome}</Typography>
+
+                                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
+                                                {eventosDaSemana.eventos.map((card: Evento) =>
+
+                                                    <EventCard key={card.id} finalDate={card.datafinal} linkMoreInformation={card.linkMaisInfomacoes} description={card.descricao} image={card.imagemUrl} title={card.titulo} location={card.localizacao} initialDate={card.dataInicial} />
+                                                )}
+                                            </Box>
+                                        </>
+                                    }
+                                </>
+                            )}
+
+
                         </TabPanel>
+
                         <TabPanel value='1'>
-                            <Typography variant="h5" mb={3}>Semana de 8 a 14 de maio</Typography>
-                            {listView ?
-                                <>
-                                    {cards2.map((card) =>
-                                        <EventList key={card.id} title={card.title} day={card.day} month={card.month} location={card.location} time={card.time} />
-                                    )}
-                                </> :
-                                <>
-                                    <Box sx={{ display: 'flex',flexWrap:'wrap', gap:'1rem' }}>
-                                        {cards2.map((card) =>
-                                            <EventCard key={card.id} image={card.image} title={card.title} day={card.day} month={card.month} location={card.location} time={card.time} />
-                                        )}
-                                    </Box>
-                                </>}
 
-                            <Typography variant="h5" mb={3} mt={8}>Semana de 15 a 21 de maio</Typography>
-                            {listView ?
+                            {eventToMapNew.map((eventosDaSemana) =>
                                 <>
-                                    {cards2.map((card) =>
-                                        <EventList key={card.id} title={card.title} day={card.day} month={card.month} location={card.location} time={card.time} />
-                                    )}
-                                </> :
-                                <>
-                                    <Box sx={{ display: 'flex',flexWrap:'wrap', gap:'1rem' }}>
-                                        {cards2.map((card) =>
-                                            <EventCard key={card.id} image={card.image} title={card.title} day={card.day} month={card.month} location={card.location} time={card.time} />
-                                        )}
-                                    </Box>
-                                </>}
+                                    {listView ?
+                                        <>
+                                            {cards1.map((card) =>
+                                                <EventList key={card.id} title={card.title} day={card.day} month={card.month} location={card.location} time={card.time} />
+                                            )}
+                                        </> :
+                                        <>
+                                            <Typography variant="h5" mt={8} mb={3}>{eventosDaSemana.nome}</Typography>
 
+                                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
+                                                {eventosDaSemana.eventos.map((card: Evento) =>
+
+                                                    <EventCard key={card.id} finalDate={card.datafinal} linkMoreInformation={card.linkMaisInfomacoes} description={card.descricao} image={card.imagemUrl} title={card.titulo} location={card.localizacao} initialDate={card.dataInicial} />
+                                                )}
+                                            </Box>
+                                        </>
+                                    }
+                                </>
+                            )}
                         </TabPanel>
                     </TabContext>
                 </Box>
@@ -185,12 +282,13 @@ export default function Home() {
     )
 }
 
-// export async function getStaticProps(){
-//     const res = await fetch("http://localhost:3000/eventos/?titulo=Simpósio&destaque=true")
-//     const eventos = await res.json()
-//     return {
-//         props: {
-//             eventos,
-//         },
-//     }
-// }
+export async function getStaticProps() {
+    const api = process.env.PUBLIC_URL
+    const res = await fetch(`${api}/api/eventos`)
+    const data = await res.json()
+    return {
+        props: {
+            data,
+        },
+    }
+}
