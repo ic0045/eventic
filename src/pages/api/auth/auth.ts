@@ -1,6 +1,8 @@
 import bcrypt from 'bcrypt'
 import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
+import { authOptions } from './[...nextauth]';
+import { getServerSession } from 'next-auth';
 
 /*
 *  Níveis de permissão de usuário
@@ -29,14 +31,36 @@ export async function checkPassword(password : string, dbPassword : string) : Pr
 /*
 * Função que verifica se usuário possui autorização para acessar um recurso
 */
-export async function redirectIfNotAuthorized(req : NextRequest, roleRequired : String){
-    const token = await getToken({req});
+export async function redirectIfNotAuthorized(req :any, res:any, roleRequired : String){
+    const session = await getServerSession(req,res,authOptions);
 
-    if(!token)
-        return NextResponse.redirect(new URL('/login'));
-    
-    if(token?.permissao == roleRequired)
-        return true;
-
-    return NextResponse.redirect(new URL('/accessdenied'));
+        if(!session){
+            return{
+                redirect:{
+                    destination: "http://localhost:3000/auth/login",
+                    permanet:false,
+                }
+            }
+        }
+        if(roleRequired === session.user.permissao){
+            return{
+                props:{}
+            }
+        }
+        else{
+            return{
+                destination: "http://localhost:3000/auth/login?error=Forbidden",
+                permanet:false,
+            }
+        }
 }
+
+    // const token = await getToken({req});
+
+    // if(!token)
+    //     return NextResponse.redirect(new URL('/login'));
+    
+    // if(token?.permissao == roleRequired)
+    //     return true;
+
+    // return NextResponse.redirect(new URL('/accessdenied'));
