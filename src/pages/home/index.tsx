@@ -33,12 +33,10 @@ interface Evento {
     linkMaisInfomacoes: string
 }
 
-interface EventosPorSemana {
-    [semana: string]: {
-        nome: string,
-        eventos: Evento[]
-    }
-}
+interface EventoPorSemana {
+    nome: string;
+    eventos: Evento[];
+  }
 
 export default function Home({ data }: { data: Evento[] }) {
 
@@ -52,8 +50,8 @@ export default function Home({ data }: { data: Evento[] }) {
     const eventosAntigos: Evento[] = data.filter(evento => new Date(evento.dataInicial).getTime() < Date.now());
     const eventosNovos: Evento[] = data.filter(evento => new Date(evento.dataInicial).getTime() >= Date.now());
 
-    function separaEventosSemana(eventos) {
-        const eventosPorSemana = [];
+    function separaEventosSemana(eventos: Evento[]) {
+        const eventosPorSemana: Array<EventoPorSemana>  = [];
 
         eventos.forEach((evento) => {
             const semana = moment(evento.dataInicial).week();
@@ -73,8 +71,8 @@ export default function Home({ data }: { data: Evento[] }) {
         return eventosPorSemana
     }
 
-    function separaEventosMes(eventos) {
-        const eventosPorMes = [];
+    function separaEventosMes(eventos: Evento[]) {
+        const eventosPorMes: Array<EventoPorSemana> = []
 
         eventos.forEach((evento) => {
             const mes = moment(evento.dataInicial).month();
@@ -101,8 +99,6 @@ export default function Home({ data }: { data: Evento[] }) {
     const eventosPorMesAnteriores = separaEventosMes(eventosAntigos)
     const eventosPorMesNovos = separaEventosMes(eventosNovos)
 
-    console.log(eventosPorMesAnteriores)
-    console.log(eventosPorSemanaAnteriores)
 
     const cards2 = [
         { id: 0, image: "/images/evento1.jpg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
@@ -287,9 +283,9 @@ export default function Home({ data }: { data: Evento[] }) {
 }
 
 export async function getStaticProps() {
-    const res = await fetch("http://localhost:3000/api/eventos")
+    const api = process.env.PUBLIC_URL
+    const res = await fetch(`${api}/api/eventos`)
     const data = await res.json()
-    console.log(data)
     return {
         props: {
             data,
