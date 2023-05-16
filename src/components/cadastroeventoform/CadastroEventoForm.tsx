@@ -85,7 +85,7 @@ export const CadastroEventoForm: FunctionComponent<CadastroEventoFormProps> = (
                 value={props.formInstance.getValue("horarioInicio")}
                 onChange={(value) => {
                   props.formInstance.onDateInputChange(
-                    dayjs(value),
+                    dayjs(value as dayjs.Dayjs),
                     "horarioInicio"
                   );
                 }}
@@ -107,7 +107,7 @@ export const CadastroEventoForm: FunctionComponent<CadastroEventoFormProps> = (
                 slotProps={{ textField: { className: styles.dataInput } }}
                 value={props.formInstance.getValue("dataFim")}
                 onChange={(value) => {
-                  props.formInstance.onDateInputChange(dayjs(value), "dataFim");
+                  props.formInstance.onDateInputChange(dayjs(value as dayjs.Dayjs), "dataFim");
                 }}
               />
             </Grid>
@@ -119,7 +119,7 @@ export const CadastroEventoForm: FunctionComponent<CadastroEventoFormProps> = (
                 value={props.formInstance.getValue("horarioFim")}
                 onChange={(value) => {
                   props.formInstance.onDateInputChange(
-                    dayjs(value),
+                    dayjs(value as dayjs.Dayjs),
                     "horarioFim"
                   );
                 }}

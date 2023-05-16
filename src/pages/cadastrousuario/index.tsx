@@ -93,6 +93,15 @@ const CadastroUsuario: NextPage = () => {
         valid: true,
         errorMessage: "",
       },
+    ],
+    [
+      "imagem",
+      {
+        value: undefined,
+        validators: [],
+        valid: true,
+        errorMessage: "",
+      },
     ]
   ]);
 
@@ -110,7 +119,12 @@ const CadastroUsuario: NextPage = () => {
     setIsLoading(true);
     setCadastroSuccess(true);
 
-    const base64 = await toBase64(formInstance.files[0]);
+    const fotoPerfil = formInstance.getValue("imagem");
+    let base64: string = "";
+
+    if(fotoPerfil){
+      base64 = await toBase64(formInstance.getValue("imagem") as File) as string;
+    }
 
     UsuarioAPI.cadastrar({
       primeiro_nome: formInstance.getValue("nome") as string,
@@ -118,7 +132,7 @@ const CadastroUsuario: NextPage = () => {
       email: formInstance.getValue("email") as string,
       senha: formInstance.getValue("senha") as string,
       permissao: "visitante",
-      imagem: base64 as string
+      fotoPerfil: base64 as string
     })
       .catch((error) => {
         setCadastroSuccess(false);

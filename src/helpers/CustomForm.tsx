@@ -5,13 +5,11 @@ import { ChangeEvent } from "react";
 
 export class CustomForm{
     formState: Map<string, FormFieldState>;
-    files: File[];
     setFormState: any;
 
     constructor(formState: Map<string, FormFieldState>, setFormState: any){
         this.formState = formState;
         this.setFormState = setFormState;
-        this.files = [];
     }
 
 
@@ -67,15 +65,14 @@ export class CustomForm{
         if(!e.target?.files){
             return;
         }
-        const newValue = e.target?.files[0]?.name
+        const newValue = e.target?.files[0]
         const currentValue = this.formState.get(e.target.id);
         let formStateMap = new Map(this.formState);
         formStateMap.set(e.target.id, {...currentValue, value: newValue})
-        this.files.push(e.target?.files[0]);
         this.setFormState(formStateMap)
     }
 
-    getValue = (fieldId: string): string | dayjs.Dayjs => {
+    getValue = (fieldId: string): string | dayjs.Dayjs | File => {
         return this.formState.get(fieldId)?.value ?? ""
     }
 
