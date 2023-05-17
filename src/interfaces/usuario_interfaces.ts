@@ -7,5 +7,6 @@ export interface UsuarioPostRequest {
     permissao: string,
     celular?: string,
     cpf?: string,
-    cep?: string 
+    cep?: string,
+    fotoPerfil: string
 }
