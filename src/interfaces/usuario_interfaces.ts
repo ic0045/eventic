@@ -8,5 +8,5 @@ export interface UsuarioPostRequest {
     celular?: string,
     cpf?: string,
     cep?: string,
-    fotoPerfil: string
+    foto_perfil: string
 }

@@ -132,7 +132,7 @@ const CadastroUsuario: NextPage = () => {
       email: formInstance.getValue("email") as string,
       senha: formInstance.getValue("senha") as string,
       permissao: "visitante",
-      fotoPerfil: base64 as string
+      foto_perfil: base64 as string
     })
       .catch((error) => {
         setCadastroSuccess(false);

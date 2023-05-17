@@ -51,9 +51,13 @@ export class Usuario {
   @Column("character varying", { name: "permissao", length: 100 })
   permissao: string;
 
-  @Column("character varying", {
+  @Column("bytea", {
     name: "foto_perfil",
     nullable: true,
+    transformer:{
+      to: (value : string) => Buffer.from(value),
+      from: (value : Buffer) => value.toString()
+    }
   })
   fotoPerfil: string | null;
 
