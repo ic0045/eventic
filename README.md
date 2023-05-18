@@ -1,4 +1,4 @@
-# SEICOMP - Sistema de Eventos do Instituto de Computação da UFBA 
+# EVENTIC - Sistema de Eventos do Instituto de Computação da UFBA 
 
 ## Sobre o projeto
 <div align="justify">
@@ -41,6 +41,7 @@ Visando solucionar esse problema e atender a demanda do Instituto da Computaçã
 - [Requisitos](https://docs.google.com/spreadsheets/d/15ZO1JtwPHYhsB4rp6Ko_rEEBG1fMr6Br-LRbo9UJFr8/edit?usp=sharing)
 - [Tarefas](https://github.com/orgs/ic0045/projects/1/views/1)
 - [Rotas de API](https://isaquecopque.stoplight.io/docs/seicomp/branches/main/oneg2aiu3tl21-seicomp)
+- [Processo de Testes](https://docs.google.com/presentation/d/1wAXX2hR5juXrmFGoiBmN0OdcGuOneKyXpbq0bgwUvyU/edit#slide=id.g244a1fecbb3_0_56)
 
 ## Protótipos
 

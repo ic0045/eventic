@@ -4,7 +4,6 @@ import { FormFieldState } from "@app/interfaces/form_interfaces";
 import { Grid, CircularProgress } from "@mui/material";
 import styles from "./cadastroevento.module.css";
 import Image from "next/image";
-import { width, height } from "@mui/system";
 import { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -13,8 +12,8 @@ import { Layout } from "@app/components/common/layout/Layout";
 import { CadastroEventoForm } from "@app/components/cadastroeventoform/CadastroEventoForm";
 import { EventoAPI } from "@app/apis/EventoAPI";
 import dayjs, { Dayjs } from "dayjs";
-import { juntarDataHorario } from "@app/helpers/Helpers";
 import { getServerSession } from "next-auth";
+import { juntarDataHorario, toBase64 } from "@app/helpers/Helpers";
 
 const CadastroEvento: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -78,10 +77,19 @@ const CadastroEvento: NextPage = () => {
       },
     ],
     [
+      "categoria",
+      {
+        value: "",
+        validators: [],
+        valid: true,
+        errorMessage: "",
+      },
+    ],
+    [
       "tipo",
       {
         value: "",
-        validators: [Validator.required],
+        validators: [],
         valid: true,
         errorMessage: "",
       },
@@ -95,6 +103,15 @@ const CadastroEvento: NextPage = () => {
         errorMessage: "",
       },
     ],
+    [
+      "imagem",
+      {
+        value: undefined,
+        validators: [],
+        valid: true,
+        errorMessage: "",
+      },
+    ],
   ]);
 
   const [formState, setFormState] = useState(formFields);
@@ -102,13 +119,20 @@ const CadastroEvento: NextPage = () => {
 
   const formInstance = new CustomForm(formState, setFormState);
 
-  const onCadastroSubmit = (e: Event) => {
+  const onCadastroSubmit = async (e: Event) => {
     if (!formInstance.validateForm()) {
       console.log(formState);
       return;
     }
 
     setIsLoading(true);
+
+    const imagem = formInstance.getValue("imagem");
+    let base64: string = "";
+
+    if(imagem){
+      base64 = await toBase64(formInstance.getValue("imagem") as File) as string;
+    }
 
     EventoAPI.cadastrar({
       titulo: formInstance.getValue("titulo") as string,
@@ -120,7 +144,7 @@ const CadastroEvento: NextPage = () => {
         formInstance.getValue("horarioInicio") as Dayjs
       ).toISOString(),
       usuario_id: session.data?.user.id ?? "1",
-      imagem_url: "teste",
+      imagem: base64 as string,
     })
       .catch((error) => {
         setFormErrorMessage(error.response.data.errorMsg);

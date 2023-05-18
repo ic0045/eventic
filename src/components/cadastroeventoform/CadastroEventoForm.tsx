@@ -8,10 +8,12 @@ import {
 } from "@mui/material";
 import styles from "./cadastroeventoform.module.css";
 import { CustomForm } from "@app/helpers/CustomForm";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useEffect, useState } from "react";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import dayjs from "dayjs";
+import { CategoriaAPI } from "@app/apis/CategoriaAPI";
+import { Categoria } from "@app/entities/Categoria";
 
 interface CadastroEventoFormProps {
   formInstance: CustomForm;
@@ -23,6 +25,14 @@ interface CadastroEventoFormProps {
 export const CadastroEventoForm: FunctionComponent<CadastroEventoFormProps> = (
   props: CadastroEventoFormProps
 ) => {
+  const [categorias, setCategorias] = useState<Categoria[]>([]);
+
+  useEffect(() => {
+    CategoriaAPI.get({}).then((response) => {
+      setCategorias(response);
+    });
+  }, []);
+
   return (
     <>
       {!props.isCadastroSuccess && (
@@ -61,7 +71,8 @@ export const CadastroEventoForm: FunctionComponent<CadastroEventoFormProps> = (
                   textField: {
                     className: styles.dataInput,
                     error: !props.formInstance.isValid("dataInicio"),
-                    helperText: props.formInstance.getErrorMessage("dataInicio"),
+                    helperText:
+                      props.formInstance.getErrorMessage("dataInicio"),
                   },
                 }}
                 defaultValue={dayjs(new Date())}
@@ -77,15 +88,18 @@ export const CadastroEventoForm: FunctionComponent<CadastroEventoFormProps> = (
               <TimePicker
                 label="Horário"
                 ampm={false}
-                slotProps={{                   textField: {
-                  className: styles.dataInput,
-                  error: !props.formInstance.isValid("horarioInicio"),
-                  helperText: props.formInstance.getErrorMessage("horarioInicio"),
-                }, }}
+                slotProps={{
+                  textField: {
+                    className: styles.dataInput,
+                    error: !props.formInstance.isValid("horarioInicio"),
+                    helperText:
+                      props.formInstance.getErrorMessage("horarioInicio"),
+                  },
+                }}
                 value={props.formInstance.getValue("horarioInicio")}
                 onChange={(value) => {
                   props.formInstance.onDateInputChange(
-                    dayjs(value),
+                    dayjs(value as dayjs.Dayjs),
                     "horarioInicio"
                   );
                 }}
@@ -107,7 +121,10 @@ export const CadastroEventoForm: FunctionComponent<CadastroEventoFormProps> = (
                 slotProps={{ textField: { className: styles.dataInput } }}
                 value={props.formInstance.getValue("dataFim")}
                 onChange={(value) => {
-                  props.formInstance.onDateInputChange(dayjs(value), "dataFim");
+                  props.formInstance.onDateInputChange(
+                    dayjs(value as dayjs.Dayjs),
+                    "dataFim"
+                  );
                 }}
               />
             </Grid>
@@ -119,7 +136,7 @@ export const CadastroEventoForm: FunctionComponent<CadastroEventoFormProps> = (
                 value={props.formInstance.getValue("horarioFim")}
                 onChange={(value) => {
                   props.formInstance.onDateInputChange(
-                    dayjs(value),
+                    dayjs(value as dayjs.Dayjs),
                     "horarioFim"
                   );
                 }}
@@ -128,16 +145,26 @@ export const CadastroEventoForm: FunctionComponent<CadastroEventoFormProps> = (
           </Grid>
         </div>
         <Select
-          label="Tipo"
-          error={!props.formInstance.isValid("tipo")}
-          name="tipo"
-          value={props.formInstance.getValue("tipo")}
+          label="Categoria"
+          error={!props.formInstance.isValid("categoria")}
+          name="categoria"
+          value={props.formInstance.getValue("categoria")}
           onChange={props.formInstance.onInputChange}
         >
-          <MenuItem value="Categoria1" selected={true}>
-            Categoria1
-          </MenuItem>
+          {categorias.map((categoria) => (
+            <MenuItem value={categoria.id} selected={true} key={categoria.id}>
+              {categoria.nome}
+            </MenuItem>
+          ))}
         </Select>
+        <TextField
+          label="Tipo"
+          error={!props.formInstance.isValid("tipo")}
+          id="tipo"
+          value={props.formInstance.getValue("tipo")}
+          onChange={props.formInstance.onInputChange}
+          helperText={props.formInstance.getErrorMessage("tipo")}
+        />
         <TextField
           label="Descrição"
           placeholder="Descrição"
@@ -151,7 +178,12 @@ export const CadastroEventoForm: FunctionComponent<CadastroEventoFormProps> = (
         />
         <div className={styles.data}>
           <h4>Upload de imagem</h4>
-          <input type="file" className={styles.fileInput} />
+          <input
+            type="file"
+            id="imagem"
+            className={styles.fileInput}
+            onChange={props.formInstance.onFileChange}
+          />
         </div>
         <Button
           variant="contained"

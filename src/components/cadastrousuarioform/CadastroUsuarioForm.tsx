@@ -5,19 +5,17 @@ import {
   TextField,
   Select,
   MenuItem,
+  Input,
 } from "@mui/material";
 import styles from "./cadastrousuarioform.module.css";
 import { CustomForm } from "@app/helpers/CustomForm";
 import { FunctionComponent } from "react";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { TimePicker } from "@mui/x-date-pickers/TimePicker";
-import dayjs from "dayjs";
 
 interface CadastroUsuarioFormProps {
   formInstance: CustomForm;
   isCadastroSuccess: boolean;
   onCadastroSubmit: any;
-  errorMessage: string
+  errorMessage: string;
 }
 
 export const CadastroUsuarioForm: FunctionComponent<
@@ -96,7 +94,12 @@ export const CadastroUsuarioForm: FunctionComponent<
         /> */}
         <div className={styles.data}>
           <h4>Upload de imagem</h4>
-          <input type="file" className={styles.fileInput} />
+          <Input
+            type="file"
+            id="imagem"
+            className={styles.fileInput}
+            onChange={props.formInstance.onFileChange}
+          />
         </div>
         <Button
           variant="contained"

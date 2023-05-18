@@ -9,23 +9,52 @@ import SubscribeButton from "@app/components/subscribebutton/SubscribeButton"
 import Link from 'next/link';
 
 interface Props {
+    initialDate: string
     image: string
     title: string
-    day: string
-    month: string
     location: string
-    time: string
+
+    description: string
+    finalDate: string
+    linkMoreInformation: string
 }
 
 export default function EventCard(props: Props) {
 
     const [subscribed, setSubscribed] = useState(false)
 
+    const meses = [
+        "JAN", "FEV", "MAR", "ABR", "MAI", "JUN", "JUL", "AGO", "SET", "OUT", "NOV", "DEZ",
+    ];
+
+    const dias = [
+        "Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado",
+    ];
+
+    const data = new Date(props.initialDate)
+    const day = data.getDate()
+    const month = meses[data.getMonth()]
+    const diaSemana = dias[data.getDay()]
+    const horario = data.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+
+
     return (
 
-        <Card sx={{ display: 'flex', maxWidth: '420px', boxShadow: 3 }}>
-            <Box sx={{alignSelf: 'center'}}>
-                <Link href='/eventdetails'>
+        <Card sx={{ display: 'flex', maxWidth: '420px', boxShadow: 3, flexGrow: 1 }}>
+            <Box sx={{ alignSelf: 'center' }}>
+                <Link href={{
+                    pathname: '/eventdetails',
+                    query: {
+                        title: props.title,
+                        description: props.description,
+                        image: props.image,
+                        location: props.location,
+                        initialDate: `Início: ${day} - ${month} as ${horario}`,
+                        finalDate: props.finalDate,
+                        linkMoreInformation: props.linkMoreInformation
+                    }
+                }}>
                     <CardMedia
                         component="img"
                         sx={{ width: 150, height: 150, objectFit: 'contain' }}
@@ -35,7 +64,7 @@ export default function EventCard(props: Props) {
                 </Link>
             </Box>
 
-            <Box >
+            <Box sx={{ flexGrow: 1 }} >
                 <CardContent>
                     <Typography component="div" variant="h5">
                         {props.title}
@@ -44,10 +73,10 @@ export default function EventCard(props: Props) {
                     <Box mt={2} sx={{ display: 'flex', gap: '1rem' }}>
                         <Box>
                             <Typography variant="h5" align="center" >
-                                {props.day}
+                                {day}
                             </Typography>
                             <Typography variant="body1" gutterBottom align="center" >
-                                {props.month}
+                                {month}
                             </Typography>
                         </Box>
                         <Box>
@@ -56,7 +85,7 @@ export default function EventCard(props: Props) {
                                 <LocationOnIcon sx={{ fontSize: '90%' }} fontSize='small' /> {props.location}
                             </Typography>
                             <Typography variant="subtitle1" color="text.secondary" component="div">
-                                <AccessTimeIcon sx={{ fontSize: '90%' }} fontSize='small' /> {props.time}
+                                <AccessTimeIcon sx={{ fontSize: '90%' }} fontSize='small' /> {diaSemana}, {horario}h
                             </Typography>
                         </Box>
                     </Box>
