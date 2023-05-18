@@ -10,6 +10,7 @@ import { useState } from "react";
 import { Layout } from "@app/components/common/layout/Layout";
 import SubscribeButton from "@app/components/subscribebutton/SubscribeButton"
 import Navbar from "@app/components/common/navbar/Navbar";
+import { getServerSession } from "next-auth";
 
 import { useSearchParams } from 'next/navigation'
 
@@ -107,5 +108,20 @@ function EventDetails() {
     </Container>
   );
 };
+
+export const getServerSideProps = async (context: any) => {
+  const session = await getServerSession(context.req, context.res, {});
+  if(!session){
+      return {
+          props: {},
+          redirect: {
+              destination: '/login',
+              permanent: false
+          }
+      }
+  }
+
+  return {props: {}}
+}
 
 export default EventDetails;

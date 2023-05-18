@@ -10,6 +10,8 @@ import LoginForm from "@app/components/loginform";
 import { Layout } from "@app/components/common/layout/Layout";
 import Image from "next/image";
 import { signIn } from "next-auth/react";
+import { getServerSession } from "next-auth";
+
 
 const Login: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -103,5 +105,20 @@ const Login: NextPage = () => {
     </Layout>
   );
 };
+
+export const getServerSideProps = async (context: any) => {
+  const session = await getServerSession(context.req, context.res, {});
+  if(session){
+      return {
+          props: {},
+          redirect: {
+              destination: '/home',
+              permanent: false
+          }
+      }
+  }
+
+  return {props: {}}
+}
 
 export default Login
