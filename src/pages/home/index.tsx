@@ -282,7 +282,7 @@ export default function Home({ data }: { data: Evento[] }) {
     )
 }
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
     const api = process.env.PUBLIC_URL
     const res = await fetch(`${api}/api/eventos`)
     const data = await res.json()
