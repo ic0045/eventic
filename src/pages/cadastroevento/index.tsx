@@ -16,21 +16,19 @@ import { getServerSession } from "next-auth";
 import { juntarDataHorario, toBase64 } from "@app/helpers/Helpers";
 import { Evento } from "@app/entities/Evento";
 
-const CadastroEvento: NextPage = () => {
+interface CadastroEventoProps {
+  evento: Evento
+}
+
+const CadastroEvento: NextPage<CadastroEventoProps> = (props: CadastroEventoProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [formErrorMessage, setFormErrorMessage] = useState("");
   const session = useSession();
   const router = useRouter();
-  const { id } = router.query;
-  let formMode = id ? FormMode.EDIT : FormMode.CREATE;
+  let formMode = props.evento ? FormMode.EDIT : FormMode.CREATE;
 
-  const [formState, setFormState] = useState(new Map<string, FormFieldState>());
-  const [cadastroSuccess, setCadastroSuccess] = useState(true);
-
-  let formInstance: CustomForm = new CustomForm(formState, setFormState);
-
-  const initForm = (evento?: Evento): void => {
-    let formFields: Map<string, FormFieldState> = new Map([
+  const getFormInit = (evento?: Evento): Map<string, FormFieldState> => {
+    return new Map([
       [
         "titulo",
         {
@@ -52,7 +50,9 @@ const CadastroEvento: NextPage = () => {
       [
         "dataInicio",
         {
-          value: evento?.dataInicial ? dayjs(evento?.dataInicial) : dayjs(new Date()),
+          value: evento?.dataInicial
+            ? dayjs(evento?.dataInicial)
+            : dayjs(new Date()),
           validators: [Validator.date],
           valid: true,
           errorMessage: "",
@@ -61,7 +61,9 @@ const CadastroEvento: NextPage = () => {
       [
         "horarioInicio",
         {
-          value: evento?.dataInicial ? dayjs(evento?.dataInicial) : dayjs(new Date()),
+          value: evento?.dataInicial
+            ? dayjs(evento?.dataInicial)
+            : dayjs(new Date()),
           validators: [Validator.date],
           valid: true,
           errorMessage: "",
@@ -70,7 +72,7 @@ const CadastroEvento: NextPage = () => {
       [
         "dataFim",
         {
-          value: '',
+          value: "",
           validators: [],
           valid: true,
           errorMessage: "",
@@ -79,7 +81,7 @@ const CadastroEvento: NextPage = () => {
       [
         "horarioFim",
         {
-          value: '',
+          value: "",
           validators: [],
           valid: true,
           errorMessage: "",
@@ -88,7 +90,7 @@ const CadastroEvento: NextPage = () => {
       [
         "categoria",
         {
-          value: evento?.categoria?.nome as string ?? "",
+          value: (evento?.categoria?.nome as string) ?? "",
           validators: [],
           valid: true,
           errorMessage: "",
@@ -124,19 +126,20 @@ const CadastroEvento: NextPage = () => {
     ]);
     console.log(formFields);
     setFormState(formFields);
-  }
+  };
+
+  const [formState, setFormState] = useState(getFormInit());
+  const [cadastroSuccess, setCadastroSuccess] = useState(true);
+
+  let formInstance: CustomForm = new CustomForm(formState, setFormState);
   useEffect(() => {
-    if(formMode == FormMode.EDIT){
-      setIsLoading(true);
-      EventoAPI.get(id as string).then((response) => {
-        const evento = response[0] as Evento;
-        initForm(evento);
-        setIsLoading(false);
-      })
-    }else{
-      initForm();
+    if (formMode == FormMode.EDIT) {
+      //setIsLoading(true);
+      setFormState(getFormInit(props.evento));
+    } else {
+      setFormState(getFormInit());
     }
-  }, [])
+  }, []);
 
   const onCadastroSubmit = async (e: Event) => {
     if (!formInstance.validateForm()) {
@@ -149,8 +152,10 @@ const CadastroEvento: NextPage = () => {
     const imagem = formInstance.getValue("imagem");
     let base64: string = "";
 
-    if(imagem){
-      base64 = await toBase64(formInstance.getValue("imagem") as File) as string;
+    if (imagem) {
+      base64 = (await toBase64(
+        formInstance.getValue("imagem") as File
+      )) as string;
     }
 
     EventoAPI.cadastrar({
@@ -174,7 +179,6 @@ const CadastroEvento: NextPage = () => {
           router.push("/home");
         }
       });
-
   };
 
   return (
@@ -195,7 +199,9 @@ const CadastroEvento: NextPage = () => {
           </Grid>
           <Grid item xs={12} md={6}>
             <div className={styles.cadastro__form}>
-              <h2>{formMode == FormMode.EDIT ? 'Atualizar' : 'Cadastrar'} Evento</h2>
+              <h2>
+                {formMode == FormMode.EDIT ? "Atualizar" : "Cadastrar"} Evento
+              </h2>
               {isLoading ? (
                 <div className="loader">
                   <CircularProgress />
@@ -219,17 +225,25 @@ const CadastroEvento: NextPage = () => {
 
 export const getServerSideProps = async (context: any) => {
   const session = await getServerSession(context.req, context.res, {});
-  if(!session){
-      return {
-          props: {},
-          redirect: {
-              destination: '/login',
-              permanent: false
-          }
-      }
+  if (!session) {
+    return {
+      props: {},
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
   }
 
-  return {props: {}}
-}
+  const { id } = context.query;
+  let data: Evento[] = [];
+  
+  if(id){
+    const res = await fetch(`http://localhost:3000/api/eventos?id=${id}`)
+    data = await res.json();
+  }
+
+  return { props: { evento: data[0] ?? null } };
+};
 
 export default CadastroEvento;
