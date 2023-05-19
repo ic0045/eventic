@@ -1,6 +1,6 @@
 import { CustomForm } from "@app/helpers/CustomForm";
 import { Validator } from "@app/helpers/Validator";
-import { FormFieldState } from "@app/interfaces/form_interfaces";
+import { FormFieldState, FormMode } from "@app/interfaces/form_interfaces";
 import { Grid, CircularProgress } from "@mui/material";
 import styles from "./cadastroevento.module.css";
 import Image from "next/image";
@@ -22,116 +22,119 @@ const CadastroEvento: NextPage = () => {
   const session = useSession();
   const router = useRouter();
   const { id } = router.query;
+  let formMode = id ? FormMode.EDIT : FormMode.CREATE;
 
-  let formFields: Map<string, FormFieldState> = new Map([
-    [
-      "titulo",
-      {
-        value: "",
-        validators: [Validator.required],
-        valid: true,
-        errorMessage: "",
-      },
-    ],
-    [
-      "local",
-      {
-        value: "",
-        validators: [Validator.required],
-        valid: true,
-        errorMessage: "",
-      },
-    ],
-    [
-      "dataInicio",
-      {
-        value: dayjs(new Date()),
-        validators: [Validator.date],
-        valid: true,
-        errorMessage: "",
-      },
-    ],
-    [
-      "horarioInicio",
-      {
-        value: dayjs(new Date()),
-        validators: [Validator.date],
-        valid: true,
-        errorMessage: "",
-      },
-    ],
-    [
-      "dataFim",
-      {
-        value: '',
-        validators: [],
-        valid: true,
-        errorMessage: "",
-      },
-    ],
-    [
-      "horarioFim",
-      {
-        value: '',
-        validators: [],
-        valid: true,
-        errorMessage: "",
-      },
-    ],
-    [
-      "categoria",
-      {
-        value: "",
-        validators: [],
-        valid: true,
-        errorMessage: "",
-      },
-    ],
-    [
-      "tipo",
-      {
-        value: "",
-        validators: [],
-        valid: true,
-        errorMessage: "",
-      },
-    ],
-    [
-      "descricao",
-      {
-        value: "",
-        validators: [Validator.required],
-        valid: true,
-        errorMessage: "",
-      },
-    ],
-    [
-      "imagem",
-      {
-        value: undefined,
-        validators: [],
-        valid: true,
-        errorMessage: "",
-      },
-    ],
-  ]);
-
-  const [formState, setFormState] = useState(formFields);
+  const [formState, setFormState] = useState(new Map<string, FormFieldState>());
   const [cadastroSuccess, setCadastroSuccess] = useState(true);
 
-  const formInstance = new CustomForm(formState, setFormState);
+  let formInstance: CustomForm = new CustomForm(formState, setFormState);
 
+  const initForm = (evento?: Evento): void => {
+    let formFields: Map<string, FormFieldState> = new Map([
+      [
+        "titulo",
+        {
+          value: evento?.titulo ?? "",
+          validators: [Validator.required],
+          valid: true,
+          errorMessage: "",
+        },
+      ],
+      [
+        "local",
+        {
+          value: evento?.localizacao ?? "",
+          validators: [Validator.required],
+          valid: true,
+          errorMessage: "",
+        },
+      ],
+      [
+        "dataInicio",
+        {
+          value: evento?.dataInicial ? dayjs(evento?.dataInicial) : dayjs(new Date()),
+          validators: [Validator.date],
+          valid: true,
+          errorMessage: "",
+        },
+      ],
+      [
+        "horarioInicio",
+        {
+          value: evento?.dataInicial ? dayjs(evento?.dataInicial) : dayjs(new Date()),
+          validators: [Validator.date],
+          valid: true,
+          errorMessage: "",
+        },
+      ],
+      [
+        "dataFim",
+        {
+          value: '',
+          validators: [],
+          valid: true,
+          errorMessage: "",
+        },
+      ],
+      [
+        "horarioFim",
+        {
+          value: '',
+          validators: [],
+          valid: true,
+          errorMessage: "",
+        },
+      ],
+      [
+        "categoria",
+        {
+          value: evento?.categoria?.nome as string ?? "",
+          validators: [],
+          valid: true,
+          errorMessage: "",
+        },
+      ],
+      [
+        "tipo",
+        {
+          value: evento?.tipo ?? "",
+          validators: [],
+          valid: true,
+          errorMessage: "",
+        },
+      ],
+      [
+        "descricao",
+        {
+          value: evento?.descricao ?? "",
+          validators: [Validator.required],
+          valid: true,
+          errorMessage: "",
+        },
+      ],
+      [
+        "imagem",
+        {
+          value: undefined,
+          validators: [],
+          valid: true,
+          errorMessage: "",
+        },
+      ],
+    ]);
+    console.log(formFields);
+    setFormState(formFields);
+  }
   useEffect(() => {
-    if(id){
+    if(formMode == FormMode.EDIT){
       setIsLoading(true);
       EventoAPI.get(id as string).then((response) => {
-        console.log(response);
-
         const evento = response[0] as Evento;
-        formInstance.loadEventoEdit(evento);
-
+        initForm(evento);
         setIsLoading(false);
       })
+    }else{
+      initForm();
     }
   }, [])
 
@@ -192,7 +195,7 @@ const CadastroEvento: NextPage = () => {
           </Grid>
           <Grid item xs={12} md={6}>
             <div className={styles.cadastro__form}>
-              <h2>Cadastrar Evento</h2>
+              <h2>{formMode == FormMode.EDIT ? 'Atualizar' : 'Cadastrar'} Evento</h2>
               {isLoading ? (
                 <div className="loader">
                   <CircularProgress />
@@ -203,6 +206,7 @@ const CadastroEvento: NextPage = () => {
                   isCadastroSuccess={cadastroSuccess}
                   onCadastroSubmit={onCadastroSubmit}
                   formInstance={formInstance}
+                  formMode={formMode}
                 />
               )}
             </div>

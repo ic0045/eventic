@@ -10,3 +10,8 @@ export interface ValidatorResponse {
     isValid: boolean;
     errorMessage: string;
 }
+
+export enum FormMode {
+    CREATE,
+    EDIT
+}
