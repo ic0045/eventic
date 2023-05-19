@@ -8,7 +8,11 @@ declare global{
             DB_USERNAME: string,
             TOKENSECRET: string,
             DEBUG: string,
-            NODE_ENV: string
+            NODE_ENV: string,
+            NEXTAUTH_SECRET: string,
+            PUBLIC_URL: string,
+            SENDGRID_API_KEY: string,
+            SENDGRID_EMAIL: string
         }
     }
 }
