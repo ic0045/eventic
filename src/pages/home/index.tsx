@@ -151,7 +151,7 @@ export default function Home({ data }: { data: Evento[] }) {
                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
                             {eventosPorPeriodo.eventos.map((card: Evento) =>
 
-                                <EventCard key={card.id} finalDate={card.datafinal} linkMoreInformation={card.linkMaisInfomacoes} description={card.descricao} image={card.imagemUrl} title={card.titulo} location={card.localizacao} initialDate={card.dataInicial} />
+                                <EventCard key={card.id} id={card.id} image={card.imagemUrl} title={card.titulo} location={card.localizacao} initialDate={card.dataInicial} />
                             )}
                         </Box>
                     </>
