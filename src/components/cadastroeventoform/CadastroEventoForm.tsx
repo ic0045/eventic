@@ -107,7 +107,7 @@ export const CadastroEventoForm: FunctionComponent<CadastroEventoFormProps> = (
             </Grid>
           </Grid>
         </div>
-        <div className={styles.data}>
+        {/* <div className={styles.data}>
           <h4>Data fim</h4>
           <Grid
             container
@@ -143,7 +143,7 @@ export const CadastroEventoForm: FunctionComponent<CadastroEventoFormProps> = (
               />
             </Grid>
           </Grid>
-        </div>
+        </div> */}
         <Select
           label="Categoria"
           error={!props.formInstance.isValid("categoria")}

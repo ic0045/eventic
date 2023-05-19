@@ -7,19 +7,21 @@ import Image from "next/image";
 import { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Layout } from "@app/components/common/layout/Layout";
 import { CadastroEventoForm } from "@app/components/cadastroeventoform/CadastroEventoForm";
 import { EventoAPI } from "@app/apis/EventoAPI";
 import dayjs, { Dayjs } from "dayjs";
 import { getServerSession } from "next-auth";
 import { juntarDataHorario, toBase64 } from "@app/helpers/Helpers";
+import { Evento } from "@app/entities/Evento";
 
 const CadastroEvento: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [formErrorMessage, setFormErrorMessage] = useState("");
   const session = useSession();
   const router = useRouter();
+  const { id } = router.query;
 
   let formFields: Map<string, FormFieldState> = new Map([
     [
@@ -119,6 +121,20 @@ const CadastroEvento: NextPage = () => {
 
   const formInstance = new CustomForm(formState, setFormState);
 
+  useEffect(() => {
+    if(id){
+      setIsLoading(true);
+      EventoAPI.get(id as string).then((response) => {
+        console.log(response);
+
+        const evento = response[0] as Evento;
+        formInstance.loadEventoEdit(evento);
+
+        setIsLoading(false);
+      })
+    }
+  }, [])
+
   const onCadastroSubmit = async (e: Event) => {
     if (!formInstance.validateForm()) {
       console.log(formState);
@@ -137,7 +153,7 @@ const CadastroEvento: NextPage = () => {
     EventoAPI.cadastrar({
       titulo: formInstance.getValue("titulo") as string,
       tipo: formInstance.getValue("tipo") as string,
-      descricao: formInstance.getValue("titulo") as string,
+      descricao: formInstance.getValue("descricao") as string,
       localizacao: formInstance.getValue("local") as string,
       data_inicial: juntarDataHorario(
         formInstance.getValue("dataInicio") as Dayjs,
