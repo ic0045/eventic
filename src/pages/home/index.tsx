@@ -141,8 +141,9 @@ export default function Home({ data }: { data: Evento[] }) {
             <>
                 {listView ?
                     <>
-                        {cards1.map((card) =>
-                            <EventList key={card.id} title={card.title} day={card.day} month={card.month} location={card.location} time={card.time} />
+                        <Typography variant="h5" mt={8} mb={3}>{eventosPorPeriodo.nome}</Typography>
+                        {eventosPorPeriodo.eventos.map((card) =>
+                            <EventList key={card.id} id={card.id} title={card.titulo} location={card.localizacao} initialDate={card.dataInicial} />
                         )}
                     </> :
                     <>
