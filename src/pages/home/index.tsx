@@ -33,10 +33,10 @@ interface Evento {
     linkMaisInfomacoes: string
 }
 
-interface EventoPorSemana {
+interface EventoPorPeriodo {
     nome: string;
     eventos: Evento[];
-  }
+}
 
 export default function Home({ data }: { data: Evento[] }) {
 
@@ -46,85 +46,55 @@ export default function Home({ data }: { data: Evento[] }) {
         new Date(b.dataInicial).getTime()
     );
 
+    function separaEventosPorPeriodo(eventos: Evento[], periodo: 'semana' | 'mes') {
+        const eventosPorPeriodo: Array<EventoPorPeriodo> = [];
+
+        eventos.forEach((evento) => {
+            let periodoIndex: number;
+            let nomePeriodo: string;
+
+            if (periodo === 'semana') {
+                periodoIndex = moment(evento.dataInicial).week();
+                const dataInicioSemana = moment(evento.dataInicial).startOf('week').format('D [de] MMMM');
+                const dataFimSemana = moment(evento.dataInicial).add(6, 'days').format('D [de] MMMM');
+                nomePeriodo = `Semana de ${dataInicioSemana} a ${dataFimSemana}`;
+            } else if (periodo === 'mes') {
+                periodoIndex = moment(evento.dataInicial).month();
+                nomePeriodo = moment(evento.dataInicial).format('MMMM YYYY');
+            } else {
+                throw new Error('Período inválido. Escolha entre "semana" e "mes".');
+            }
+
+            if (!eventosPorPeriodo[periodoIndex]) {
+                eventosPorPeriodo[periodoIndex] = {
+                    nome: nomePeriodo,
+                    eventos: [],
+                };
+            }
+            eventosPorPeriodo[periodoIndex].eventos.push(evento);
+        });
+
+        return eventosPorPeriodo;
+    }
+
     // Separando os eventos em dois arrays: um para as datas que já passaram e outro para as novas datas
     const eventosAntigos: Evento[] = data.filter(evento => new Date(evento.dataInicial).getTime() < Date.now());
     const eventosNovos: Evento[] = data.filter(evento => new Date(evento.dataInicial).getTime() >= Date.now());
 
-    function separaEventosSemana(eventos: Evento[]) {
-        const eventosPorSemana: Array<EventoPorSemana>  = [];
-
-        eventos.forEach((evento) => {
-            const semana = moment(evento.dataInicial).week();
-            const dataInicioSemana = moment(evento.dataInicial).startOf('week').format('D [de] MMMM');
-            const dataFimSemana = moment(evento.dataInicial).add(6, 'days').format('D [de] MMMM');
-            const nomeSemana = `Semana de ${dataInicioSemana} a ${dataFimSemana}`;
-
-            if (!eventosPorSemana[semana]) {
-                eventosPorSemana[semana] = {
-                    nome: nomeSemana,
-                    eventos: []
-                };
-            }
-            eventosPorSemana[semana].eventos.push(evento);
-        });
-
-        return eventosPorSemana
-    }
-
-    function separaEventosMes(eventos: Evento[]) {
-        const eventosPorMes: Array<EventoPorSemana> = []
-
-        eventos.forEach((evento) => {
-            const mes = moment(evento.dataInicial).month();
-
-            const nomeMes = moment(evento.dataInicial).format('MMMM YYYY');
-
-            if (!eventosPorMes[mes]) {
-                eventosPorMes[mes] = {
-                    nome: nomeMes,
-                    eventos: [],
-                };
-            }
-            eventosPorMes[mes].eventos.push(evento);
-        });
-        return eventosPorMes
-    }
-
     const eventosPorDiaAnteriores = [{ nome: '', eventos: [...eventosAntigos] }]
     const eventosPorDiaNovos = [{ nome: '', eventos: [...eventosNovos] }]
 
-    const eventosPorSemanaAnteriores = separaEventosSemana(eventosAntigos)
-    const eventosPorSemanaNovos = separaEventosSemana(eventosNovos)
+    const eventosPorSemanaAnteriores = separaEventosPorPeriodo(eventosAntigos, 'semana');
+    const eventosPorSemanaNovos = separaEventosPorPeriodo(eventosNovos, 'semana');
 
-    const eventosPorMesAnteriores = separaEventosMes(eventosAntigos)
-    const eventosPorMesNovos = separaEventosMes(eventosNovos)
-
-
-    const cards2 = [
-        { id: 0, image: "/images/evento1.jpg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
-        { id: 1, image: "/images/evento1.jpg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
-        { id: 2, image: "/images/evento1.jpg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
-        { id: 3, image: "/images/evento1.jpg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
-        { id: 4, image: "/images/evento1.jpg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
-        { id: 5, image: "/images/evento1.jpg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
-    ]
-
-    const cards1 = [
-        { id: 1, image: "/images/evento2.jpeg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
-        { id: 0, image: "/images/evento2.jpeg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
-        { id: 2, image: "/images/evento2.jpeg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
-        { id: 3, image: "/images/evento2.jpeg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
-        { id: 4, image: "/images/evento2.jpeg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
-        { id: 5, image: "/images/evento2.jpeg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
-    ]
+    const eventosPorMesAnteriores = separaEventosPorPeriodo(eventosAntigos, 'mes');
+    const eventosPorMesNovos = separaEventosPorPeriodo(eventosNovos, 'mes');
 
     const [period, setPeriod] = useState('1');
     const [category, setCategory] = useState('1');
-
+    const [aba, setAba] = useState('1')
 
     const [listView, setListView] = useState(false)
-
-    const [value, setValue] = useState('1')
 
     const [eventToMapOld, setEventToMapOld] = useState(eventosPorDiaAnteriores)
     const [eventToMapNew, setEventToMapNew] = useState(eventosPorDiaNovos)
@@ -147,16 +117,52 @@ export default function Home({ data }: { data: Evento[] }) {
 
     }
 
+    const cards2 = [
+        { id: 0, image: "/images/evento1.jpg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
+        { id: 1, image: "/images/evento1.jpg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
+        { id: 2, image: "/images/evento1.jpg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
+        { id: 3, image: "/images/evento1.jpg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
+        { id: 4, image: "/images/evento1.jpg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
+        { id: 5, image: "/images/evento1.jpg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
+    ]
 
-    const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-        setValue(newValue)
-    }
+    const cards1 = [
+        { id: 1, image: "/images/evento2.jpeg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
+        { id: 0, image: "/images/evento2.jpeg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
+        { id: 2, image: "/images/evento2.jpeg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
+        { id: 3, image: "/images/evento2.jpeg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
+        { id: 4, image: "/images/evento2.jpeg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
+        { id: 5, image: "/images/evento2.jpeg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
+    ]
 
+    const events = (eventList: Array<EventoPorPeriodo>) =>
+    (
+        eventList.map((eventosPorPeriodo) =>
+            <>
+                {listView ?
+                    <>
+                        {cards1.map((card) =>
+                            <EventList key={card.id} title={card.title} day={card.day} month={card.month} location={card.location} time={card.time} />
+                        )}
+                    </> :
+                    <>
+                        <Typography variant="h5" mt={8} mb={3}>{eventosPorPeriodo.nome}</Typography>
+
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
+                            {eventosPorPeriodo.eventos.map((card: Evento) =>
+
+                                <EventCard key={card.id} finalDate={card.datafinal} linkMoreInformation={card.linkMaisInfomacoes} description={card.descricao} image={card.imagemUrl} title={card.titulo} location={card.localizacao} initialDate={card.dataInicial} />
+                            )}
+                        </Box>
+                    </>
+                }
+            </>
+        )
+    )
 
 
     return (
         <Container maxWidth="xl">
-
             <Navbar />
 
             <Box sx={{ borderRadius: '0.3rem', backgroundColor: 'white', padding: '1rem', boxShadow: 3 }}>
@@ -214,9 +220,9 @@ export default function Home({ data }: { data: Evento[] }) {
 
                 </Box>
                 <Box>
-                    <TabContext value={value}>
+                    <TabContext value={aba}>
                         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                            <TabList onChange={handleChange}>
+                            <TabList onChange={(e, newValue) => { setAba(newValue) }}>
                                 <Tab label='Anteriores' value='0'></Tab>
                                 <Tab label='Próximos' value='1'></Tab>
                             </TabList>
@@ -224,55 +230,11 @@ export default function Home({ data }: { data: Evento[] }) {
                         </Box>
 
                         <TabPanel value='0'>
-
-                            {eventToMapOld.map((eventosDaSemana) =>
-                                <>
-                                    {listView ?
-                                        <>
-                                            {cards1.map((card) =>
-                                                <EventList key={card.id} title={card.title} day={card.day} month={card.month} location={card.location} time={card.time} />
-                                            )}
-                                        </> :
-                                        <>
-                                            <Typography variant="h5" mt={8} mb={3}>{eventosDaSemana.nome}</Typography>
-
-                                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
-                                                {eventosDaSemana.eventos.map((card: Evento) =>
-
-                                                    <EventCard key={card.id} finalDate={card.datafinal} linkMoreInformation={card.linkMaisInfomacoes} description={card.descricao} image={card.imagemUrl} title={card.titulo} location={card.localizacao} initialDate={card.dataInicial} />
-                                                )}
-                                            </Box>
-                                        </>
-                                    }
-                                </>
-                            )}
-
-
+                            {events(eventToMapOld)}
                         </TabPanel>
 
                         <TabPanel value='1'>
-
-                            {eventToMapNew.map((eventosDaSemana) =>
-                                <>
-                                    {listView ?
-                                        <>
-                                            {cards1.map((card) =>
-                                                <EventList key={card.id} title={card.title} day={card.day} month={card.month} location={card.location} time={card.time} />
-                                            )}
-                                        </> :
-                                        <>
-                                            <Typography variant="h5" mt={8} mb={3}>{eventosDaSemana.nome}</Typography>
-
-                                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
-                                                {eventosDaSemana.eventos.map((card: Evento) =>
-
-                                                    <EventCard key={card.id} finalDate={card.datafinal} linkMoreInformation={card.linkMaisInfomacoes} description={card.descricao} image={card.imagemUrl} title={card.titulo} location={card.localizacao} initialDate={card.dataInicial} />
-                                                )}
-                                            </Box>
-                                        </>
-                                    }
-                                </>
-                            )}
+                            {events(eventToMapNew)}
                         </TabPanel>
                     </TabContext>
                 </Box>

@@ -109,19 +109,19 @@ function EventDetails() {
   );
 };
 
-export const getServerSideProps = async (context: any) => {
-  const session = await getServerSession(context.req, context.res, {});
-  if(!session){
-      return {
-          props: {},
-          redirect: {
-              destination: '/login',
-              permanent: false
-          }
-      }
-  }
+// export const getServerSideProps = async (context: any) => {
+//   const session = await getServerSession(context.req, context.res, {});
+//   if(!session){
+//       return {
+//           props: {},
+//           redirect: {
+//               destination: '/login',
+//               permanent: false
+//           }
+//       }
+//   }
 
-  return {props: {}}
-}
+//   return {props: {}}
+// }
 
 export default EventDetails;
