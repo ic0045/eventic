@@ -70,10 +70,10 @@ export default async function handler(
                     if (evento == null)
                         res.status(400).json(`Não foi encontrado evento de id: ${req.body.id}`);
                     else {
-                        let canDelete = token.permissao == AcessLevel.admin;
-                        if (!canDelete) //se usuário é professor, verifica se é criador do evento
-                            canDelete = evento.criador.id == token.id;
-                        if (canDelete) {
+                        let canEdit = token.permissao == AcessLevel.admin;
+                        if (!canEdit) //se usuário é professor, verifica se é criador do evento
+                            canEdit = evento.criador.id == token.id;
+                        if (canEdit) {
                             const { descricao, localizacao, data_inicial, titulo, destaque,
                                 imagem_url, data_final, link_imagem, link_titulo,
                                 tipo, link_mais_informacoes, categoria_id } = req.body;
