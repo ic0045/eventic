@@ -1,6 +1,6 @@
 import styles from './home.module.css'
 import Navbar from "@app/components/common/navbar/Navbar";
-import { Box, Container, Grid, FormControl, InputLabel, MenuItem, TextField, InputAdornment, Button, IconButton } from "@mui/material";
+import { Box, Container, Grid, FormControl, InputLabel, MenuItem, TextField, InputAdornment, Button, IconButton, Paper, InputBase } from "@mui/material";
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
@@ -161,27 +161,47 @@ export default function Home({ data }: { data: Evento[] }) {
         )
     )
 
+    const [responseData, setResponseData] = useState(data);
+    const [inputValue, setInputValue] = useState('');
+
+    useEffect(() => {
+        if (responseData) {
+            setEventToMapNew([{ nome: '', eventos: [...responseData] }])
+          console.log("to aqui");
+        }
+      }, [responseData]);
+
+    const handleClick = async () => {
+        const api = process.env.NEXT_PUBLIC_URL
+        const res = await fetch(`${api}/api/eventos?localizacao=${inputValue}`)
+
+        const newData = await res.json();
+        setResponseData(newData);
+    };
+
 
     return (
         <Container maxWidth="xl">
             <Navbar />
 
-            <Box sx={{ borderRadius: '0.3rem', backgroundColor: 'white', padding: '1rem', boxShadow: 3 }}>
-                <TextField
+            <Box sx={{ borderRadius: '0.3rem', backgroundColor: 'white', boxShadow: 3 }}>
+                <Paper
+                    component="form"
+                    sx={{ display: 'flex', alignItems: 'center', padding: '1rem', }}
+                >
+                    <IconButton onClick={handleClick} type="button" aria-label="search">
+                        <SearchIcon />
+                    </IconButton>
+                    <InputBase
+                        onChange={(e) => { setInputValue(e.target.value) }}
+                        sx={{ ml: 1, flex: 1 }}
+                        placeholder="Pesquisar Eventos e Atividades"
+                        inputProps={{ 'aria-label': 'busca de eventos' }}
+                    />
 
-                    fullWidth
-                    placeholder='Pesquisar eventos e atividades'
-                    id="input-with-icon-textfield"
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <SearchIcon />
-                            </InputAdornment>
-                        ),
-                    }}
-                    variant="outlined"
-                />
+                </Paper>
             </Box>
+            <h1>{inputValue}</h1>
 
             <Box mt={2} sx={{ borderRadius: '0.3rem', backgroundColor: 'white', padding: '1rem', boxShadow: 3 }}>
                 <Box mb={2} sx={{ display: 'flex' }}>
