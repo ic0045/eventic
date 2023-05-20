@@ -5,7 +5,7 @@ import { hashPassword } from '../../auth/auth';
 import { getToken } from "next-auth/jwt";
 
 /*
-*   Rota para alterar senha do usuário logado. Para recuperar senha usar outra rota.
+*   Rota para alterar senha do usuário logado. Para recuperar senha usar rota recuperasenha.
 *   Restrição:       Usuário logado.
 *   Nível de acesso: Todos.
 */
