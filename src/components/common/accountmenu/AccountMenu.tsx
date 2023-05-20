@@ -11,6 +11,8 @@ import Tooltip from '@mui/material/Tooltip';
 import PersonAdd from '@mui/icons-material/PersonAdd';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
+import Link from 'next/link';
+
 
 export default function AccountMenu() {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -34,7 +36,7 @@ export default function AccountMenu() {
                         aria-haspopup="true"
                         aria-expanded={open ? 'true' : undefined}
                     >
-                        <Avatar sx={{backgroundColor:'#00B03B', width: 46, height: 46 }}>DC</Avatar>
+                        <Avatar sx={{ backgroundColor: '#00B03B', width: 46, height: 46 }}>DC</Avatar>
                     </IconButton>
                 </Tooltip>
             </Box>
@@ -73,22 +75,32 @@ export default function AccountMenu() {
                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
-                <MenuItem onClick={handleClose}>
-                    Página Inicial
-                </MenuItem>
-                <MenuItem onClick={handleClose}>
-                    Meu Cadastro
-                </MenuItem>
-                <MenuItem onClick={handleClose}>
-                    Minhas Inscrições
-                </MenuItem>
+                <Link href="/home">
+                    <MenuItem onClick={handleClose}>
+                        Página Inicial
+                    </MenuItem>
+                </Link>
+                <Link href="/home">
+                    <MenuItem onClick={handleClose}>
+                        Meu Cadastro
+                    </MenuItem>
+                </Link>
+                <Link href="/home">
+                    <MenuItem onClick={handleClose}>
+                        Minhas Inscrições
+                    </MenuItem>
+                </Link>
                 <Divider />
-                <MenuItem onClick={handleClose}>
-                    Gerenciar Eventos
-                </MenuItem>
-                <MenuItem onClick={handleClose}>
-                    Gerenciar Usuários
-                </MenuItem>
+                <Link href="/home">
+                    <MenuItem onClick={handleClose}>
+                        Gerenciar Eventos
+                    </MenuItem>
+                </Link>
+                <Link href="/usermanagement">
+                    <MenuItem onClick={handleClose}>
+                        Gerenciar Usuários
+                    </MenuItem>
+                </Link>
                 <Divider />
                 <MenuItem onClick={handleClose}>
                     <ListItemIcon>

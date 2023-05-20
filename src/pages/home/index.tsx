@@ -14,6 +14,7 @@ import ViewModuleIcon from '@mui/icons-material/ViewModule';
 import SearchIcon from '@mui/icons-material/Search';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import moment from 'moment';
+import CircularProgress from '@mui/material/CircularProgress';
 
 
 interface Evento {
@@ -78,26 +79,34 @@ export default function Home({ data }: { data: Evento[] }) {
     }
 
     // Separando os eventos em dois arrays: um para as datas que já passaram e outro para as novas datas
-    const eventosAntigos: Evento[] = data.filter(evento => new Date(evento.dataInicial).getTime() < Date.now());
-    const eventosNovos: Evento[] = data.filter(evento => new Date(evento.dataInicial).getTime() >= Date.now());
 
-    const eventosPorDiaAnteriores = [{ nome: '', eventos: [...eventosAntigos] }]
-    const eventosPorDiaNovos = [{ nome: '', eventos: [...eventosNovos] }]
+    function organizaEventos(eventos: Evento[]) {
+        const eventosAntigos: Evento[] = eventos.filter(evento => new Date(evento.dataInicial).getTime() < Date.now());
+        const eventosNovos: Evento[] = eventos.filter(evento => new Date(evento.dataInicial).getTime() >= Date.now());
 
-    const eventosPorSemanaAnteriores = separaEventosPorPeriodo(eventosAntigos, 'semana');
-    const eventosPorSemanaNovos = separaEventosPorPeriodo(eventosNovos, 'semana');
+        let eventosPorDiaAnteriores = [{ nome: '', eventos: [...eventosAntigos] }]
+        let eventosPorDiaNovos = [{ nome: '', eventos: [...eventosNovos] }]
 
-    const eventosPorMesAnteriores = separaEventosPorPeriodo(eventosAntigos, 'mes');
-    const eventosPorMesNovos = separaEventosPorPeriodo(eventosNovos, 'mes');
+        let eventosPorSemanaAnteriores = separaEventosPorPeriodo(eventosAntigos, 'semana');
+        let eventosPorSemanaNovos = separaEventosPorPeriodo(eventosNovos, 'semana');
 
-    const [period, setPeriod] = useState('1');
+        let eventosPorMesAnteriores = separaEventosPorPeriodo(eventosAntigos, 'mes');
+        let eventosPorMesNovos = separaEventosPorPeriodo(eventosNovos, 'mes');
+
+        return [eventosPorDiaAnteriores, eventosPorDiaNovos, eventosPorSemanaAnteriores, eventosPorSemanaNovos, eventosPorMesAnteriores, eventosPorMesNovos]
+    }
+
+    let [eventosPorDiaAnteriores, eventosPorDiaNovos, eventosPorSemanaAnteriores, eventosPorSemanaNovos, eventosPorMesAnteriores, eventosPorMesNovos] = organizaEventos(data)
+
     const [category, setCategory] = useState('1');
     const [aba, setAba] = useState('1')
 
     const [listView, setListView] = useState(false)
 
+    const [period, setPeriod] = useState('1');
     const [eventToMapOld, setEventToMapOld] = useState(eventosPorDiaAnteriores)
     const [eventToMapNew, setEventToMapNew] = useState(eventosPorDiaNovos)
+
 
     function handlePeriodChange(event: SelectChangeEvent) {
         const evento = event.target.value
@@ -114,26 +123,22 @@ export default function Home({ data }: { data: Evento[] }) {
             setEventToMapOld(eventosPorDiaAnteriores);
             setEventToMapNew(eventosPorDiaNovos);
         }
-
     }
 
-    const cards2 = [
-        { id: 0, image: "/images/evento1.jpg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
-        { id: 1, image: "/images/evento1.jpg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
-        { id: 2, image: "/images/evento1.jpg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
-        { id: 3, image: "/images/evento1.jpg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
-        { id: 4, image: "/images/evento1.jpg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
-        { id: 5, image: "/images/evento1.jpg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
-    ]
-
-    const cards1 = [
-        { id: 1, image: "/images/evento2.jpeg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
-        { id: 0, image: "/images/evento2.jpeg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
-        { id: 2, image: "/images/evento2.jpeg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
-        { id: 3, image: "/images/evento2.jpeg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
-        { id: 4, image: "/images/evento2.jpeg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
-        { id: 5, image: "/images/evento2.jpeg", title: "Simpósio Nacional", day: "1", month: "Abril", location: "Instituto de Matemática", time: "Sábado, 14h" },
-    ]
+    function update() {
+        if (period == '3') {
+            setEventToMapOld(eventosPorMesAnteriores);
+            setEventToMapNew(eventosPorMesNovos);
+        }
+        if (period == '2') {
+            setEventToMapOld(eventosPorSemanaAnteriores);
+            setEventToMapNew(eventosPorSemanaNovos);
+        }
+        if (period == '1') {
+            setEventToMapOld(eventosPorDiaAnteriores);
+            setEventToMapNew(eventosPorDiaNovos);
+        }
+    }
 
     const events = (eventList: Array<EventoPorPeriodo>) =>
     (
@@ -166,18 +171,33 @@ export default function Home({ data }: { data: Evento[] }) {
 
     useEffect(() => {
         if (responseData) {
-            setEventToMapNew([{ nome: '', eventos: [...responseData] }])
-          console.log("to aqui");
+            [eventosPorDiaAnteriores, eventosPorDiaNovos, eventosPorSemanaAnteriores, eventosPorSemanaNovos, eventosPorMesAnteriores, eventosPorMesNovos] = organizaEventos(responseData)
+            update()
+
         }
-      }, [responseData]);
+    }, [responseData]);
+
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleClick = async () => {
+        setIsLoading(true)
         const api = process.env.NEXT_PUBLIC_URL
-        const res = await fetch(`${api}/api/eventos?localizacao=${inputValue}`)
+        const res = await fetch(`${api}/api/eventos?titulo=${inputValue}`)
 
         const newData = await res.json();
         setResponseData(newData);
+        setIsLoading(false)
     };
+
+
+    const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            e.preventDefault(); // Evita que o evento padrão de tecla Enter ocorra
+            await handleClick(); // Realiza a busca quando a tecla Enter é pressionada
+        }
+    };
+
+
 
 
     return (
@@ -192,19 +212,19 @@ export default function Home({ data }: { data: Evento[] }) {
                     <IconButton onClick={handleClick} type="button" aria-label="search">
                         <SearchIcon />
                     </IconButton>
+                    {isLoading ? <CircularProgress /> : <></>}
                     <InputBase
+                        onKeyDown={handleKeyDown}
                         onChange={(e) => { setInputValue(e.target.value) }}
                         sx={{ ml: 1, flex: 1 }}
-                        placeholder="Pesquisar Eventos e Atividades"
+                        placeholder="Filtrar por nome de Evento"
                         inputProps={{ 'aria-label': 'busca de eventos' }}
                     />
-
                 </Paper>
             </Box>
-            <h1>{inputValue}</h1>
 
             <Box mt={2} sx={{ borderRadius: '0.3rem', backgroundColor: 'white', padding: '1rem', boxShadow: 3 }}>
-                <Box mb={2} sx={{ display: 'flex' }}>
+                <Box mb={2} sx={{ display: 'flex',flexWrap:'wrap' }}>
                     <Typography sx={{ marginRight: 'auto' }} variant="h3">Eventos</Typography>
                     <FormControl variant="standard" sx={{ m: 1, minWidth: 150 }}>
                         <InputLabel id="demo-simple-select-label">Período</InputLabel>

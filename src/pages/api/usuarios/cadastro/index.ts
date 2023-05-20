@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { UsuarioRepo } from '@app/database'
 import { Usuario } from '@app/entities/Usuario'
-import UsuarioValidator from '../util'
+import {UsuarioValidator, sendConfirmEmail} from '../util'
 import { AcessLevel, hashPassword } from '../../auth/auth'
 
 /*
@@ -24,7 +24,13 @@ export default async function handler(
                     usuario.permissao = AcessLevel.visitante; //admins não são criados por esta rota
                     usuario.senha = await hashPassword(usuario.senha);
                     usuario = await UsuarioRepo.save(usuario);
-                    res.status(200).json({usuario});
+                    if( await sendConfirmEmail(usuario.email, usuario.id) ){
+                        res.status(200).json({usuario});
+                    }
+                    else{ //erro ao enviar e-mail, deleta usuário do banco para que seja possível tentar novamente
+                        await UsuarioRepo.delete(usuario.id);
+                        res.status(500).json({errorMsg: "Erro ao enviar e-mail de confirmação."});
+                    }
                 }
                 else{ res.status(400).json({errorMsg: "Já existe um usuario cadastrado para o e-mail informado."})}
             }catch(e){res.status(500).json(e)}

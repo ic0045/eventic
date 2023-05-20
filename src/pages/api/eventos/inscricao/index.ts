@@ -33,6 +33,7 @@ export default async function handler(
                         const inscricao = new Inscricao();
                         inscricao.evento = evento;
                         inscricao.usuario = usuario;
+                        inscricao.createdAt = new Date();
                         await InscricaoRepo.save(inscricao);
                         res.status(200).send(`Usuário ${usuario.primeiroNome} cadastrado no evento ${evento.titulo}.`)
                     }
