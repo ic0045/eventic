@@ -5,7 +5,7 @@ export class RecuperarSenhaAPI {
 
     static async enviarLink(recuperarSenhaRequest: RecuperarSenhaRequest){
         const response = await api.request({
-            url: '/senha/resetar',
+            url: '/api/usuarios/recuperasenha',
             method: 'POST',
             data: recuperarSenhaRequest
         })

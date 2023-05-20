@@ -33,7 +33,7 @@ export async function sendConfirmEmail (email : string, id : string) :Promise<bo
 * Envio de e-mail para recuperação de senha
 */
 export async function sendRecoveryEmail (email : string, id : string) :Promise<boolean>{
-    const redirectLink = `${process.env.PUBLIC_URL}/api/ROTAAQUI/recover=${id}`;
+    const redirectLink = `${process.env.PUBLIC_URL}/api/ROTAPARATELA/recover=${id}`;
     const msg = {
         to: email,
         from: process.env.SENDGRID_EMAIL, 
