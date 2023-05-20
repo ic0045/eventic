@@ -36,7 +36,7 @@ export default async function handler(
         }
 
         try{
-            const eventos = await EventoRepo.find({where: where});
+            const eventos = await EventoRepo.find({where: where, relations: relations});
             res.status(200).json(eventos);
         }catch(e){console.log(e);res.status(500).json(e)}
     } 
