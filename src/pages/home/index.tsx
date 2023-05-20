@@ -39,13 +39,15 @@ interface EventoPorPeriodo {
     eventos: Evento[];
 }
 
-export default function Home({ data }: { data: Evento[] }) {
+interface Categoria {
+    id: string
+    nome: string
+    icone: string
+}
 
-    // Ordena os eventos por data
-    data = data.sort((a, b) =>
-        new Date(a.dataInicial).getTime() -
-        new Date(b.dataInicial).getTime()
-    );
+export default function Home({ data, categorias }: { data: Evento[], categorias: Categoria[] }) {
+
+
 
     function separaEventosPorPeriodo(eventos: Evento[], periodo: 'semana' | 'mes') {
         const eventosPorPeriodo: Array<EventoPorPeriodo> = [];
@@ -78,9 +80,15 @@ export default function Home({ data }: { data: Evento[] }) {
         return eventosPorPeriodo;
     }
 
-    // Separando os eventos em dois arrays: um para as datas que já passaram e outro para as novas datas
 
     function organizaEventos(eventos: Evento[]) {
+
+        // Ordena os eventos por data
+        eventos = eventos.sort((a, b) =>
+            new Date(a.dataInicial).getTime() -
+            new Date(b.dataInicial).getTime()
+        );
+        // Separando os eventos em dois arrays: um para as datas que já passaram e outro para as novas datas
         const eventosAntigos: Evento[] = eventos.filter(evento => new Date(evento.dataInicial).getTime() < Date.now());
         const eventosNovos: Evento[] = eventos.filter(evento => new Date(evento.dataInicial).getTime() >= Date.now());
 
@@ -96,14 +104,16 @@ export default function Home({ data }: { data: Evento[] }) {
         return [eventosPorDiaAnteriores, eventosPorDiaNovos, eventosPorSemanaAnteriores, eventosPorSemanaNovos, eventosPorMesAnteriores, eventosPorMesNovos]
     }
 
-    let [eventosPorDiaAnteriores, eventosPorDiaNovos, eventosPorSemanaAnteriores, eventosPorSemanaNovos, eventosPorMesAnteriores, eventosPorMesNovos] = organizaEventos(data)
+    const eventosOrganizados = organizaEventos(data)
+    let [eventosPorDiaAnteriores, eventosPorDiaNovos, eventosPorSemanaAnteriores, eventosPorSemanaNovos, eventosPorMesAnteriores, eventosPorMesNovos] = eventosOrganizados
 
-    const [category, setCategory] = useState('1');
+    const [category, setCategory] = useState('Todas');
+    const [period, setPeriod] = useState('1');
+
     const [aba, setAba] = useState('1')
 
     const [listView, setListView] = useState(false)
 
-    const [period, setPeriod] = useState('1');
     const [eventToMapOld, setEventToMapOld] = useState(eventosPorDiaAnteriores)
     const [eventToMapNew, setEventToMapNew] = useState(eventosPorDiaNovos)
 
@@ -138,6 +148,11 @@ export default function Home({ data }: { data: Evento[] }) {
             setEventToMapOld(eventosPorDiaAnteriores);
             setEventToMapNew(eventosPorDiaNovos);
         }
+    }
+
+    function limpaBusca() {
+        [eventosPorDiaAnteriores, eventosPorDiaNovos, eventosPorSemanaAnteriores, eventosPorSemanaNovos, eventosPorMesAnteriores, eventosPorMesNovos] = eventosOrganizados
+        update()
     }
 
     const events = (eventList: Array<EventoPorPeriodo>) =>
@@ -222,9 +237,10 @@ export default function Home({ data }: { data: Evento[] }) {
                     />
                 </Paper>
             </Box>
+            <Button onClick={limpaBusca} variant="text">Limpar Busca</Button>
 
             <Box mt={2} sx={{ borderRadius: '0.3rem', backgroundColor: 'white', padding: '1rem', boxShadow: 3 }}>
-                <Box mb={2} sx={{ display: 'flex',flexWrap:'wrap' }}>
+                <Box mb={2} sx={{ display: 'flex', flexWrap: 'wrap' }}>
                     <Typography sx={{ marginRight: 'auto' }} variant="h3">Eventos</Typography>
                     <FormControl variant="standard" sx={{ m: 1, minWidth: 150 }}>
                         <InputLabel id="demo-simple-select-label">Período</InputLabel>
@@ -249,9 +265,10 @@ export default function Home({ data }: { data: Evento[] }) {
                             label="Categoria"
                             onChange={(event: SelectChangeEvent) => (setCategory(event.target.value))}
                         >
-                            <MenuItem value={1}>Evento</MenuItem>
-                            <MenuItem value={2}>Atividade</MenuItem>
-                            <MenuItem value={3}>Palestra</MenuItem>
+                            <MenuItem value='Todas'>Todas</MenuItem>
+                            {categorias.map((categoria) =>
+                                <MenuItem key={categoria.id} value={categoria.nome}>{categoria.nome}</MenuItem>
+                            )}
                         </Select>
                     </FormControl>
 
@@ -289,9 +306,14 @@ export async function getServerSideProps() {
     const api = process.env.PUBLIC_URL
     const res = await fetch(`${api}/api/eventos`)
     const data = await res.json()
+
+    const resCategoria = await fetch(`${api}/api/categorias`)
+    const categorias = await resCategoria.json()
+    console.log(categorias)
     return {
         props: {
             data,
+            categorias
         },
     }
 }
