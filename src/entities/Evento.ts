@@ -89,11 +89,11 @@ export class Evento {
   //@ts-ignore
   criador: Relation<Usuario>;
 
-  @ManyToOne(() => Categoria, (categoria) => categoria.eventos)
+  @ManyToOne(() => Categoria, (categoria) => categoria.eventos, {eager:true})
   @JoinColumn([{ 
     name: "categoria_id", 
     referencedColumnName: "id",
-    foreignKeyConstraintName: "categoria_fk" }])
+    foreignKeyConstraintName: "categoria_fk",  }])
   //@ts-ignore
   categoria: Relation<Categoria>;
 

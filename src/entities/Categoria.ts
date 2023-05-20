@@ -1,4 +1,5 @@
 import {
+    BeforeInsert,
     Column,
     Entity,
     OneToMany,
@@ -54,4 +55,9 @@ export class Categoria{
 
     @OneToMany(() => Evento, (evento) => evento.categoria)
     eventos: Evento[];
+
+    @BeforeInsert()
+    updateDates() {
+        this.icone == null ? "/path/toIconeDefault" : this.icone;
+    }
 }
