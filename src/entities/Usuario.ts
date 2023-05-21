@@ -56,7 +56,7 @@ export class Usuario {
     nullable: true,
     transformer:{
       to: (value : string) => Buffer.from(value),
-      from: (value : Buffer) => value.toString()
+      from: (value : Buffer) => value?.toString()
     }
   })
   fotoPerfil: string | null;
@@ -81,4 +81,5 @@ export class Usuario {
     (preferenciasUsuario) => preferenciasUsuario.usuario
   )
   preferenciasUsuarios: PreferenciasUsuario[];
+
 }

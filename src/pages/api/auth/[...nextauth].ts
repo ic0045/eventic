@@ -26,6 +26,8 @@ export const authOptions : NextAuthOptions = {
 
             if(usuario == null)
               throw new Error("Não existe um cadastro para o e-mail informado.");
+            if(!usuario.emailConfirmado)
+              throw new Error("E-mail ainda não confirmado.");
             if(!await checkPassword(password, usuario.senha))
               throw new Error("Credenciais inválidas.");
 
