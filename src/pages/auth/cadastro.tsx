@@ -121,7 +121,7 @@ const CadastroUsuario: NextPage = () => {
     const fotoPerfil = formInstance.getValue("imagem");
     let base64: string = "";
 
-    if(fotoPerfil){
+    if (fotoPerfil) {
       base64 = await toBase64(formInstance.getValue("imagem") as File) as string;
     }
 
@@ -148,53 +148,51 @@ const CadastroUsuario: NextPage = () => {
   };
 
   return (
-    <Layout>
-      <div className={styles.cadastro}>
-        <div>
-          <Modal open={openModal} onClose={redirectoToLogin}>
-            <Box sx={style}>
-              <Typography id="modal-modal-title" variant="h6" component="h2">
-                Validação de e-mail
-              </Typography>
-              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                Valide sua usando o link que enviamos para o seu e-mail.
-              </Typography>
-            </Box>
-          </Modal>
-        </div>
-        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-          <Grid item md={6} xs={0}>
-            <div className={styles.imagem}>
-              <Image
-                src="/amico.png"
-                alt="login"
-                width="0"
-                height="0"
-                sizes="100vw"
-                style={{ width: "70%", height: "auto" }}
-              />
-            </div>
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <div className={styles.cadastro__form}>
-              <h2>Cadastrar Usuario</h2>
-              {isLoading ? (
-                <div className="loader">
-                  <CircularProgress />
-                </div>
-              ) : (
-                <CadastroUsuarioForm
-                  isCadastroSuccess={cadastroSuccess}
-                  onCadastroSubmit={onCadastroSubmit}
-                  formInstance={formInstance}
-                  errorMessage={formErrorMessage}
-                />
-              )}
-            </div>
-          </Grid>
-        </Grid>
+    <div className={styles.cadastro}>
+      <div>
+        <Modal open={openModal} onClose={redirectoToLogin}>
+          <Box sx={style}>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Validação de e-mail
+            </Typography>
+            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+              Valide sua usando o link que enviamos para o seu e-mail.
+            </Typography>
+          </Box>
+        </Modal>
       </div>
-    </Layout>
+      <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+        <Grid item md={6} xs={0}>
+          <div className={styles.imagem}>
+            <Image
+              src="/amico.png"
+              alt="login"
+              width="0"
+              height="0"
+              sizes="100vw"
+              style={{ width: "70%", height: "auto" }}
+            />
+          </div>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <div className={styles.cadastro__form}>
+            <h2>Cadastrar Usuario</h2>
+            {isLoading ? (
+              <div className="loader">
+                <CircularProgress />
+              </div>
+            ) : (
+              <CadastroUsuarioForm
+                isCadastroSuccess={cadastroSuccess}
+                onCadastroSubmit={onCadastroSubmit}
+                formInstance={formInstance}
+                errorMessage={formErrorMessage}
+              />
+            )}
+          </div>
+        </Grid>
+      </Grid>
+    </div>
   );
 };
 

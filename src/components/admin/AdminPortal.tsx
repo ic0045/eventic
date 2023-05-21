@@ -6,7 +6,7 @@ import CategoriaIcone from "@mui/icons-material/CategoryRounded";
 import UsuarioIcone from "@mui/icons-material/PersonSearchRounded";
 import EventoIcone from "@mui/icons-material/EventRounded";
 import InscricaoIcone from "@mui/icons-material/SubscriptionsRounded";
-import { Dashboard } from "./dashboard";
+import { Dashboard } from "./DashBoard";
 import { EventoCreate, EventoEdit, EventoList } from "./forms/eventos.form";
 import { UsuarioList, UsuarioEdit, UsuarioCreate } from "./forms/usuarios.form";
 import { ApiResource } from "@app/common/constants";
