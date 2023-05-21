@@ -80,7 +80,7 @@ export default function UserManagement() {
                     </Select>
                 </FormControl>
 
-                <Link href='/cadastrousario'>
+                <Link href='/auth/cadastro'>
                     <Button variant="contained" sx={{ backgroundColor: "#76D104", marginLeft: "0.5rem" }}>
                         Cadastro
                     </Button>

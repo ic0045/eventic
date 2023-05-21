@@ -49,7 +49,7 @@ export async function redirectIfNotAuthorized(req :any, res:any, roleRequired : 
         }
         else{
             return{
-                destination: "http://localhost:3000/auth/login?error=Forbidden",
+                destination: `${process.env.NEXT_PUBLIC_URL}/auth/login?error=Forbidden`,
                 permanet:false,
             }
         }
@@ -58,7 +58,7 @@ export async function redirectIfNotAuthorized(req :any, res:any, roleRequired : 
     // const token = await getToken({req});
 
     // if(!token)
-    //     return NextResponse.redirect(new URL('/login'));
+    //     return NextResponse.redirect(new URL('/auth/login'));
     
     // if(token?.permissao == roleRequired)
     //     return true;

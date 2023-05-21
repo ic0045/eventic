@@ -163,7 +163,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 //       return {
 //           props: {},
 //           redirect: {
-//               destination: '/login',
+//               destination: '/auth/login',
 //               permanent: false
 //           }
 //       }

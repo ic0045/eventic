@@ -51,7 +51,7 @@ const Login: NextPage = () => {
     signIn('credentials',{
       email: formInstance.getValue("email"),
       password: formInstance.getValue("senha"),
-      callbackUrl: 'http://localhost:3000/home'
+      callbackUrl: process.env.NEXT_PUBLIC_URL
     }).catch(() => {
       setLoginSuccess(false);
     })
@@ -111,7 +111,7 @@ export const getServerSideProps = async (context: any) => {
       return {
           props: {},
           redirect: {
-              destination: '/home',
+              destination: '/',
               permanent: false
           }
       }

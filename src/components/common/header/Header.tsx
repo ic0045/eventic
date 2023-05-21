@@ -95,7 +95,7 @@ export const Header: FunctionComponent = () => {
           <div className={styles.header__login}>
             {!isPage("login") && (
               <Button variant="contained" color="success" 
-              href="/login">
+              href="/auth/login">
                 Login
               </Button>
             )}
@@ -106,7 +106,7 @@ export const Header: FunctionComponent = () => {
                   backgroundColor: "#76D104",
                   marginLeft: "0.5rem",
                 }}
-                href="/cadastrousuario"
+                href="/auth/cadastro"
               >
                 Cadastre-se
               </Button>

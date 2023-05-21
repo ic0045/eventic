@@ -33,6 +33,7 @@ export const authOptions : NextAuthOptions = {
 
             return {
               id: usuario.id,
+              name: usuario.primeiroNome,
               primeiroNome: usuario.primeiroNome,
               segundoNome: usuario.segundoNome,
               fotoPerfil: usuario.fotoPerfil,

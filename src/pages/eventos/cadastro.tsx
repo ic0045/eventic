@@ -151,7 +151,7 @@ const CadastroEvento: NextPage = () => {
       })
       .then((response) => {
         if (response) {
-          router.push("/home");
+          router.push("/");
         }
       });
 
@@ -202,7 +202,7 @@ export const getServerSideProps = async (context: any) => {
       return {
           props: {},
           redirect: {
-              destination: '/login',
+              destination: '/auth/login',
               permanent: false
           }
       }

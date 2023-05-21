@@ -13,7 +13,7 @@ const RouteGuard = (props: {
     const router = useRouter();
     const session = useSession();
     const [authorized, setAuthorized] = useState(false);
-    const publicPaths = ['/login', '/cadastrousuario'];
+    const publicPaths = ['/auth/login', '/cadastrousuario'];
     const { children } = props;
 
     useEffect(() => {
@@ -42,7 +42,7 @@ const RouteGuard = (props: {
         if (!session.data?.user && !publicPaths.includes(path)) {
             setAuthorized(false);
             router.push({
-                pathname: '/login',
+                pathname: '/auth/login',
                 query: { returnUrl: router.asPath }
             });
         } else {
