@@ -124,8 +124,6 @@ const CadastroEvento: NextPage<CadastroEventoProps> = (props: CadastroEventoProp
         },
       ],
     ]);
-    console.log(formFields);
-    setFormState(formFields);
   };
 
   const [formState, setFormState] = useState(getFormInit());
@@ -139,7 +137,7 @@ const CadastroEvento: NextPage<CadastroEventoProps> = (props: CadastroEventoProp
     } else {
       setFormState(getFormInit());
     }
-  }, []);
+  }, [formMode, props.evento]);
 
   const onCadastroSubmit = async (e: Event) => {
     if (!formInstance.validateForm()) {
