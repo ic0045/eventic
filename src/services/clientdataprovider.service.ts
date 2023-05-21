@@ -4,7 +4,7 @@ import { stringify } from 'query-string';
 const apiUrl = `${process.env.NEXT_PUBLIC_URL}/api/admin`;
 const httpClient = fetchUtils.fetchJson;
 
-const AppDataProvider: DataProvider = {
+const ClientDataProvider: DataProvider = {
     getList: (resource, params) => {
         const query = {
             sort: JSON.stringify(params.sort),
@@ -96,4 +96,4 @@ const AppDataProvider: DataProvider = {
         }).then(({ json }) => ({ data: json }));
     },
 };
-export default AppDataProvider;
+export default ClientDataProvider;
