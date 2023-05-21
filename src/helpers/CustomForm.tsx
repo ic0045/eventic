@@ -14,13 +14,6 @@ export class CustomForm{
         this.setFormState = setFormState;
     }
 
-
-    addFormField(fieldId: string, validators: any[]){
-        let formStateMap = new Map(this.formState);  
-        // const currentValue = this.formState.get(fieldId);
-        formStateMap.set(fieldId, {value: '', validators: validators, valid: true, errorMessage: '', })
-    }
-
     validateForm = (): boolean => {
         let formStateMap = new Map(this.formState);  
         let isFormValid = true;
@@ -76,101 +69,6 @@ export class CustomForm{
 
     getValue = (fieldId: string): string | dayjs.Dayjs | File => {
         return this.formState.get(fieldId)?.value ?? ""
-    }
-
-    loadEventoEdit = (evento: Evento): void => {
-        this.setFormState(new Map([
-            [
-              "titulo",
-              {
-                value: evento.titulo,
-                validators: [Validator.required],
-                valid: true,
-                errorMessage: "",
-              },
-            ],
-            [
-              "local",
-              {
-                value: evento.localizacao ?? "",
-                validators: [Validator.required],
-                valid: true,
-                errorMessage: "",
-              },
-            ],
-            [
-              "dataInicio",
-              {
-                value: dayjs(evento.dataInicial),
-                validators: [Validator.date],
-                valid: true,
-                errorMessage: "",
-              },
-            ],
-            [
-              "horarioInicio",
-              {
-                value: dayjs(evento.dataInicial),
-                validators: [Validator.date],
-                valid: true,
-                errorMessage: "",
-              },
-            ],
-            [
-              "dataFim",
-              {
-                value: '',
-                validators: [],
-                valid: true,
-                errorMessage: "",
-              },
-            ],
-            [
-              "horarioFim",
-              {
-                value: '',
-                validators: [],
-                valid: true,
-                errorMessage: "",
-              },
-            ],
-            [
-              "categoria",
-              {
-                value: evento.categoria?.nome ?? "",
-                validators: [],
-                valid: true,
-                errorMessage: "",
-              },
-            ],
-            [
-              "tipo",
-              {
-                value: evento.tipo ?? "",
-                validators: [],
-                valid: true,
-                errorMessage: "",
-              },
-            ],
-            [
-              "descricao",
-              {
-                value: evento.descricao ?? "",
-                validators: [Validator.required],
-                valid: true,
-                errorMessage: "",
-              },
-            ],
-            [
-              "imagem",
-              {
-                value: undefined,
-                validators: [],
-                valid: true,
-                errorMessage: "",
-              },
-            ],
-          ]))
     }
 
     getErrorMessage = (fieldId: string): string => {
