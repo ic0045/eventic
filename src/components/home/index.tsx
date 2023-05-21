@@ -14,8 +14,9 @@ import ViewModuleIcon from '@mui/icons-material/ViewModule';
 import SearchIcon from '@mui/icons-material/Search';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import moment from 'moment';
+import 'moment/locale/pt-br';
+
 import CircularProgress from '@mui/material/CircularProgress';
-const _ = require('lodash');
 
 
 interface Evento {
@@ -66,7 +67,7 @@ interface ListaCategorias {
 
 export default function Home({ data, categorias, eventosCategoria }: { data: Evento[], categorias: Categoria[], eventosCategoria: Array<EventoPorCategoria> }) {
 
-
+    moment.locale('pt-br');
 
     function separaEventosPorPeriodo(eventos: Evento[], periodo: 'semana' | 'mes') {
         const eventosPorPeriodo: Array<EventoPorPeriodo> = [];
@@ -256,6 +257,7 @@ export default function Home({ data, categorias, eventosCategoria }: { data: Eve
 
     function limpaBusca() {
         setListaCategorias(listaCategoriasBackup)
+        setInputValue('')
     }
 
 
@@ -311,6 +313,7 @@ export default function Home({ data, categorias, eventosCategoria }: { data: Eve
                     {isLoading ? <CircularProgress /> : <></>}
                     <InputBase
                         onKeyDown={handleKeyDown}
+                        value={inputValue}
                         onChange={(e) => { setInputValue(e.target.value) }}
                         sx={{ ml: 1, flex: 1 }}
                         placeholder="Filtrar por nome de Evento"
@@ -371,15 +374,13 @@ export default function Home({ data, categorias, eventosCategoria }: { data: Eve
 
                         <TabPanel value='0'>
                             {events(eventToMapOld)}
-                            {/* {events(listaCategorias.Palestras.eventosPorDiaAnteriores)} */}
                         </TabPanel>
 
                         <TabPanel value='1'>
                             {events(eventToMapNew)}
-                            {/* {events(listaCategorias.Palestras.eventosPorDiaNovos)} */}
                         </TabPanel>
                     </TabContext>
-                </Box>
+                </Box>  
             </Box>
         </Container>
 

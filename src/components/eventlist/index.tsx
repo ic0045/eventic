@@ -49,7 +49,7 @@ export default function ListCard(props: Props) {
             </Box>
 
             <Link href={{
-                pathname: '/eventdetails',
+                pathname: '/eventos/detalhes',
                 query: {
                     id: props.id
                 }
