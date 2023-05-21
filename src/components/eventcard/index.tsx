@@ -9,14 +9,11 @@ import SubscribeButton from "@app/components/subscribebutton/SubscribeButton"
 import Link from 'next/link';
 
 interface Props {
+    id: string
     initialDate: string
     image: string
     title: string
     location: string
-
-    description: string
-    finalDate: string
-    linkMoreInformation: string
 }
 
 export default function EventCard(props: Props) {
@@ -46,13 +43,7 @@ export default function EventCard(props: Props) {
                 <Link href={{
                     pathname: '/eventdetails',
                     query: {
-                        title: props.title,
-                        description: props.description,
-                        image: props.image,
-                        location: props.location,
-                        initialDate: `Início: ${day} - ${month} as ${horario}`,
-                        finalDate: props.finalDate,
-                        linkMoreInformation: props.linkMoreInformation
+                        id: props.id
                     }
                 }}>
                     <CardMedia

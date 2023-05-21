@@ -12,9 +12,28 @@ import SubscribeButton from "@app/components/subscribebutton/SubscribeButton"
 import Navbar from "@app/components/common/navbar/Navbar";
 import { getServerSession } from "next-auth";
 
+import { GetServerSideProps } from 'next';
+
 import { useSearchParams } from 'next/navigation'
 
-function EventDetails() {
+interface Evento {
+  id: string
+  descricao: string
+  localizacao: string
+  dataInicial: string
+  titulo: string
+  destaque: boolean
+  imagemUrl: string
+  createdAt: string
+  updatedAt: string
+  datafinal: string
+  linkImagem: string
+  linkTitulo: string
+  tipo: string
+  linkMaisInfomacoes: string
+}
+
+function EventDetails({ data }: { data: Evento[] }) {
 
   const searchParams = useSearchParams()
 
@@ -31,13 +50,28 @@ function EventDetails() {
 
   const [subscribed, setSubscribed] = useState(false)
 
+  const meses = [
+    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Jnho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
+  ];
+
+  function getData(d: string,x:string) {
+    if (d === null) {
+      return null
+    }
+    const date = new Date(d)
+    const day = date.getDate()
+    const month = meses[date.getMonth()]
+    const horario = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    return `${x}: ${day} - ${month} | ${horario}`
+  }
 
   return (
 
     <Container maxWidth="xl">
       <Navbar />
       <Typography sx={{ borderRadius: '0.3rem', backgroundColor: 'white', boxShadow: 3, padding: '1rem' }} variant="h5" mb={3}>
-        {searchParams.get('title')}
+        {data[0].titulo}
       </Typography>
       <Grid container spacing={3}>
         <Grid item md={4}>
@@ -46,7 +80,7 @@ function EventDetails() {
               height={600}
               width={600}
               className={styles.img}
-              src={searchParams.get('image') || event.image}
+              src={searchParams.get('image') || data[0].imagemUrl}
               alt='evento-imagem'
             />
           </Box>
@@ -66,7 +100,7 @@ function EventDetails() {
               Descrição
             </Typography>
             <Typography sx={{ textAlign: 'justify' }} variant="body1" gutterBottom>
-              {searchParams.get('description')}
+              {data[0].descricao}
             </Typography>
           </Box >
 
@@ -75,16 +109,16 @@ function EventDetails() {
               Detalhes
             </Typography>
             <Typography variant="body2" gutterBottom>
-              {searchParams.get('initialDate')}
+              {getData(data[0].dataInicial,'Início')}
               <IconButton target="_blank" href="https://calendar.google.com/" aria-label="calendar">
                 <EventIcon />
               </IconButton>
             </Typography>
             <Typography variant="body2" gutterBottom>
-              {searchParams.get('finalDate')}
+              {getData(data[0].datafinal,'Fim')}
             </Typography>
             <Typography variant="body2" gutterBottom>
-              Local: {searchParams.get('location')}
+              Local: {data[0].localizacao}
 
               <IconButton target="_blank" href="https://www.google.com/maps/place/Instituto+de+Geoci%C3%AAncias+da+UFBA/@-12.9980058,-38.5097059,17z/data=!3m1!4b1!4m6!3m5!1s0x716049f49530915:0xeee17285dd935415!8m2!3d-12.9980058!4d-38.5071256!16s%2Fg%2F1q5bwgf_d" aria-label="location ">
                 <PlaceIcon />
@@ -92,7 +126,7 @@ function EventDetails() {
 
             </Typography>
             <Typography variant="body2" gutterBottom>
-              Mais informacoes: <a href={searchParams.get('linkMoreInformation')|| 'www.google.com'}>{searchParams.get('linkMoreInformation')}</a>
+              Mais informacoes: <a href={data[0].linkMaisInfomacoes || 'www.google.com'}>{data[0].linkMaisInfomacoes}</a>
             </Typography>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
               <SubscribeButton />
@@ -109,19 +143,34 @@ function EventDetails() {
   );
 };
 
-export const getServerSideProps = async (context: any) => {
-  const session = await getServerSession(context.req, context.res, {});
-  if(!session){
-      return {
-          props: {},
-          redirect: {
-              destination: '/login',
-              permanent: false
-          }
-      }
-  }
 
-  return {props: {}}
-}
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const id = query.id;
+
+  const api = process.env.PUBLIC_URL;
+  const res = await fetch(`${api}/api/eventos?id=${id}`);
+  const data = await res.json();
+
+  return {
+    props: {
+      data,
+    },
+  };
+};
+
+// export const getServerSideProps = async (context: any) => {
+//   const session = await getServerSession(context.req, context.res, {});
+//   if(!session){
+//       return {
+//           props: {},
+//           redirect: {
+//               destination: '/login',
+//               permanent: false
+//           }
+//       }
+//   }
+
+//   return {props: {}}
+// }
 
 export default EventDetails;

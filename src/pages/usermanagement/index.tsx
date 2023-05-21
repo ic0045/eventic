@@ -38,6 +38,21 @@ const users = [
     },
 ]
 
+const user = {
+    "id": "17c8818e-a7f3-4b40-a7ea-1a6c16d29e57",
+    "primeiroNome": "Gregour",
+    "segundoNome": "Mazour",
+    "email": "gMazour@gmail.com",
+    "celular": null,
+    "senha": "$2b$10$T.8QNWcMvlXEG2rTHCMJr.pCPrztqAeKmAUQT5DJ0m6e.X/Rr.6vC",
+    "permissao": "visitante",
+    "fotoPerfil": null,
+    "cpf": null,
+    "createdAt": "2023-04-08T23:35:34.941Z",
+    "updatedAt": null,
+    "emailConfirmado": false
+}
+
 
 
 
@@ -48,9 +63,9 @@ export default function UserManagement() {
     return (
         <Container maxWidth="xl">
             <Navbar />
-            
 
-            <Box mb={2} sx={{display:'flex', alignItems:'center'}}>
+
+            <Box mb={2} sx={{ display: 'flex', alignItems: 'center' }}>
                 <FormControl sx={{ m: 1, minWidth: 150 }}>
                     <InputLabel id="demo-simple-select-label">Usuários</InputLabel>
                     <Select
@@ -66,7 +81,7 @@ export default function UserManagement() {
                 </FormControl>
 
                 <Link href='/cadastrousario'>
-                    <Button variant="contained" sx={{ backgroundColor: "#76D104", marginLeft: "0.5rem"}}>
+                    <Button variant="contained" sx={{ backgroundColor: "#76D104", marginLeft: "0.5rem" }}>
                         Cadastro
                     </Button>
                 </Link>
