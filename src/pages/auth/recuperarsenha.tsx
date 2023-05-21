@@ -47,7 +47,6 @@ const RecuperarSenha: NextPage = () => {
   };
 
   return (
-    <Layout>
       <div className={styles.recuperarsenha}>
         <Grid
           container
@@ -74,7 +73,6 @@ const RecuperarSenha: NextPage = () => {
           </Grid>
         </Grid>
       </div>
-    </Layout>
   );
 };
 export default RecuperarSenha;

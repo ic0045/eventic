@@ -91,21 +91,21 @@ export default function AccountMenu(props: { session: Session }) {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <Link href="#">
+        {/* <Link href="#">
           <MenuItem>Seja Bem Vindo {props.session.user.name}</MenuItem>
-        </Link>
+        </Link> */}
         <Link href="/eventos">
           <MenuItem onClick={handleClose}>Página Inicial</MenuItem>
         </Link>
-        <Link href="/meucadastro">
+        <Link href="/auth/meucadastro">
           <MenuItem onClick={handleClose}>Meu Cadastro</MenuItem>
         </Link>
-        <Link href="/inscricoes">
+        <Link href="/eventos/minhasinscricoes">
           <MenuItem onClick={handleClose}>Minhas Inscrições</MenuItem>
         </Link>
         <Divider />
-        <Link href="/usermanagement">
-          <MenuItem onClick={handleClose}>Gerenciar Usuários</MenuItem>
+        <Link href="/admin#">
+          <MenuItem onClick={handleClose}>Painel Administrativo</MenuItem>
         </Link>
         <Divider />
         <MenuItem onClick={handleSair}>
