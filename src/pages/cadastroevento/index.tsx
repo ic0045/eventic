@@ -167,6 +167,7 @@ const CadastroEvento: NextPage<CadastroEventoProps> = (props: CadastroEventoProp
       ).toISOString(),
       usuario_id: session.data?.user.id ?? "1",
       imagem: base64 as string,
+      imagem_url: "url"
     })
       .catch((error) => {
         setFormErrorMessage(error.response.data.errorMsg);

@@ -7,7 +7,7 @@ export interface EventoPostRequest {
     destaque?: string,
     imagem?: string,
     data_final?: string,
-    link_imagem?: string,
+    imagem_url: string,
     link_titulo?: string,
     tipo: string,
     usuario_id: string,
