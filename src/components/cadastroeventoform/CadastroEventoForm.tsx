@@ -14,12 +14,14 @@ import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import dayjs from "dayjs";
 import { CategoriaAPI } from "@app/apis/CategoriaAPI";
 import { Categoria } from "@app/entities/Categoria";
+import { FormMode } from "@app/helpers/enums";
 
 interface CadastroEventoFormProps {
   formInstance: CustomForm;
   isCadastroSuccess: boolean;
   onCadastroSubmit: any;
   errorMessage: string;
+  formMode: FormMode;
 }
 
 export const CadastroEventoForm: FunctionComponent<CadastroEventoFormProps> = (
@@ -75,10 +77,10 @@ export const CadastroEventoForm: FunctionComponent<CadastroEventoFormProps> = (
                       props.formInstance.getErrorMessage("dataInicio"),
                   },
                 }}
-                defaultValue={dayjs(new Date())}
+                value={props.formInstance.getValue("dataInicio")}
                 onChange={(value) => {
                   props.formInstance.onDateInputChange(
-                    dayjs(value),
+                    dayjs(value as dayjs.Dayjs),
                     "dataInicio"
                   );
                 }}
@@ -107,7 +109,7 @@ export const CadastroEventoForm: FunctionComponent<CadastroEventoFormProps> = (
             </Grid>
           </Grid>
         </div>
-        <div className={styles.data}>
+        {/* <div className={styles.data}>
           <h4>Data fim</h4>
           <Grid
             container
@@ -143,7 +145,7 @@ export const CadastroEventoForm: FunctionComponent<CadastroEventoFormProps> = (
               />
             </Grid>
           </Grid>
-        </div>
+        </div> */}
         <Select
           label="Categoria"
           error={!props.formInstance.isValid("categoria")}
@@ -190,7 +192,7 @@ export const CadastroEventoForm: FunctionComponent<CadastroEventoFormProps> = (
           color="success"
           onClick={props.onCadastroSubmit}
         >
-          Cadastrar
+          { props.formMode == FormMode.EDIT ? 'Atualizar' : 'Cadastrar'}
         </Button>
       </div>
     </>

@@ -301,7 +301,6 @@ export default function Home({ data, categorias, eventosCategoria }: { data: Eve
 
     return (
         <Container maxWidth="xl">
-            <Navbar />
 
             <Box sx={{ borderRadius: '0.3rem', backgroundColor: 'white', boxShadow: 3 }}>
                 <Paper
