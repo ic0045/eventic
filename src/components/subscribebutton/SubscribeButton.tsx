@@ -39,7 +39,7 @@ export default function SubscribeButton() {
         </DialogTitle>
         <DialogActions>
           <Button onClick={handleClose}>Fechar</Button>
-          <Link href='/login'>
+          <Link href='/auth/login'>
             <Button onClick={handleClose} autoFocus>
               Login
             </Button>

@@ -12,9 +12,10 @@ import PersonAdd from '@mui/icons-material/PersonAdd';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import Link from 'next/link';
+import { Session } from 'next-auth';
 
 
-export default function AccountMenu() {
+export default function AccountMenu({session}:{session:Session}) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -23,6 +24,7 @@ export default function AccountMenu() {
     const handleClose = () => {
         setAnchorEl(null);
     };
+    console.log({session})
     return (
         <React.Fragment>
             <Box
@@ -75,23 +77,28 @@ export default function AccountMenu() {
                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
-                <Link href="/home">
+            <Link href="#">
+                <MenuItem >
+                    Seja Bem Vindo {session.user.name}
+                </MenuItem>
+            </Link>
+                <Link href="/">
                     <MenuItem onClick={handleClose}>
                         Página Inicial
                     </MenuItem>
                 </Link>
-                <Link href="/home">
+                <Link href="/">
                     <MenuItem onClick={handleClose}>
                         Meu Cadastro
                     </MenuItem>
                 </Link>
-                <Link href="/home">
+                <Link href="/">
                     <MenuItem onClick={handleClose}>
                         Minhas Inscrições
                     </MenuItem>
                 </Link>
                 <Divider />
-                <Link href="/home">
+                <Link href="/">
                     <MenuItem onClick={handleClose}>
                         Gerenciar Eventos
                     </MenuItem>

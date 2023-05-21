@@ -175,7 +175,7 @@ const CadastroEvento: NextPage<CadastroEventoProps> = (props: CadastroEventoProp
       })
       .then((response) => {
         if (response) {
-          router.push("/home");
+          router.push("/");
         }
       });
   };
@@ -224,21 +224,22 @@ const CadastroEvento: NextPage<CadastroEventoProps> = (props: CadastroEventoProp
 
 export const getServerSideProps = async (context: any) => {
   const session = await getServerSession(context.req, context.res, {});
-  if (!session) {
-    return {
-      props: {},
-      redirect: {
-        destination: "/login",
-        permanent: false,
-      },
-    };
+  if(!session){
+      return {
+          props: {},
+          redirect: {
+              destination: '/auth/login',
+              permanent: false
+          }
+      }
   }
 
   const { id } = context.query;
   let data: Evento[] = [];
   
   if(id){
-    const res = await fetch(`http://localhost:3000/api/eventos?id=${id}`)
+    const apiURL = process.env.NEXT_PUBLIC_URL;
+    const res = await fetch(`${apiURL}/api/eventos?id=${id}`)
     data = await res.json();
   }
 

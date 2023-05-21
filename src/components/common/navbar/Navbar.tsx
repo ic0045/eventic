@@ -3,15 +3,20 @@ import Image from 'next/image';
 import Link from 'next/link';
 import AccountMenu from "@app/components/common/accountmenu/AccountMenu";
 import { useState } from "react";
+import { useSession } from "next-auth/react";
 
 export default function Navbar() {
 
-    const [isLogged, setLogged] = useState(true);
+    const { data: session, status } = useSession()
+
+    if (status === "loading"){
+        return <div>Loading</div>
+    }
 
     return (
 
         <Box sx={{ display: 'flex', marginTop: '1rem', marginBottom: '3rem' }}>
-            <Link href='/home'>
+            <Link href='/'>
                 <Image
                     width={337}
                     height={83}
@@ -24,16 +29,16 @@ export default function Navbar() {
 
             <Box sx={{ marginLeft: 'auto', alignSelf: 'center' }}>
 
-                {isLogged ?
-                    <AccountMenu /> :
+                {status === "authenticated" ?
+                    <AccountMenu session={session} /> :
                     <>
-                        <Link href='/login'>
+                        <Link href='/auth/login'>
                             <Button variant="contained" color="success">
                                 Login
                             </Button>
                         </Link>
 
-                        <Link href='/cadastrousario'>
+                        <Link href='/auth/cadastro'>
                             <Button variant="contained" sx={{ backgroundColor: "#76D104", marginLeft: "0.5rem" }}>
                                 Cadastro
                             </Button>
