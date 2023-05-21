@@ -41,7 +41,7 @@ export default function EventCard(props: Props) {
         <Card sx={{ display: 'flex', maxWidth: '420px', boxShadow: 3, flexGrow: 1 }}>
             <Box sx={{ alignSelf: 'center' }}>
                 <Link href={{
-                    pathname: '/eventdetails',
+                    pathname: '/eventos/detalhes',
                     query: {
                         id: props.id
                     }
