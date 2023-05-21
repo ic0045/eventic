@@ -156,8 +156,10 @@ export default function Home({ data, categorias, eventosCategoria }: { data: Eve
         return listaCategorias
     }
 
-    let listaCategorias = criaListaCategorias(eventosCategoria,data)
-    const listaCategoriasBackup = _.cloneDeep(listaCategorias);
+    let [listaCategorias, setListaCategorias] = useState(criaListaCategorias(eventosCategoria, data));
+
+    const listaCategoriasBackup = criaListaCategorias(eventosCategoria, data)
+    // const listaCategoriasBackup: ListaCategorias = _.cloneDeep(listaCategorias);
 
     const [category, setCategory] = useState('Todas');
     const [period, setPeriod] = useState('1');
@@ -220,16 +222,14 @@ export default function Home({ data, categorias, eventosCategoria }: { data: Eve
         }
     }
 
-    const [responseData, setResponseData] = useState(data);
     const [inputValue, setInputValue] = useState('');
+    
 
-    // useEffect(() => {
-    //     if (responseData) {
-    //         [eventosPorDiaAnteriores, eventosPorDiaNovos, eventosPorSemanaAnteriores, eventosPorSemanaNovos, eventosPorMesAnteriores, eventosPorMesNovos] = organizaEventos(responseData)
-    //         update()
-
-    //     }
-    // }, [responseData]);
+    useEffect(() => {
+        if (listaCategorias) {
+            update()
+        }
+    }, [listaCategorias]);
 
     const [isLoading, setIsLoading] = useState(false);
 
@@ -250,15 +250,12 @@ export default function Home({ data, categorias, eventosCategoria }: { data: Eve
             eventosCategoria.push({ nome: categoria.nome, eventos: newData })
         }
 
-        listaCategorias = criaListaCategorias(eventosCategoria,data)
-        update()
-
+        setListaCategorias(criaListaCategorias(eventosCategoria, data))
         setIsLoading(false)
     };
 
     function limpaBusca() {
-        listaCategorias = listaCategoriasBackup
-        update()
+        setListaCategorias(listaCategoriasBackup)
     }
 
 
