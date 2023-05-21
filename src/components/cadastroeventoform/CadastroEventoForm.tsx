@@ -13,7 +13,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import dayjs from "dayjs";
 import { CategoriaAPI } from "@app/apis/CategoriaAPI";
-import { Categoria } from "@app/entities/Categoria";
+import { Categoria } from "@app/server/entities/categoria.entity";
 
 interface CadastroEventoFormProps {
   formInstance: CustomForm;

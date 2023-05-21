@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { UsuarioRepo } from '@app/database'
+import { UsuarioRepo } from '@app/server/database'
 import {UsuarioValidator} from '../util';
 import { hashPassword } from '../../auth/auth';
 import { getToken } from "next-auth/jwt";

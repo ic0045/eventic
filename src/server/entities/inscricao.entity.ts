@@ -5,8 +5,8 @@ import {
   ManyToOne, 
   PrimaryGeneratedColumn,
   Relation } from "typeorm";
-import { Evento } from "./Evento";
-import { Usuario } from "./Usuario";
+import { Evento } from "./evento.entity";
+import { Usuario } from "./usuario.entity";
 
 @Entity("inscricao", { schema: "public" })
 export class Inscricao {

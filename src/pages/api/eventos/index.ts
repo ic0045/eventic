@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import {  EventoRepo,  } from '@app/database'
+import {  EventoRepo,  } from '@app/server/database'
 import { ILike } from "typeorm"
 
 /*

@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { EventoRepo, InscricaoRepo, UsuarioRepo } from '@app/database'
-import { Usuario } from '@app/entities/Usuario';
+import { EventoRepo, InscricaoRepo, UsuarioRepo } from '@app/server/database'
+import { Usuario } from '@app/server/entities/usuario.entity';
 import { getToken } from "next-auth/jwt";
-import { Inscricao } from '@app/entities/Inscricao';
+import { Inscricao } from '@app/server/entities/inscricao.entity';
 
 /*
 *   Rota para inscrição em eventos.

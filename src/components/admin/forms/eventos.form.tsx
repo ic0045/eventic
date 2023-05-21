@@ -1,4 +1,4 @@
-import { ApiResource } from '@app/helpers/enums';
+import { ApiResource } from "@app/common/constants";
 import { Theme, useMediaQuery } from '@mui/material';
 import { BooleanField, Datagrid, DateField, List,  TextField, BooleanInput, DateInput, Edit, SimpleForm, TextInput, Create, UrlField, ReferenceField, ReferenceInput, SimpleList } from 'react-admin';
 

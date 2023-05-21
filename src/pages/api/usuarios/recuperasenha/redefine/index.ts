@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { UsuarioRepo } from '@app/database'
+import { UsuarioRepo } from '@app/server/database'
 import { hashPassword } from '@app/pages/api/auth/auth';
 
 /*

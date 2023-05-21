@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { UsuarioRepo } from '@app/database';
+import { UsuarioRepo } from '@app/server/database';
 
 /*
 * Rota para confirmação de cadastro de usuário

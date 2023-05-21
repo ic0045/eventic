@@ -1,9 +1,9 @@
-import { CategoriaRepo, EventoRepo, UsuarioRepo } from "@app/database";
-import { Categoria } from "@app/entities/Categoria";
-import { Evento } from "@app/entities/Evento";
-import { Usuario } from "@app/entities/Usuario";
-import { ApiResource } from "@app/helpers/enums";
-import ServerAbstractDataProvider from "@app/helpers/ServerAbstractDataProvider";
+import { CategoriaRepo, EventoRepo, UsuarioRepo } from "@app/server/database";
+import { Categoria } from "@app/server/entities/categoria.entity";
+import { Evento } from "@app/server/entities/evento.entity";
+import { Usuario } from "@app/server/entities/usuario.entity";
+import { ApiResource } from "@app/common/constants";
+import ServerAbstractDataProvider from "@app/server/services/abstractdataprovider.service";
 import { NextApiRequest, NextApiResponse } from "next";
 import { DataProvider, PaginationPayload, SortPayload } from "react-admin";
 import { EntitySchema, ObjectLiteral, Repository } from "typeorm";
@@ -33,7 +33,7 @@ export default async function handler(
         const provider = new ServerAbstractDataProvider<Evento>(EventoRepo);
         return await execute(req, res, provider);
     }
-
+    res.status(500).send(`Falta definir um middleware para o recurso ${req.query.resource}`)
 }
 
 async function execute<T extends ObjectLiteral>(

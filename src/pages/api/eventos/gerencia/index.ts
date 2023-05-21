@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { CategoriaRepo, EventoRepo, UsuarioRepo } from '@app/database'
+import { CategoriaRepo, EventoRepo, UsuarioRepo } from '@app/server/database'
 import EventoValidator from '../util';
-import { Evento } from '@app/entities/Evento';
+import { Evento } from '@app/server/entities/evento.entity';
 import { getToken } from "next-auth/jwt";
 import { AcessLevel } from '../../auth/auth';
 

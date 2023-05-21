@@ -6,7 +6,7 @@ import {
     PrimaryGeneratedColumn,
     Unique
 } from "typeorm";
-import { Evento } from "./Evento";
+import { Evento } from "./evento.entity";
 
 /*
 * Tipo do corpo de requisição para criação de categoria

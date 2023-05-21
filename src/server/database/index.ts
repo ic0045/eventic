@@ -1,11 +1,11 @@
 import "reflect-metadata"
 import { DataSource } from "typeorm"
 import * as dotenv from 'dotenv'
-import { Usuario } from "@app/entities/Usuario"
-import { Evento } from "@app/entities/Evento"
-import { Inscricao } from "@app/entities/Inscricao"
-import { PreferenciasUsuario } from "@app/entities/PreferenciasUsuario"
-import { Categoria } from "@app/entities/Categoria"
+import { Usuario } from "@app/server/entities/usuario.entity"
+import { Evento } from "@app/server/entities/evento.entity"
+import { Inscricao } from "@app/server/entities/inscricao.entity"
+import { PreferenciasUsuario } from "@app/server/entities/preferenciasusuario.entity"
+import { Categoria } from "@app/server/entities/categoria.entity"
 
 dotenv.config();
 

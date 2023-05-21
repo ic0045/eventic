@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { UsuarioRepo } from '@app/database'
-import { Usuario } from '@app/entities/Usuario'
+import { UsuarioRepo } from '@app/server/database'
+import { Usuario } from '@app/server/entities/usuario.entity'
 import {UsuarioValidator, sendConfirmEmail} from '../util'
 import { AcessLevel, hashPassword } from '../../auth/auth'
 
