@@ -62,7 +62,6 @@ export default function UserManagement() {
 
     return (
         <Container maxWidth="xl">
-            <Navbar />
 
 
             <Box mb={2} sx={{ display: 'flex', alignItems: 'center' }}>

@@ -68,7 +68,6 @@ function EventDetails({ data }: { data: Evento[] }) {
   return (
 
     <Container maxWidth="xl">
-      <Navbar />
       <Typography sx={{ borderRadius: '0.3rem', backgroundColor: 'white', boxShadow: 3, padding: '1rem' }} variant="h5" mb={3}>
         {data[0].titulo}
       </Typography>

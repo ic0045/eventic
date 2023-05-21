@@ -4,3 +4,8 @@ export enum ApiResource {
     USUARIOS = 'usuarios',
     EVENTOS = 'eventos',
 }
+
+export enum FormMode { 
+    EDIT,
+    CREATE
+}
