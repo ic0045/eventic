@@ -39,13 +39,18 @@ interface EventoPorPeriodo {
     eventos: Evento[];
 }
 
+interface EventoPorCategoria {
+    nome: string;
+    eventos: Evento[];
+}
+
 interface Categoria {
     id: string
     nome: string
     icone: string
 }
 
-export default function Home({ data, categorias }: { data: Evento[], categorias: Categoria[] }) {
+export default function Home({ data, categorias, eventosCategoria }: { data: Evento[], categorias: Categoria[], eventosCategoria: Array<EventoPorCategoria> }) {
 
 
 
@@ -107,6 +112,45 @@ export default function Home({ data, categorias }: { data: Evento[], categorias:
     const eventosOrganizados = organizaEventos(data)
     let [eventosPorDiaAnteriores, eventosPorDiaNovos, eventosPorSemanaAnteriores, eventosPorSemanaNovos, eventosPorMesAnteriores, eventosPorMesNovos] = eventosOrganizados
 
+    interface Categoria {
+        eventosPorDiaAnteriores: Array<EventoPorPeriodo>
+        eventosPorDiaNovos: Array<EventoPorPeriodo>
+        eventosPorSemanaAnteriores: Array<EventoPorPeriodo>
+        eventosPorSemanaNovos: Array<EventoPorPeriodo>
+        eventosPorMesAnteriores: Array<EventoPorPeriodo>
+        eventosPorMesNovos: Array<EventoPorPeriodo>
+    }
+
+    interface ListaCategorias {
+        [key: string]: Categoria;
+    }
+
+    const listaCategorias: ListaCategorias = {
+        Todas: {
+            eventosPorDiaAnteriores: eventosPorDiaAnteriores,
+            eventosPorDiaNovos: eventosPorDiaNovos,
+            eventosPorSemanaAnteriores: eventosPorSemanaAnteriores,
+            eventosPorSemanaNovos: eventosPorSemanaNovos,
+            eventosPorMesAnteriores: eventosPorMesAnteriores,
+            eventosPorMesNovos: eventosPorMesNovos
+        }
+    }
+
+    for (const categoria of eventosCategoria) {
+        const [eventosPorDiaAnteriores, eventosPorDiaNovos, eventosPorSemanaAnteriores, eventosPorSemanaNovos, eventosPorMesAnteriores, eventosPorMesNovos] = organizaEventos(categoria.eventos)
+        const eventoOrganizado = {
+            eventosPorDiaAnteriores: eventosPorDiaAnteriores,
+            eventosPorDiaNovos: eventosPorDiaNovos,
+            eventosPorSemanaAnteriores: eventosPorSemanaAnteriores,
+            eventosPorSemanaNovos: eventosPorSemanaNovos,
+            eventosPorMesAnteriores: eventosPorMesAnteriores,
+            eventosPorMesNovos: eventosPorMesNovos
+        }
+        listaCategorias[categoria.nome] = eventoOrganizado
+    }
+
+    console.log(listaCategorias)
+
     const [category, setCategory] = useState('Todas');
     const [period, setPeriod] = useState('1');
 
@@ -122,16 +166,33 @@ export default function Home({ data, categorias }: { data: Evento[], categorias:
         const evento = event.target.value
         setPeriod(event.target.value)
         if (evento == '3') {
-            setEventToMapOld(eventosPorMesAnteriores);
-            setEventToMapNew(eventosPorMesNovos);
+            setEventToMapOld(listaCategorias[category].eventosPorMesAnteriores);
+            setEventToMapNew(listaCategorias[category].eventosPorMesNovos);
         }
         if (evento == '2') {
-            setEventToMapOld(eventosPorSemanaAnteriores);
-            setEventToMapNew(eventosPorSemanaNovos);
+            setEventToMapOld(listaCategorias[category].eventosPorSemanaAnteriores);
+            setEventToMapNew(listaCategorias[category].eventosPorSemanaNovos);
         }
         if (evento == '1') {
-            setEventToMapOld(eventosPorDiaAnteriores);
-            setEventToMapNew(eventosPorDiaNovos);
+            setEventToMapOld(listaCategorias[category].eventosPorDiaAnteriores);
+            setEventToMapNew(listaCategorias[category].eventosPorDiaNovos);
+        }
+    }
+
+    function handleCategoryChange(event: SelectChangeEvent) {
+        const evento = event.target.value
+        setCategory(evento)
+        if (period == '3') {
+            setEventToMapOld(listaCategorias[evento].eventosPorMesAnteriores);
+            setEventToMapNew(listaCategorias[evento].eventosPorMesNovos);
+        }
+        if (period == '2') {
+            setEventToMapOld(listaCategorias[evento].eventosPorSemanaAnteriores);
+            setEventToMapNew(listaCategorias[evento].eventosPorSemanaNovos);
+        }
+        if (period == '1') {
+            setEventToMapOld(listaCategorias[evento].eventosPorDiaAnteriores);
+            setEventToMapNew(listaCategorias[evento].eventosPorDiaNovos);
         }
     }
 
@@ -212,7 +273,19 @@ export default function Home({ data, categorias }: { data: Evento[], categorias:
         }
     };
 
+    const [eventosPorCategoria, setEventosPorCategoria] = useState([{ nome: "Todas", eventos: data }])
+    const getCategory = async () => {
+        const api = process.env.NEXT_PUBLIC_URL;
+        const eventosCategoria = []
+        for (const categoria of categorias) {
+            const res = await fetch(`${api}/api/eventos?categoria_id=${categoria.id}`);
+            const newData = await res.json();
+            eventosCategoria.push({ nome: categoria.nome, eventos: newData })
+        }
+        setEventosPorCategoria(eventosCategoria)
+    };
 
+    //getCategory()
 
 
     return (
@@ -263,7 +336,8 @@ export default function Home({ data, categorias }: { data: Evento[], categorias:
                             id="demo-simple-select"
                             value={category}
                             label="Categoria"
-                            onChange={(event: SelectChangeEvent) => (setCategory(event.target.value))}
+                            // onChange={(event: SelectChangeEvent) => (setCategory(event.target.value))}
+                            onChange={handleCategoryChange}
                         >
                             <MenuItem value='Todas'>Todas</MenuItem>
                             {categorias.map((categoria) =>
@@ -289,10 +363,12 @@ export default function Home({ data, categorias }: { data: Evento[], categorias:
 
                         <TabPanel value='0'>
                             {events(eventToMapOld)}
+                            {/* {events(listaCategorias.Palestras.eventosPorDiaAnteriores)} */}
                         </TabPanel>
 
                         <TabPanel value='1'>
                             {events(eventToMapNew)}
+                            {/* {events(listaCategorias.Palestras.eventosPorDiaNovos)} */}
                         </TabPanel>
                     </TabContext>
                 </Box>
@@ -304,16 +380,29 @@ export default function Home({ data, categorias }: { data: Evento[], categorias:
 
 export async function getServerSideProps() {
     const api = process.env.PUBLIC_URL
+
+    // Pega os Eventos
     const res = await fetch(`${api}/api/eventos`)
     const data = await res.json()
 
+    // Pega as Categorias
     const resCategoria = await fetch(`${api}/api/categorias`)
     const categorias = await resCategoria.json()
-    console.log(categorias)
+
+    // Pega os Eventos por Categoria
+    const eventosCategoria = []
+    for (const categoria of categorias) {
+        const res = await fetch(`${api}/api/eventos?categoria_id=${categoria.id}`);
+        const newData = await res.json();
+        eventosCategoria.push({ nome: categoria.nome, eventos: newData })
+    }
+
+
     return {
         props: {
             data,
-            categorias
+            categorias,
+            eventosCategoria
         },
     }
 }
