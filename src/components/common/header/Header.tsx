@@ -1,10 +1,7 @@
 import styles from "./header.module.css";
 import { FunctionComponent, useState } from "react";
 import Image from "next/image";
-import {
-  Box,
-  Button
-} from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -29,21 +26,21 @@ export const Header: FunctionComponent = () => {
         ) : (
           <div className={styles.header__login}>
             {!isPage("login") && (
-              <Button variant="contained" color="success" href="/auth/login">
-                Login
-              </Button>
+              <Link href="/auth/login">
+                <Button variant="contained" color="success">
+                  Login
+                </Button>
+              </Link>
             )}
             {!isPage("cadastrousuario") && (
-              <Button
-                variant="contained"
-                style={{
-                  backgroundColor: "#76D104",
-                  marginLeft: "0.5rem",
-                }}
-                href="/auth/cadastro"
-              >
-                Cadastre-se
-              </Button>
+              <Link href="/auth/cadastro">
+                <Button
+                  variant="contained"
+                  sx={{ backgroundColor: "#76D104", marginLeft: "0.5rem" }}
+                >
+                  Cadastro
+                </Button>
+              </Link>
             )}
           </div>
         )}
