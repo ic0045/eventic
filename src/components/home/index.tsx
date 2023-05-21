@@ -15,6 +15,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import moment from 'moment';
 import 'moment/locale/pt-br';
+import Image from 'next/image';
 
 import CircularProgress from '@mui/material/CircularProgress';
 
@@ -224,7 +225,7 @@ export default function Home({ data, categorias, eventosCategoria }: { data: Eve
     }
 
     const [inputValue, setInputValue] = useState('');
-    
+
 
     useEffect(() => {
         if (listaCategorias) {
@@ -296,12 +297,26 @@ export default function Home({ data, categorias, eventosCategoria }: { data: Eve
         )
     )
 
+    const buscaFalhou = (
+        <Box sx={{ textAlign: 'center' }}>
+            <Typography variant="h5" >Nenhum resultado encontrado</Typography>
+            <Typography variant="body1" mb={2} >Tente diminuir ou reescrever seus termos de pesquisa.</Typography>
+            <Image
+                height={200}
+                width={200}
+                src="/images/search.png"
+                alt='evento-imagem'
+            />
+        </Box>
+    )
+
 
 
 
     return (
         <Container maxWidth="xl">
 
+            {/* {buscaFalhou} */}
             <Box sx={{ borderRadius: '0.3rem', backgroundColor: 'white', boxShadow: 3 }}>
                 <Paper
                     component="form"
@@ -374,13 +389,14 @@ export default function Home({ data, categorias, eventosCategoria }: { data: Eve
 
                         <TabPanel value='0'>
                             {events(eventToMapOld)}
+                            {/* {eventToMapOld ? events(eventToMapOld) : buscaFalhou} */}
                         </TabPanel>
 
                         <TabPanel value='1'>
                             {events(eventToMapNew)}
                         </TabPanel>
                     </TabContext>
-                </Box>  
+                </Box>
             </Box>
         </Container>
 

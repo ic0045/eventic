@@ -6,12 +6,10 @@ import { Layout } from "@app/components/common/layout/Layout";
 const AlterarSenha: NextPage = () => {
 
   return (
-    <Layout>
       <div>
-        {/* TODO: Alterar Senha */}
-        Alterar senha
+        <h1>Em progresso...</h1>
+        
       </div>
-    </Layout>
   );
 };
 export default AlterarSenha;
