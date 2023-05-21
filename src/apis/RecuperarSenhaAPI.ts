@@ -1,14 +1,13 @@
-import api from "./config/axiosConfig";
-
-export class RecuperarSenhaAPI {
+import { BaseAPI } from "./BaseAPI";
+export class RecuperarSenhaAPI extends BaseAPI {
 
     static async enviarLink(recuperarSenhaRequest: RecuperarSenhaRequest){
-        const response = await api.request({
-            url: '/api/usuarios/recuperasenha',
+        const response = await fetch(`${this.apiURL}/usuarios/recuperarsenha`, {
             method: 'POST',
-            data: recuperarSenhaRequest
+            body: JSON.stringify(recuperarSenhaRequest),
+            headers: {"Content-type": "application/json; charset=UTF-8"}
         })
 
-        return response.data;
+        return await response.json();
     }
 }
