@@ -11,13 +11,6 @@ export class CustomForm{
         this.setFormState = setFormState;
     }
 
-
-    addFormField(fieldId: string, validators: any[]){
-        let formStateMap = new Map(this.formState);  
-        // const currentValue = this.formState.get(fieldId);
-        formStateMap.set(fieldId, {value: '', validators: validators, valid: true, errorMessage: '', })
-    }
-
     validateForm = (): boolean => {
         let formStateMap = new Map(this.formState);  
         let isFormValid = true;

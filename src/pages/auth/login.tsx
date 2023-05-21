@@ -68,7 +68,6 @@ const Login: NextPage = () => {
   };
 
   return (
-    <Layout>
       <div className={styles.login}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item md={6} xs={0}>
@@ -101,7 +100,6 @@ const Login: NextPage = () => {
           </Grid>
         </Grid>
       </div>
-    </Layout>
   );
 };
 

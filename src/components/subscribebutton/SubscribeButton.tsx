@@ -6,17 +6,19 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 import Link from 'next/link';
+import { useSession } from "next-auth/react";
 
 export default function SubscribeButton() {
 
   const [open, setOpen] = useState(false);
+  const {data: session} = useSession();
 
   const [subscribed, setSubscribed] = useState(false)
 
   const [logged, setLogged] = useState(false)
 
   const handleClickOpen = () => {
-    logged ? setSubscribed(!subscribed) : setOpen(true);
+    session ? setSubscribed(!subscribed) : setOpen(true);
   };
 
   const handleClose = () => {

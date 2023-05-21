@@ -4,6 +4,7 @@ import { SessionProvider } from "next-auth/react";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { ptBR } from "@mui/x-date-pickers/locales";
+import { Layout } from "@app/components/common/layout/Layout";
 
 export default function App({
   Component,
@@ -17,7 +18,9 @@ export default function App({
       }
     >
       <SessionProvider session={session}>
-        <Component {...pageProps} />
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
       </SessionProvider>
     </LocalizationProvider>
   );

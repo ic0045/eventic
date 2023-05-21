@@ -4,7 +4,7 @@ import axios, { AxiosError } from 'axios';
 const api = axios.create({
   // adding a custom language header   
   headers: {},
-  baseURL: 'http://localhost:3000'
+  baseURL: process.env.NEXT_PUBLIC_URL
 });
 
 const errorHandler = (error: AxiosError) => {
