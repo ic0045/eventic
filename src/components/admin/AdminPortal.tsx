@@ -28,7 +28,7 @@ const myTheme = {
 const AdminPortal = () => (
   <Admin theme={myTheme} i18nProvider={i18nProvider} layout={MyLayout} dataProvider={ClientDataProvider} dashboard={Dashboard}  >
     <Resource name={ApiResource.CATEGORIAS} recordRepresentation="nome"  list={CategoriaList} edit={CategoriaEdit}  create={CategoriaCreate} icon={CategoriaIcone} />
-    <Resource name={ApiResource.USUARIOS} recordRepresentation="primeiro_nome" list={UsuarioList} edit={UsuarioEdit} create={UsuarioCreate} icon={UsuarioIcone} />
+    <Resource name={ApiResource.USUARIOS} recordRepresentation="primeiroNome" list={UsuarioList} edit={UsuarioEdit} create={UsuarioCreate} icon={UsuarioIcone} />
     <Resource name={ApiResource.EVENTOS} recordRepresentation={(r)=> r.eventoTituloCompleto} list={EventoList} edit={EventoEdit} create={EventoCreate}  icon={EventoIcone} />
     <Resource name={ApiResource.INSCRICOES} list={InscricaoList} edit={InscricaoEdit} create={InscricaoCreate} icon={InscricaoIcone} />
   </Admin>

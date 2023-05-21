@@ -14,18 +14,18 @@ export default function App({
 }: AppProps) {
   return (
     <ThemeProvider theme={tema}>
-    <LocalizationProvider
-      dateAdapter={AdapterDayjs}
-      localeText={
-        ptBR.components.MuiLocalizationProvider.defaultProps.localeText
-      }
-    >
-      <SessionProvider session={session}>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </SessionProvider>
-    </LocalizationProvider>
+      <LocalizationProvider
+        dateAdapter={AdapterDayjs}
+        localeText={
+          ptBR.components.MuiLocalizationProvider.defaultProps.localeText
+        }
+      >
+        <SessionProvider session={session}>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </SessionProvider>
+      </LocalizationProvider>
     </ThemeProvider>
   );
 }
