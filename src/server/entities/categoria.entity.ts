@@ -58,6 +58,6 @@ export class Categoria{
 
     @BeforeInsert()
     updateDates() {
-        this.icone == null ? "/path/toIconeDefault" : this.icone;
+        this.icone == null ? Categoria.DEFAULT_CATEGORIA_ICON_PATH : this.icone;
     }
 }
