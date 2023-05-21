@@ -1,4 +1,4 @@
-import { Evento } from './../entities/Evento';
+import { Evento } from '@app/server/entities/evento.entity';
 
 const api = process.env.PUBLIC_URL
 export class EventoAPI {
