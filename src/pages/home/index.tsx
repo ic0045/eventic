@@ -15,6 +15,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import moment from 'moment';
 import CircularProgress from '@mui/material/CircularProgress';
+const _ = require('lodash');
 
 
 interface Evento {
@@ -48,6 +49,19 @@ interface Categoria {
     id: string
     nome: string
     icone: string
+}
+
+interface ObjetoCategoria {
+    eventosPorDiaAnteriores: Array<EventoPorPeriodo>
+    eventosPorDiaNovos: Array<EventoPorPeriodo>
+    eventosPorSemanaAnteriores: Array<EventoPorPeriodo>
+    eventosPorSemanaNovos: Array<EventoPorPeriodo>
+    eventosPorMesAnteriores: Array<EventoPorPeriodo>
+    eventosPorMesNovos: Array<EventoPorPeriodo>
+}
+
+interface ListaCategorias {
+    [key: string]: ObjetoCategoria;
 }
 
 export default function Home({ data, categorias, eventosCategoria }: { data: Evento[], categorias: Categoria[], eventosCategoria: Array<EventoPorCategoria> }) {
@@ -109,47 +123,41 @@ export default function Home({ data, categorias, eventosCategoria }: { data: Eve
         return [eventosPorDiaAnteriores, eventosPorDiaNovos, eventosPorSemanaAnteriores, eventosPorSemanaNovos, eventosPorMesAnteriores, eventosPorMesNovos]
     }
 
-    const eventosOrganizados = organizaEventos(data)
-    let [eventosPorDiaAnteriores, eventosPorDiaNovos, eventosPorSemanaAnteriores, eventosPorSemanaNovos, eventosPorMesAnteriores, eventosPorMesNovos] = eventosOrganizados
 
-    interface Categoria {
-        eventosPorDiaAnteriores: Array<EventoPorPeriodo>
-        eventosPorDiaNovos: Array<EventoPorPeriodo>
-        eventosPorSemanaAnteriores: Array<EventoPorPeriodo>
-        eventosPorSemanaNovos: Array<EventoPorPeriodo>
-        eventosPorMesAnteriores: Array<EventoPorPeriodo>
-        eventosPorMesNovos: Array<EventoPorPeriodo>
-    }
+    function criaListaCategorias(eventosCategoria: Array<EventoPorCategoria>, data: Evento[]) {
 
-    interface ListaCategorias {
-        [key: string]: Categoria;
-    }
+        const eventosOrganizados = organizaEventos(data)
+        let [eventosPorDiaAnteriores, eventosPorDiaNovos, eventosPorSemanaAnteriores, eventosPorSemanaNovos, eventosPorMesAnteriores, eventosPorMesNovos] = eventosOrganizados
 
-    const listaCategorias: ListaCategorias = {
-        Todas: {
-            eventosPorDiaAnteriores: eventosPorDiaAnteriores,
-            eventosPorDiaNovos: eventosPorDiaNovos,
-            eventosPorSemanaAnteriores: eventosPorSemanaAnteriores,
-            eventosPorSemanaNovos: eventosPorSemanaNovos,
-            eventosPorMesAnteriores: eventosPorMesAnteriores,
-            eventosPorMesNovos: eventosPorMesNovos
+        const listaCategorias: ListaCategorias = {
+            Todas: {
+                eventosPorDiaAnteriores: eventosPorDiaAnteriores,
+                eventosPorDiaNovos: eventosPorDiaNovos,
+                eventosPorSemanaAnteriores: eventosPorSemanaAnteriores,
+                eventosPorSemanaNovos: eventosPorSemanaNovos,
+                eventosPorMesAnteriores: eventosPorMesAnteriores,
+                eventosPorMesNovos: eventosPorMesNovos
+            }
         }
-    }
 
-    for (const categoria of eventosCategoria) {
-        const [eventosPorDiaAnteriores, eventosPorDiaNovos, eventosPorSemanaAnteriores, eventosPorSemanaNovos, eventosPorMesAnteriores, eventosPorMesNovos] = organizaEventos(categoria.eventos)
-        const eventoOrganizado = {
-            eventosPorDiaAnteriores: eventosPorDiaAnteriores,
-            eventosPorDiaNovos: eventosPorDiaNovos,
-            eventosPorSemanaAnteriores: eventosPorSemanaAnteriores,
-            eventosPorSemanaNovos: eventosPorSemanaNovos,
-            eventosPorMesAnteriores: eventosPorMesAnteriores,
-            eventosPorMesNovos: eventosPorMesNovos
+        for (const categoria of eventosCategoria) {
+            const [eventosPorDiaAnteriores, eventosPorDiaNovos, eventosPorSemanaAnteriores, eventosPorSemanaNovos, eventosPorMesAnteriores, eventosPorMesNovos] = organizaEventos(categoria.eventos)
+            const eventoOrganizado = {
+                eventosPorDiaAnteriores: eventosPorDiaAnteriores,
+                eventosPorDiaNovos: eventosPorDiaNovos,
+                eventosPorSemanaAnteriores: eventosPorSemanaAnteriores,
+                eventosPorSemanaNovos: eventosPorSemanaNovos,
+                eventosPorMesAnteriores: eventosPorMesAnteriores,
+                eventosPorMesNovos: eventosPorMesNovos
+            }
+            listaCategorias[categoria.nome] = eventoOrganizado
         }
-        listaCategorias[categoria.nome] = eventoOrganizado
+
+        return listaCategorias
     }
 
-    console.log(listaCategorias)
+    let listaCategorias = criaListaCategorias(eventosCategoria,data)
+    const listaCategoriasBackup = _.cloneDeep(listaCategorias);
 
     const [category, setCategory] = useState('Todas');
     const [period, setPeriod] = useState('1');
@@ -158,8 +166,8 @@ export default function Home({ data, categorias, eventosCategoria }: { data: Eve
 
     const [listView, setListView] = useState(false)
 
-    const [eventToMapOld, setEventToMapOld] = useState(eventosPorDiaAnteriores)
-    const [eventToMapNew, setEventToMapNew] = useState(eventosPorDiaNovos)
+    const [eventToMapOld, setEventToMapOld] = useState(listaCategorias['Todas'].eventosPorDiaAnteriores)
+    const [eventToMapNew, setEventToMapNew] = useState(listaCategorias['Todas'].eventosPorDiaNovos)
 
 
     function handlePeriodChange(event: SelectChangeEvent) {
@@ -196,25 +204,72 @@ export default function Home({ data, categorias, eventosCategoria }: { data: Eve
         }
     }
 
+
     function update() {
         if (period == '3') {
-            setEventToMapOld(eventosPorMesAnteriores);
-            setEventToMapNew(eventosPorMesNovos);
+            setEventToMapOld(listaCategorias[category].eventosPorMesAnteriores);
+            setEventToMapNew(listaCategorias[category].eventosPorMesNovos);
         }
         if (period == '2') {
-            setEventToMapOld(eventosPorSemanaAnteriores);
-            setEventToMapNew(eventosPorSemanaNovos);
+            setEventToMapOld(listaCategorias[category].eventosPorSemanaAnteriores);
+            setEventToMapNew(listaCategorias[category].eventosPorSemanaNovos);
         }
         if (period == '1') {
-            setEventToMapOld(eventosPorDiaAnteriores);
-            setEventToMapNew(eventosPorDiaNovos);
+            setEventToMapOld(listaCategorias[category].eventosPorDiaAnteriores);
+            setEventToMapNew(listaCategorias[category].eventosPorDiaNovos);
         }
     }
 
+    const [responseData, setResponseData] = useState(data);
+    const [inputValue, setInputValue] = useState('');
+
+    // useEffect(() => {
+    //     if (responseData) {
+    //         [eventosPorDiaAnteriores, eventosPorDiaNovos, eventosPorSemanaAnteriores, eventosPorSemanaNovos, eventosPorMesAnteriores, eventosPorMesNovos] = organizaEventos(responseData)
+    //         update()
+
+    //     }
+    // }, [responseData]);
+
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleClick = async () => {
+        setIsLoading(true)
+
+        const api = process.env.NEXT_PUBLIC_URL
+
+        // Pega os Eventos
+        const res = await fetch(`${api}/api/eventos?titulo=${inputValue}`)
+        const data = await res.json()
+
+        // Pega os Eventos por Categoria
+        const eventosCategoria = []
+        for (const categoria of categorias) {
+            const res = await fetch(`${api}/api/eventos?categoria_id=${categoria.id}&titulo=${inputValue}`);
+            const newData = await res.json();
+            eventosCategoria.push({ nome: categoria.nome, eventos: newData })
+        }
+
+        listaCategorias = criaListaCategorias(eventosCategoria,data)
+        update()
+
+        setIsLoading(false)
+    };
+
     function limpaBusca() {
-        [eventosPorDiaAnteriores, eventosPorDiaNovos, eventosPorSemanaAnteriores, eventosPorSemanaNovos, eventosPorMesAnteriores, eventosPorMesNovos] = eventosOrganizados
+        listaCategorias = listaCategoriasBackup
         update()
     }
+
+
+
+    const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            e.preventDefault(); // Evita que o evento padrão de tecla Enter ocorra
+            await handleClick(); // Realiza a busca quando a tecla Enter é pressionada
+        }
+    };
+
 
     const events = (eventList: Array<EventoPorPeriodo>) =>
     (
@@ -242,50 +297,7 @@ export default function Home({ data, categorias, eventosCategoria }: { data: Eve
         )
     )
 
-    const [responseData, setResponseData] = useState(data);
-    const [inputValue, setInputValue] = useState('');
 
-    useEffect(() => {
-        if (responseData) {
-            [eventosPorDiaAnteriores, eventosPorDiaNovos, eventosPorSemanaAnteriores, eventosPorSemanaNovos, eventosPorMesAnteriores, eventosPorMesNovos] = organizaEventos(responseData)
-            update()
-
-        }
-    }, [responseData]);
-
-    const [isLoading, setIsLoading] = useState(false);
-
-    const handleClick = async () => {
-        setIsLoading(true)
-        const api = process.env.NEXT_PUBLIC_URL
-        const res = await fetch(`${api}/api/eventos?titulo=${inputValue}`)
-
-        const newData = await res.json();
-        setResponseData(newData);
-        setIsLoading(false)
-    };
-
-
-    const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
-            e.preventDefault(); // Evita que o evento padrão de tecla Enter ocorra
-            await handleClick(); // Realiza a busca quando a tecla Enter é pressionada
-        }
-    };
-
-    const [eventosPorCategoria, setEventosPorCategoria] = useState([{ nome: "Todas", eventos: data }])
-    const getCategory = async () => {
-        const api = process.env.NEXT_PUBLIC_URL;
-        const eventosCategoria = []
-        for (const categoria of categorias) {
-            const res = await fetch(`${api}/api/eventos?categoria_id=${categoria.id}`);
-            const newData = await res.json();
-            eventosCategoria.push({ nome: categoria.nome, eventos: newData })
-        }
-        setEventosPorCategoria(eventosCategoria)
-    };
-
-    //getCategory()
 
 
     return (
