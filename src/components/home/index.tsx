@@ -386,32 +386,3 @@ export default function Home({ data, categorias, eventosCategoria }: { data: Eve
 
     )
 }
-
-export async function getServerSideProps() {
-    const api = process.env.PUBLIC_URL
-
-    // Pega os Eventos
-    const res = await fetch(`${api}/api/eventos`)
-    const data = await res.json()
-
-    // Pega as Categorias
-    const resCategoria = await fetch(`${api}/api/categorias`)
-    const categorias = await resCategoria.json()
-
-    // Pega os Eventos por Categoria
-    const eventosCategoria = []
-    for (const categoria of categorias) {
-        const res = await fetch(`${api}/api/eventos?categoria_id=${categoria.id}`);
-        const newData = await res.json();
-        eventosCategoria.push({ nome: categoria.nome, eventos: newData })
-    }
-
-
-    return {
-        props: {
-            data,
-            categorias,
-            eventosCategoria
-        },
-    }
-}

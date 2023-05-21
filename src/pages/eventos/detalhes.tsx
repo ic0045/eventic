@@ -1,5 +1,5 @@
 import { Box, Container, Grid } from "@mui/material";
-import styles from './eventdetails.module.css'
+import styles from './detalhes.module.css'
 import Typography from "@mui/material/Typography";
 import IconButton from '@mui/material/IconButton';
 import Image from 'next/image';
@@ -7,7 +7,6 @@ import ShareIcon from '@mui/icons-material/Share';
 import EventIcon from '@mui/icons-material/Event';
 import PlaceIcon from '@mui/icons-material/Place';
 import { useState } from "react";
-import { Layout } from "@app/components/common/layout/Layout";
 import SubscribeButton from "@app/components/subscribebutton/SubscribeButton"
 import Navbar from "@app/components/common/navbar/Navbar";
 import { getServerSession } from "next-auth";

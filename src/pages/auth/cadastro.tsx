@@ -1,29 +1,46 @@
 import { CustomForm } from "@app/helpers/CustomForm";
 import { Validator } from "@app/helpers/Validator";
-import { FormFieldState } from "@app/interfaces/form_interfaces";
-import { Grid, CircularProgress } from "@mui/material";
-import styles from "./cadastroevento.module.css";
+import {
+  Grid,
+  CircularProgress,
+  Box,
+  Modal,
+  Typography,
+} from "@mui/material";
+import styles from "./cadastro.module.css";
 import Image from "next/image";
 import { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { Layout } from "@app/components/common/layout/Layout";
-import { CadastroEventoForm } from "@app/components/cadastroeventoform/CadastroEventoForm";
-import { EventoAPI } from "@app/apis/EventoAPI";
-import dayjs, { Dayjs } from "dayjs";
-import { getServerSession } from "next-auth";
-import { juntarDataHorario, toBase64 } from "@app/helpers/Helpers";
+import { CadastroUsuarioForm } from "@app/components/cadastrousuarioform/CadastroUsuarioForm";
+import { UsuarioAPI } from "@app/apis/UsuarioAPI";
+import { toBase64 } from "@app/helpers/Helpers";
 
-const CadastroEvento: NextPage = () => {
+const CadastroUsuario: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [formErrorMessage, setFormErrorMessage] = useState("");
+  const [openModal, setOpenModal] = useState(false);
+  const [formErrorMessage, setFormErrorMessage] = useState('')
   const session = useSession();
   const router = useRouter();
+  const [cadastroSuccess, setCadastroSuccess] = useState(true);
+
+  const style = {
+    position: "absolute" as "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 24,
+    p: 4,
+  };
 
   let formFields: Map<string, FormFieldState> = new Map([
     [
-      "titulo",
+      "nome",
       {
         value: "",
         validators: [Validator.required],
@@ -32,7 +49,7 @@ const CadastroEvento: NextPage = () => {
       },
     ],
     [
-      "local",
+      "sobrenome",
       {
         value: "",
         validators: [Validator.required],
@@ -41,64 +58,37 @@ const CadastroEvento: NextPage = () => {
       },
     ],
     [
-      "dataInicio",
-      {
-        value: dayjs(new Date()),
-        validators: [Validator.date],
-        valid: true,
-        errorMessage: "",
-      },
-    ],
-    [
-      "horarioInicio",
-      {
-        value: dayjs(new Date()),
-        validators: [Validator.date],
-        valid: true,
-        errorMessage: "",
-      },
-    ],
-    [
-      "dataFim",
-      {
-        value: '',
-        validators: [],
-        valid: true,
-        errorMessage: "",
-      },
-    ],
-    [
-      "horarioFim",
-      {
-        value: '',
-        validators: [],
-        valid: true,
-        errorMessage: "",
-      },
-    ],
-    [
-      "categoria",
+      "email",
       {
         value: "",
-        validators: [],
+        validators: [Validator.required, Validator.email],
         valid: true,
         errorMessage: "",
       },
     ],
     [
-      "tipo",
-      {
-        value: "",
-        validators: [],
-        valid: true,
-        errorMessage: "",
-      },
-    ],
-    [
-      "descricao",
+      "senha",
       {
         value: "",
         validators: [Validator.required],
+        valid: true,
+        errorMessage: "",
+      },
+    ],
+    [
+      "celular",
+      {
+        value: "",
+        validators: [],
+        valid: true,
+        errorMessage: "",
+      },
+    ],
+    [
+      "cpf",
+      {
+        value: "",
+        validators: [],
         valid: true,
         errorMessage: "",
       },
@@ -111,61 +101,72 @@ const CadastroEvento: NextPage = () => {
         valid: true,
         errorMessage: "",
       },
-    ],
+    ]
   ]);
 
   const [formState, setFormState] = useState(formFields);
-  const [cadastroSuccess, setCadastroSuccess] = useState(true);
-
   const formInstance = new CustomForm(formState, setFormState);
 
+  const redirectoToLogin = () => {
+    router.push("/login");
+  };
   const onCadastroSubmit = async (e: Event) => {
     if (!formInstance.validateForm()) {
-      console.log(formState);
       return;
     }
 
     setIsLoading(true);
+    setCadastroSuccess(true);
 
-    const imagem = formInstance.getValue("imagem");
+    const fotoPerfil = formInstance.getValue("imagem");
     let base64: string = "";
 
-    if(imagem){
+    if(fotoPerfil){
       base64 = await toBase64(formInstance.getValue("imagem") as File) as string;
     }
 
-    EventoAPI.cadastrar({
-      titulo: formInstance.getValue("titulo") as string,
-      tipo: formInstance.getValue("tipo") as string,
-      descricao: formInstance.getValue("titulo") as string,
-      localizacao: formInstance.getValue("local") as string,
-      data_inicial: juntarDataHorario(
-        formInstance.getValue("dataInicio") as Dayjs,
-        formInstance.getValue("horarioInicio") as Dayjs
-      ).toISOString(),
-      usuario_id: session.data?.user.id ?? "1",
-      imagem: base64 as string,
+    UsuarioAPI.cadastrar({
+      primeiro_nome: formInstance.getValue("nome") as string,
+      segundo_nome: formInstance.getValue("sobrenome") as string,
+      email: formInstance.getValue("email") as string,
+      senha: formInstance.getValue("senha") as string,
+      permissao: "visitante",
+      foto_perfil: base64 as string
     })
       .catch((error) => {
+        setCadastroSuccess(false);
         setFormErrorMessage(error.response.data.errorMsg);
-        setIsLoading(false);
       })
       .then((response) => {
         if (response) {
-          router.push("/home");
+          setOpenModal(true);
         }
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
-
   };
 
   return (
     <Layout>
       <div className={styles.cadastro}>
+        <div>
+          <Modal open={openModal} onClose={redirectoToLogin}>
+            <Box sx={style}>
+              <Typography id="modal-modal-title" variant="h6" component="h2">
+                Validação de e-mail
+              </Typography>
+              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                Valide sua usando o link que enviamos para o seu e-mail.
+              </Typography>
+            </Box>
+          </Modal>
+        </div>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item md={6} xs={0}>
             <div className={styles.imagem}>
               <Image
-                src="/pana.png"
+                src="/amico.png"
                 alt="login"
                 width="0"
                 height="0"
@@ -176,17 +177,17 @@ const CadastroEvento: NextPage = () => {
           </Grid>
           <Grid item xs={12} md={6}>
             <div className={styles.cadastro__form}>
-              <h2>Cadastrar Evento</h2>
+              <h2>Cadastrar Usuario</h2>
               {isLoading ? (
                 <div className="loader">
                   <CircularProgress />
                 </div>
               ) : (
-                <CadastroEventoForm
-                  errorMessage={formErrorMessage}
+                <CadastroUsuarioForm
                   isCadastroSuccess={cadastroSuccess}
                   onCadastroSubmit={onCadastroSubmit}
                   formInstance={formInstance}
+                  errorMessage={formErrorMessage}
                 />
               )}
             </div>
@@ -197,19 +198,4 @@ const CadastroEvento: NextPage = () => {
   );
 };
 
-export const getServerSideProps = async (context: any) => {
-  const session = await getServerSession(context.req, context.res, {});
-  if(!session){
-      return {
-          props: {},
-          redirect: {
-              destination: '/login',
-              permanent: false
-          }
-      }
-  }
-
-  return {props: {}}
-}
-
-export default CadastroEvento;
+export default CadastroUsuario;

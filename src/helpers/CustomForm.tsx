@@ -1,4 +1,3 @@
-import { FormFieldState } from "@app/interfaces/form_interfaces";
 import dayjs, { Dayjs } from "dayjs";
 import { ChangeEvent } from "react";
 

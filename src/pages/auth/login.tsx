@@ -5,7 +5,6 @@ import { useState } from "react";
 // import { LoginAPI } from "@app/apis/LoginAPI";
 import { CustomForm } from "@app/helpers/CustomForm";
 import { Validator } from "@app/helpers/Validator";
-import { FormFieldState } from "@app/interfaces/form_interfaces";
 import LoginForm from "@app/components/loginform";
 import { Layout } from "@app/components/common/layout/Layout";
 import Image from "next/image";
