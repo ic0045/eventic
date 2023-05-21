@@ -10,7 +10,7 @@
 update public.usuario set permissao = 'admin' where id = '0e8c91e8-1f2f-4285-b898-1ca65116bf04';
 
 --Usuário B
-update public.usuario set permissao = 'tecnico' where id = '409c2cbf-6bbd-4539-b406-4234e40d3529';
+update public.usuario set permissao = 'servidor' where id = '409c2cbf-6bbd-4539-b406-4234e40d3529';
 -------------------------
 ----Insere Categorias----
 -------------------------

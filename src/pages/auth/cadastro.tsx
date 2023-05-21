@@ -17,6 +17,7 @@ import { Layout } from "@app/components/common/layout/Layout";
 import { CadastroUsuarioForm } from "@app/components/cadastrousuarioform/CadastroUsuarioForm";
 import { UsuarioAPI } from "@app/apis/UsuarioAPI";
 import { toBase64 } from "@app/helpers/Helpers";
+import { Permissao } from "@app/common/constants";
 
 const CadastroUsuario: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -130,7 +131,7 @@ const CadastroUsuario: NextPage = () => {
       segundo_nome: formInstance.getValue("sobrenome") as string,
       email: formInstance.getValue("email") as string,
       senha: formInstance.getValue("senha") as string,
-      permissao: "visitante",
+      permissao: Permissao.visitante,
       foto_perfil: base64 as string
     })
       .catch((error) => {

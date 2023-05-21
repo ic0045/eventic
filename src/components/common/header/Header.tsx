@@ -11,25 +11,25 @@ import { useRouter } from "next/router";
 import AccountMenu from "../accountmenu/AccountMenu";
 
 export const Header: FunctionComponent = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const { asPath } = useRouter();
 
   const isPage = (pageName: string): boolean => {
     return asPath === `/${pageName}`;
   };
-
+  
   return (
     <Box sx={{ display: "flex", marginTop: "1rem", marginBottom: "3rem" }}>
       <Link href="/">
         <Image width={337} height={83} src={"/images/logo.png"} alt="logo" />
       </Link>
       <Box sx={{ marginLeft: "auto", alignSelf: "center" }}>
-        {session ? (
+        {status == 'authenticated' && session ? (
           <AccountMenu session={session} />
         ) : (
           <div className={styles.header__login}>
             {!isPage("login") && (
-              <Button variant="contained" color="success" href="/auth/login">
+              <Button variant="contained" color={"secondary"} href="/auth/login">
                 Login
               </Button>
             )}
@@ -37,7 +37,6 @@ export const Header: FunctionComponent = () => {
               <Button
                 variant="contained"
                 style={{
-                  backgroundColor: "#76D104",
                   marginLeft: "0.5rem",
                 }}
                 href="/auth/cadastro"

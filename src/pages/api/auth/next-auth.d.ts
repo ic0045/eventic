@@ -1,3 +1,4 @@
+import { Permissao } from '@app/common/constants';
 import NextAuth from 'next-auth';
 
 declare module "next-auth"{
@@ -7,7 +8,7 @@ declare module "next-auth"{
             name:string,
             primeiroNome:string,
             segundoNome:string,
-            permissao: string,
+            permissao: Permissao,
             fotoPerfil: string | null,
         }
     }

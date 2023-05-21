@@ -3,15 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { authOptions } from './[...nextauth]';
 import { getServerSession } from 'next-auth';
+import { Permissao } from '@app/common/constants';
 
-/*
-*  Níveis de permissão de usuário
-*/
-export enum AcessLevel {
-    admin = 'admin', // eslint-disable-line
-    tecnico = 'tecnico',// eslint-disable-line
-    visitante = 'visitante',// eslint-disable-line
-}
 
 /*
 *  Faz o hash de senha
@@ -31,13 +24,13 @@ export async function checkPassword(password : string, dbPassword : string) : Pr
 /*
 * Função que verifica se usuário possui autorização para acessar um recurso
 */
-export async function redirectIfNotAuthorized(req :any, res:any, roleRequired : String){
+export async function redirectIfNotAuthorized(req :any, res:any, roleRequired : Permissao){
     const session = await getServerSession(req,res,authOptions);
 
         if(!session){
             return{
                 redirect:{
-                    destination: "http://localhost:3000/auth/login",
+                    destination: `${process.env.NEXT_PUBLIC_URL}/auth/login`,
                     permanet:false,
                 }
             }

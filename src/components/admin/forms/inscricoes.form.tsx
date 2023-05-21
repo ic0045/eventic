@@ -1,60 +1,55 @@
-import { BooleanField, Datagrid, DateField, List, TextField, SimpleForm, SimpleList,
-    TextInput, CreateButton, DateInput, EditButton, BooleanInput, Edit, Create  } from 'react-admin';
+import {
+    BooleanField, Datagrid, DateField, List, TextField, SimpleForm, SimpleList,
+    TextInput, CreateButton, DateInput, EditButton, BooleanInput, Edit, Create, ReferenceField, ReferenceInput
+} from 'react-admin';
 import { Theme, useMediaQuery } from '@mui/material';
+import { ApiResource } from '@app/common/constants';
 
-export const UsuarioList = () => {
-    const isSmall = useMediaQuery((theme : Theme) => theme.breakpoints.down("sm"));
+export const InscricaoList = () => {
+    const isSmall = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
     return (
         <List title={"Inscrições"}>
-            {isSmall ? 
+            {isSmall ?
                 (
                     <SimpleList
-                    primaryText={(record) => record.primeiroNome}
-                    secondaryText={(record) => record.email}
-                    tertiaryText={(record) => record.permissao}
+                        primaryText={(record) => record.usuario.primeirNome}
+                        secondaryText={(record) => record.evento.titulo}
+                        tertiaryText={(record) => record.notificarEm}
                     />
-                ) 
-                : 
+                )
+                :
                 (
-                <Datagrid rowClick="edit">
-                    <TextField source="primeiroNome" />
-                    <TextField source="segundoNome" />
-                    <TextField source="email" />
-                    <BooleanField source="emailConfirmado" />
-                    <TextField source="celular" />
-                    <TextField source="cpf" />
-                    <TextField source="permissao" />
-                </Datagrid>
+                    <Datagrid rowClick="edit">
+                        <ReferenceField fullWidth source="evento.id" reference={ApiResource.EVENTOS} label="Evento" />
+                        <ReferenceField fullWidth source="usuario.id" reference={ApiResource.USUARIOS} label="Usuário" />
+                        <TextField fullWidth source="notificarEm" />
+                    </Datagrid>
+
                 )
             }
         </List>
     );
 };
 
-export const UsuarioEdit = () => (
-    <Edit title={"Editar Usuario"} actions={<EditButton title='Editar'/>}>
+
+export const InscricaoEdit = () => (
+    <Edit title={"Editar Inscrição"} actions={<EditButton title='Editar' />}>
         <SimpleForm>
-            <TextInput source="primeiroNome" />
-            <TextInput source="segundoNome" />
-            <TextInput source="email" />
-            <TextInput source="permissao" />
-            <BooleanInput source="emailConfirmado" disabled/>
-            <TextInput source="celular" />
-            <TextInput source="cpf" />
+            <TextInput source="id" disabled />
+            <ReferenceInput fullWidth source="evento.id" reference={ApiResource.EVENTOS} label="Evento" />
+            <ReferenceInput fullWidth source="usuario.id" reference={ApiResource.USUARIOS} label="Usuário" />
+            <TextInput fullWidth source="notificarEm" />
         </SimpleForm>
     </Edit>
 );
 
-export const UsuarioCreate = () => (
-    <Create title={"Criar Usuario"} actions={<EditButton title='Editar'/>}>
+export const InscricaoCreate = () => (
+    <Create title={"Inscrever Usuário"} actions={<EditButton title='Editar' />}>
         <SimpleForm>
-            <TextInput source="primeiroNome" />
-            <TextInput source="segundoNome" />
-            <TextInput source="email" />
-            <TextInput source="permissao" />
-            <BooleanInput source="emailConfirmado" disabled/>
-            <TextInput source="celular" />
-            <TextInput source="cpf" />
+            <TextInput fullWidth source="id" disabled />
+            <ReferenceInput fullWidth source="evento.id" reference={ApiResource.EVENTOS} label="Evento" />
+            <ReferenceInput fullWidth source="usuario.id" reference={ApiResource.USUARIOS} label="Usuário" />
+            <TextInput fullWidth source="notificarEm" />
         </SimpleForm>
     </Create>
 );

@@ -2,6 +2,7 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Relation, Unique } f
 import { Evento } from "@app/server/entities/evento.entity"
 import { Inscricao } from "@app/server/entities/inscricao.entity";
 import { PreferenciasUsuario } from "@app/server/entities/preferenciasusuario.entity";
+import { Permissao } from "@app/common/constants";
 
 @Entity("usuario", { schema: "public" })
 @Unique('email_unique', ['email'])
@@ -49,7 +50,7 @@ export class Usuario {
   senha: string;
 
   @Column("character varying", { name: "permissao", length: 100 })
-  permissao: string;
+  permissao: Permissao;
 
   @Column("bytea", {
     name: "foto_perfil",

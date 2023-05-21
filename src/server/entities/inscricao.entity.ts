@@ -1,3 +1,4 @@
+import { NotificarEm } from "@app/common/constants";
 import { 
   Column, 
   Entity, 
@@ -18,7 +19,7 @@ export class Inscricao {
     nullable: true,
     length: 100,
   })
-  notificarEm: string | null;
+  notificarEm: NotificarEm | null;
 
   @Column("timestamp without time zone", { name: "created_at" })
   createdAt: Date;
