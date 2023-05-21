@@ -1,7 +1,7 @@
 import NextAuth, { NextAuthOptions } from "next-auth"
 import CredentialsProvider  from "next-auth/providers/credentials"
 import { checkPassword } from "./auth"
-import { UsuarioRepo } from "@app/database"
+import { UsuarioRepo } from "@app/server/database"
 
 export const authOptions : NextAuthOptions = {
   providers: [

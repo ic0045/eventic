@@ -7,9 +7,9 @@ import {
   PrimaryGeneratedColumn,
   Relation
 } from "typeorm";
-import { Usuario } from "@app/entities/Usuario";
-import { Inscricao } from "@app/entities/Inscricao";
-import { Categoria } from "@app/entities/Categoria";
+import { Usuario } from "@app/server/entities/usuario.entity";
+import { Inscricao } from "@app/server/entities/inscricao.entity";
+import { Categoria } from "@app/server/entities/categoria.entity";
 
 @Entity("evento", { schema: "public" })
 export class Evento {

@@ -6,7 +6,7 @@ import {
     PrimaryGeneratedColumn,
     Unique
 } from "typeorm";
-import { Evento } from "./Evento";
+import { Evento } from "./evento.entity";
 
 /*
 * Tipo do corpo de requisição para criação de categoria
@@ -58,6 +58,6 @@ export class Categoria{
 
     @BeforeInsert()
     updateDates() {
-        this.icone == null ? "/path/toIconeDefault" : this.icone;
+        this.icone == null ? Categoria.DEFAULT_CATEGORIA_ICON_PATH : this.icone;
     }
 }

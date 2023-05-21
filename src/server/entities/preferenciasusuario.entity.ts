@@ -1,5 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, Relation, PrimaryGeneratedColumn } from "typeorm";
-import { Usuario } from "./Usuario";
+import { Usuario } from "./usuario.entity";
 
 @Entity("preferencias_usuario", { schema: "public" })
 export class PreferenciasUsuario {

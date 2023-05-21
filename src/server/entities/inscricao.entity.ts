@@ -5,8 +5,8 @@ import {
   ManyToOne, 
   PrimaryGeneratedColumn,
   Relation } from "typeorm";
-import { Evento } from "./Evento";
-import { Usuario } from "./Usuario";
+import { Evento } from "./evento.entity";
+import { Usuario } from "./usuario.entity";
 
 @Entity("inscricao", { schema: "public" })
 export class Inscricao {
@@ -26,7 +26,7 @@ export class Inscricao {
   @Column("timestamp without time zone", { name: "updated_at", nullable: true })
   updatedAt: Date | null;
 
-  @ManyToOne(() => Evento, (evento) => evento.inscricoes)
+  @ManyToOne(() => Evento, (evento) => evento.inscricoes, {eager:true})
   @JoinColumn([{ 
     name: "evento_id", 
     referencedColumnName: "id",
@@ -35,7 +35,7 @@ export class Inscricao {
   //@ts-ignore
   evento: Relation<Evento>;
 
-  @ManyToOne(() => Usuario, (usuario) => usuario.inscricaos)
+  @ManyToOne(() => Usuario, (usuario) => usuario.inscricaos, {eager:true})
   @JoinColumn([{ 
     name: "usuario_id", 
     referencedColumnName: "id",

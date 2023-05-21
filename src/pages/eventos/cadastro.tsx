@@ -13,8 +13,8 @@ import { EventoAPI } from "@app/apis/EventoAPI";
 import dayjs, { Dayjs } from "dayjs";
 import { getServerSession } from "next-auth";
 import { juntarDataHorario, toBase64 } from "@app/helpers/Helpers";
-import { Evento } from "@app/entities/Evento";
-import { FormMode } from "@app/helpers/enums";
+import { Evento } from "@app/server/entities/evento.entity";
+import { FormMode } from "@app/common/constants";
 
 interface CadastroEventoProps {
   evento: Evento

@@ -1,7 +1,7 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Relation, Unique } from "typeorm";
-import { Evento } from "@app/entities/Evento"
-import { Inscricao } from "@app/entities/Inscricao";
-import { PreferenciasUsuario } from "@app/entities/PreferenciasUsuario";
+import { Evento } from "@app/server/entities/evento.entity"
+import { Inscricao } from "@app/server/entities/inscricao.entity";
+import { PreferenciasUsuario } from "@app/server/entities/preferenciasusuario.entity";
 
 @Entity("usuario", { schema: "public" })
 @Unique('email_unique', ['email'])
