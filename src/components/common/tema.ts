@@ -6,8 +6,6 @@ const tema:ThemeOptions = createTheme( {
         primary: teal,
         secondary: green,
         error: red,
-        contrastThreshold: 3,
-        tonalOffset: 0.2,
     }
 })
 
