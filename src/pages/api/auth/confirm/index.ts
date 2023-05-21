@@ -14,8 +14,8 @@ export default async function handler(
         if(usuario != null){
             usuario.emailConfirmado = true;
             await UsuarioRepo.save(usuario);
-            res.redirect(process.env.PUBLIC_URL+"/login");
+            res.redirect(process.env.PUBLIC_URL+"/auth/login");
         }
     }
-    res.redirect(process.env.PUBLIC_URL+"/login");
+    res.redirect(process.env.PUBLIC_URL+"/auth/login");
   }
