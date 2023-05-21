@@ -1,4 +1,3 @@
-import { ValidatorResponse } from "@app/interfaces/form_interfaces";
 import dayjs, { Dayjs } from "dayjs";
 
 export class Validator {

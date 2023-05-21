@@ -5,7 +5,6 @@ import { RecuperarSenhaAPI } from "@app/apis/RecuperarSenhaAPI";
 import { RecuperarSenhaForm } from "@app/components/recuperarsenhaform";
 import { CustomForm } from "@app/helpers/CustomForm";
 import { Validator } from "@app/helpers/Validator";
-import { FormFieldState } from "@app/interfaces/form_interfaces";
 import { useState } from "react";
 import { Layout } from "@app/components/common/layout/Layout";
 

@@ -1,4 +1,3 @@
-import { RecuperarSenhaRequest } from './../interfaces/login_interfaces';
 import api from "./config/axiosConfig";
 
 export class RecuperarSenhaAPI {

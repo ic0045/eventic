@@ -8,6 +8,15 @@ const nextConfig = {
     config.experiments = { ...config.experiments, topLevelAwait: true }
     return config
   },
+    async redirects() {
+      return [
+        {
+          source: '/',
+          destination: '/eventos',
+          permanent: true,
+        },
+      ];
+    },
 }
 
 module.exports = nextConfig

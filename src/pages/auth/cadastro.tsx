@@ -1,6 +1,5 @@
 import { CustomForm } from "@app/helpers/CustomForm";
 import { Validator } from "@app/helpers/Validator";
-import { FormFieldState } from "@app/interfaces/form_interfaces";
 import {
   Grid,
   CircularProgress,
@@ -8,7 +7,7 @@ import {
   Modal,
   Typography,
 } from "@mui/material";
-import styles from "./cadastrousuario.module.css";
+import styles from "./cadastro.module.css";
 import Image from "next/image";
 import { NextPage } from "next";
 import { useSession } from "next-auth/react";

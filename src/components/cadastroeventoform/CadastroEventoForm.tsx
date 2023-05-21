@@ -14,7 +14,7 @@ import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import dayjs from "dayjs";
 import { CategoriaAPI } from "@app/apis/CategoriaAPI";
 import { Categoria } from "@app/entities/Categoria";
-import { FormMode } from "@app/interfaces/form_interfaces";
+import { FormMode } from "@app/helpers/enums";
 
 interface CadastroEventoFormProps {
   formInstance: CustomForm;

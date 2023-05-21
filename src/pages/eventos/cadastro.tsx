@@ -1,8 +1,7 @@
 import { CustomForm } from "@app/helpers/CustomForm";
 import { Validator } from "@app/helpers/Validator";
-import { FormFieldState, FormMode } from "@app/interfaces/form_interfaces";
 import { Grid, CircularProgress } from "@mui/material";
-import styles from "./cadastroevento.module.css";
+import styles from "./cadastro.module.css";
 import Image from "next/image";
 import { NextPage } from "next";
 import { useSession } from "next-auth/react";
@@ -15,6 +14,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { getServerSession } from "next-auth";
 import { juntarDataHorario, toBase64 } from "@app/helpers/Helpers";
 import { Evento } from "@app/entities/Evento";
+import { FormMode } from "@app/helpers/enums";
 
 interface CadastroEventoProps {
   evento: Evento

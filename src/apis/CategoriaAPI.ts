@@ -1,4 +1,3 @@
-import { CategoriaGetRequest } from './../interfaces/categoria_interfaces';
 import api from "./config/axiosConfig";
 
 export class CategoriaAPI {

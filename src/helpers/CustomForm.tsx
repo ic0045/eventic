@@ -1,8 +1,5 @@
-import { Evento } from "@app/entities/Evento";
-import { FormFieldState } from "@app/interfaces/form_interfaces";
 import dayjs, { Dayjs } from "dayjs";
 import { ChangeEvent } from "react";
-import { Validator } from "./Validator";
 
 
 export class CustomForm{

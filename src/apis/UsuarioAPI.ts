@@ -1,4 +1,3 @@
-import { UsuarioPostRequest } from './../interfaces/usuario_interfaces';
 import api from "./config/axiosConfig";
 
 export class UsuarioAPI {
