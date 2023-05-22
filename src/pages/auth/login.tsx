@@ -10,6 +10,7 @@ import { Layout } from "@app/components/common/layout/Layout";
 import Image from "next/image";
 import { signIn } from "next-auth/react";
 import { getServerSession } from "next-auth";
+import { useRouter } from "next/router";
 
 
 const Login: NextPage = () => {
@@ -35,7 +36,9 @@ const Login: NextPage = () => {
       },
     ],
   ]);
+  const router = useRouter();
   const [formState, setFormState] = useState(formFields);
+  const [loginErrorMessage, setLoginErrorMessage] = useState("");
   const [loginSuccess, setLoginSuccess] = useState(true);
 
   const formInstance = new CustomForm(formState, setFormState);
@@ -51,21 +54,21 @@ const Login: NextPage = () => {
     signIn('credentials',{
       email: formInstance.getValue("email"),
       password: formInstance.getValue("senha"),
-      callbackUrl: process.env.NEXT_PUBLIC_URL
+      redirect: false
     }).catch((error) => {
       setLoginSuccess(false);
     })
     .then((response) => {
-      console.log(response)
-    })
-    .finally(() => {
-      setIsLoading(false);
-    });
+      if(response?.error){
+        setLoginErrorMessage(response?.error);
+        setLoginSuccess(false);
+        setIsLoading(false);
+      }
 
-    // LoginAPI.login({
-    //   email: formInstance.getValue("email"),
-    //   password: formInstance.getValue("senha"),
-    // })
+      if(response?.ok){
+        router.push("/eventos")
+      }
+    })
       
   };
 
@@ -94,6 +97,7 @@ const Login: NextPage = () => {
               ) : (
                 <LoginForm
                   formInstance={formInstance}
+                  formErrorMessage={loginErrorMessage}
                   onLoginSubmit={onLoginSubmit}
                   isLoginSuccess={loginSuccess}
                 />
