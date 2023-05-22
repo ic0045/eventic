@@ -97,6 +97,11 @@ interface RecuperarSenhaRequest {
     email: string;
 }
 
+interface AlterarSenhaRequest {
+    senha: string;
+    id: string;
+}
+
 interface FormFieldState { 
     value?: string | dayjs.Dayjs | File; 
     validators?: any[]; 
