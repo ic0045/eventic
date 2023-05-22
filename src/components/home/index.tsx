@@ -16,8 +16,8 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import moment from 'moment';
 import 'moment/locale/pt-br';
 import Image from 'next/image';
-
 import CircularProgress from '@mui/material/CircularProgress';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 
 interface Evento {
@@ -310,22 +310,19 @@ export default function Home({ data, categorias, eventosCategoria }: { data: Eve
         </Box>
     )
 
-
-
-
+    const mobile = useMediaQuery('(max-width: 720px)');
     return (
-        <Container maxWidth="xl">
-
-            {/* {buscaFalhou} */}
+        <>
             <Box sx={{ borderRadius: '0.3rem', backgroundColor: 'white', boxShadow: 3 }}>
                 <Paper
                     component="form"
                     sx={{ display: 'flex', alignItems: 'center', padding: '1rem', }}
                 >
-                    <IconButton onClick={handleClick} type="button" aria-label="search">
-                        <SearchIcon />
-                    </IconButton>
-                    {isLoading ? <CircularProgress /> : <></>}
+                    {isLoading ? <CircularProgress /> :
+                        <IconButton onClick={handleClick} type="button" aria-label="search">
+                            <SearchIcon />
+                        </IconButton>
+                    }
                     <InputBase
                         onKeyDown={handleKeyDown}
                         value={inputValue}
@@ -337,9 +334,9 @@ export default function Home({ data, categorias, eventosCategoria }: { data: Eve
                 </Paper>
             </Box>
             <Button onClick={limpaBusca} variant="text">Limpar Busca</Button>
-
+            {/* flexDirection: 'column',alignItems:'flex-start' */}
             <Box mt={2} sx={{ borderRadius: '0.3rem', backgroundColor: 'white', padding: '1rem', boxShadow: 3 }}>
-                <Box mb={2} sx={{ display: 'flex', flexWrap: 'wrap' }}>
+                <Box mb={2} sx={{ display: 'flex', flexWrap: 'wrap', flexDirection: mobile ? 'column' : 'row', alignItems: mobile ? 'flex-start' : 'center',gap:'0.5rem' }}>
                     <Typography sx={{ marginRight: 'auto' }} variant="h3">Eventos</Typography>
                     <FormControl variant="standard" sx={{ m: 1, minWidth: 150 }}>
                         <InputLabel id="demo-simple-select-label">Período</InputLabel>
@@ -355,7 +352,7 @@ export default function Home({ data, categorias, eventosCategoria }: { data: Eve
                             <MenuItem value={3}>Mês</MenuItem>
                         </Select>
                     </FormControl>
-                    <FormControl variant="standard" sx={{ m: 1, minWidth: 150, marginRight: '2rem' }}>
+                    <FormControl variant="standard" sx={{ m: 1, minWidth: 150 }}>
                         <InputLabel id="demo-simple-select-label">Categoria</InputLabel>
                         <Select
                             labelId="demo-simple-select-label"
@@ -371,11 +368,11 @@ export default function Home({ data, categorias, eventosCategoria }: { data: Eve
                             )}
                         </Select>
                     </FormControl>
+                    <Box sx={{ marginLeft: '0.5rem' }}>
+                        <ViewModuleIcon onClick={() => setListView(false)} sx={{ color: 'black', opacity: listView ? 0.5 : 1, alignSelf: 'center', cursor: 'pointer', border: '1px solid', marginRight: '0.5rem', borderColor: listView ? 'gray' : 'black', borderRadius: '4px' }} fontSize="large" />
 
-                    <ViewModuleIcon onClick={() => setListView(false)} sx={{ color: 'black', opacity: listView ? 0.5 : 1, alignSelf: 'center', cursor: 'pointer', border: '1px solid', marginRight: '0.5rem', borderColor: listView ? 'gray' : 'black', borderRadius: '4px' }} fontSize="large" />
-
-                    <ViewListIcon onClick={() => setListView(true)} sx={{ color: 'black', opacity: listView ? 1 : 0.5, alignSelf: 'center', cursor: 'pointer', border: '1px solid', marginRight: '0.5rem', borderColor: listView ? 'black' : 'gray', borderRadius: '4px' }} fontSize="large" />
-
+                        <ViewListIcon onClick={() => setListView(true)} sx={{ color: 'black', opacity: listView ? 1 : 0.5, alignSelf: 'center', cursor: 'pointer', border: '1px solid', marginRight: '0.5rem', borderColor: listView ? 'black' : 'gray', borderRadius: '4px' }} fontSize="large" />
+                    </Box>
                 </Box>
                 <Box>
                     <TabContext value={aba}>
@@ -387,18 +384,18 @@ export default function Home({ data, categorias, eventosCategoria }: { data: Eve
 
                         </Box>
 
-                        <TabPanel value='0'>
+                        <TabPanel sx={{ padding: 0 }} value='0'>
                             {events(eventToMapOld)}
                             {/* {eventToMapOld ? events(eventToMapOld) : buscaFalhou} */}
                         </TabPanel>
 
-                        <TabPanel value='1'>
+                        <TabPanel sx={{ padding: 0 }} value='1'>
                             {events(eventToMapNew)}
                         </TabPanel>
                     </TabContext>
                 </Box>
             </Box>
-        </Container>
+        </>
 
     )
 }

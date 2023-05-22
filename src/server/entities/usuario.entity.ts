@@ -7,28 +7,28 @@ import { Permissao } from "@app/common/constants";
 @Entity("usuario", { schema: "public" })
 @Unique('email_unique', ['email'])
 export class Usuario {
-/**
- * Cria Usuario a partir de objeto
- */
- public static createFromObj(obj : any){
+  /**
+   * Cria Usuario a partir de objeto
+   */
+  public static createFromObj(obj: any) {
     const usuario = new Usuario();
-    const {primeiro_nome, segundo_nome, email, senha, permissao,
+    const { primeiro_nome, segundo_nome, email, senha, permissao,
       celular, foto_perfil, cpf } = obj;
 
-      usuario.primeiroNome = primeiro_nome;
-      usuario.segundoNome = segundo_nome;
-      usuario.email = email.toLocaleLowerCase();
-      usuario.senha = senha;
-      usuario.permissao = permissao;
-      if(celular) usuario.celular = celular;
-      if(foto_perfil) usuario.fotoPerfil = foto_perfil;
-      if(cpf) usuario.cpf = cpf;
-      usuario.createdAt = new Date();
+    usuario.primeiroNome = primeiro_nome;
+    usuario.segundoNome = segundo_nome;
+    usuario.email = email.toLocaleLowerCase();
+    usuario.senha = senha;
+    usuario.permissao = permissao;
+    if (celular) usuario.celular = celular;
+    if (foto_perfil) usuario.fotoPerfil = foto_perfil;
+    if (cpf) usuario.cpf = cpf;
+    usuario.createdAt = new Date();
 
-      return usuario;
- }
+    return usuario;
+  }
 
-  @PrimaryGeneratedColumn("uuid", {name: "id", primaryKeyConstraintName: "usuario_pkey"})
+  @PrimaryGeneratedColumn("uuid", { name: "id", primaryKeyConstraintName: "usuario_pkey" })
   id: string;
 
   @Column("character varying", { name: "primeiro_nome", length: 200 })
@@ -40,8 +40,8 @@ export class Usuario {
   @Column("character varying", { name: "email", unique: true, length: 100 })
   email: string;
 
-  @Column("boolean", {name: "email_confirmado", default: false})
-  emailConfirmado : boolean;
+  @Column("boolean", { name: "email_confirmado", default: false })
+  emailConfirmado: boolean;
 
   @Column("character varying", { name: "celular", nullable: true, length: 100 })
   celular: string | null;
@@ -55,9 +55,15 @@ export class Usuario {
   @Column("bytea", {
     name: "foto_perfil",
     nullable: true,
-    transformer:{
-      to: (value : string) => Buffer.from(value),
-      from: (value : Buffer) => value?.toString()
+    transformer: {
+      to: (value: string) => {
+        if (value)
+          return Buffer.from(value)
+      },
+      from: (value: Buffer) => {
+        if (value)
+          return value?.toString()
+      }
     }
   })
   fotoPerfil: string | null;
