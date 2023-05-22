@@ -1,8 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { UsuarioRepo } from '@app/database'
-import UsuarioValidator from '../util';
-import { hashPassword, AcessLevel } from '../../auth/auth';
+import { UsuarioRepo } from '@app/server/database'
+import {UsuarioValidator} from '../util';
+import { hashPassword } from '../../auth/auth';
 import { getToken } from "next-auth/jwt";
+import { Permissao } from '@app/common/constants';
 /*
 *   Rotas para gerência de usuários.
 *   Restrição:       Usuário logado
@@ -15,7 +16,7 @@ export default async function handler(
     const token = await getToken({req}) as any;
     if(!token) 
         res.status(401).send("É necessário estar autenticado.");
-    else if(token.permissao != AcessLevel.admin)
+    else if(token.permissao != Permissao.admin)
         res.status(401).send("É necessário ter nível de acesso administrador para esta função.");
     else{
 

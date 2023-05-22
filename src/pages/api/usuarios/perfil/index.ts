@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { UsuarioRepo } from '@app/database'
+import { UsuarioRepo } from '@app/server/database'
 import { getToken } from "next-auth/jwt";
-import UsuarioValidator from '../util';
+import {UsuarioValidator} from '../util';
 
 /*
 *   Rota para edição de perfil. Não altera senha, permissão e e-mail.

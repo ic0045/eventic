@@ -10,39 +10,59 @@ import Link from 'next/link';
 import styles from './eventdetails.module.css'
 
 interface Props {
+    id: string
+    initialDate: string
     title: string
-    day: string
-    month: string
     location: string
-    time: string
 }
 
 export default function ListCard(props: Props) {
 
     const [subscribed, setSubscribed] = useState(false)
 
+
+    const meses = [
+        "JAN", "FEV", "MAR", "ABR", "MAI", "JUN", "JUL", "AGO", "SET", "OUT", "NOV", "DEZ",
+    ];
+
+    const dias = [
+        "Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado",
+    ];
+
+    const data = new Date(props.initialDate)
+    const day = data.getDate()
+    const month = meses[data.getMonth()]
+    const diaSemana = dias[data.getDay()]
+    const horario = data.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+
     return (
         <Box m={2} sx={{ display: 'flex', borderRadius: '0.3rem', backgroundColor: 'white', boxShadow: 3, padding: '1rem' }}>
 
             <Box mr={10} sx={{ alignSelf: 'center', marginLeft: '1rem' }}>
                 <Typography variant="h5" align="center" >
-                    {props.day}
+                    {day}
                 </Typography>
                 <Typography variant="body1" gutterBottom align="center" >
-                    {props.month}
+                    {month}
                 </Typography>
             </Box>
-
-            <Link href='/eventdetails'>
+            
+            <Link  href={{
+                pathname: '/eventos/detalhes',
+                query: {
+                    id: props.id
+                }
+            }}>
                 <Box>
-                    <Typography component="div" variant="h5">
+                    <Typography color='primary' component="div" variant="h5">
                         {props.title}
                     </Typography>
                     <Typography variant="subtitle1" color="text.secondary" component="div">
                         <LocationOnIcon sx={{ fontSize: '90%' }} fontSize='small' /> {props.location}
                     </Typography>
                     <Typography variant="subtitle1" color="text.secondary" component="div">
-                        <AccessTimeIcon sx={{ fontSize: '90%' }} fontSize='small' /> {props.time}
+                        <AccessTimeIcon sx={{ fontSize: '90%' }} fontSize='small' /> {diaSemana}, {horario}h
                     </Typography>
                 </Box>
             </Link>

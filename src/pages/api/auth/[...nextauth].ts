@@ -1,7 +1,7 @@
 import NextAuth, { NextAuthOptions } from "next-auth"
 import CredentialsProvider  from "next-auth/providers/credentials"
 import { checkPassword } from "./auth"
-import { UsuarioRepo } from "@app/database"
+import { UsuarioRepo } from "@app/server/database"
 
 export const authOptions : NextAuthOptions = {
   providers: [
@@ -18,37 +18,38 @@ export const authOptions : NextAuthOptions = {
           }
 
           if(email === undefined || password === undefined)
-            return null;
+            throw new Error("Dados de login inválidos");
 
-          try{
             const usuario = await UsuarioRepo.findOne({
               where: {email: email.toLocaleLowerCase()}
             });
 
             if(usuario == null)
               throw new Error("Não existe um cadastro para o e-mail informado.");
+            if(!usuario.emailConfirmado)
+              throw new Error("E-mail ainda não confirmado.");
             if(!await checkPassword(password, usuario.senha))
               throw new Error("Credenciais inválidas.");
 
             return {
               id: usuario.id,
+              name: usuario.primeiroNome,
               primeiroNome: usuario.primeiroNome,
               segundoNome: usuario.segundoNome,
               fotoPerfil: usuario.fotoPerfil,
               permissao: usuario.permissao
             }
-        }catch(e){console.log(e); throw new Error("Erro ao buscar usuário.");}
         }   
     })
   ],
   callbacks:{
-    async jwt({ token, user } ) {
-        return {...token, ...user}
-    },
-    async session({session,token}){
-        session.user = token as any;
-        return session;
-    }
+    async signIn({user}){
+      console.log("\n======SIGIn CALLBACK=======")
+      console.log("Parâmetros do token")
+      console.log(user)
+      console.log(".......................\n")
+      return true;
+     }
   },
   pages:{
     signIn: "/login"

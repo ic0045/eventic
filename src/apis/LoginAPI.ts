@@ -1,15 +1,14 @@
-import { LoginRequest } from "@app/interfaces/login_interfaces";
-import api from "./config/axiosConfig";
+import { BaseAPI } from "./BaseAPI";
 
-export class LoginAPI {
+export class LoginAPI extends BaseAPI {
 
     static async login(loginCredentials: LoginRequest){
-        const response = await api.request({
-            url: '/auth/login',
+        const response = await fetch(`${this.apiURL}/auth/login`, {
             method: 'POST',
-            data: loginCredentials
+            body: JSON.stringify(loginCredentials),
+            headers: {"Content-type": "application/json; charset=UTF-8"}
         })
-
-        return response.data;
+        
+        return await response.json();
     }
 }

@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { EventoRepo, InscricaoRepo, UsuarioRepo } from '@app/database'
-import { Usuario } from '@app/entities/Usuario';
+import { EventoRepo, InscricaoRepo, UsuarioRepo } from '@app/server/database'
+import { Usuario } from '@app/server/entities/usuario.entity';
 import { getToken } from "next-auth/jwt";
-import { Inscricao } from '@app/entities/Inscricao';
+import { Inscricao } from '@app/server/entities/inscricao.entity';
 
 /*
 *   Rota para inscrição em eventos.
@@ -33,6 +33,7 @@ export default async function handler(
                         const inscricao = new Inscricao();
                         inscricao.evento = evento;
                         inscricao.usuario = usuario;
+                        inscricao.createdAt = new Date();
                         await InscricaoRepo.save(inscricao);
                         res.status(200).send(`Usuário ${usuario.primeiroNome} cadastrado no evento ${evento.titulo}.`)
                     }

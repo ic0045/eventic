@@ -1,10 +1,22 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  webpack(config){
+  images: {
+    domains: ['picsum.photos'],
+  },
+  webpack(config) {
     config.experiments = { ...config.experiments, topLevelAwait: true }
     return config
   },
+    async redirects() {
+      return [
+        {
+          source: '/',
+          destination: '/eventos',
+          permanent: true,
+        },
+      ];
+    },
 }
 
 module.exports = nextConfig

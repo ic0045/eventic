@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { CategoriaRepo, EventoRepo, UsuarioRepo } from '@app/database'
+import { CategoriaRepo, EventoRepo, UsuarioRepo } from '@app/server/database'
 import EventoValidator from '../util';
-import { Evento } from '@app/entities/Evento';
+import { Evento } from '@app/server/entities/evento.entity';
 import { getToken } from "next-auth/jwt";
-import { AcessLevel } from '../../auth/auth';
+import { Permissao } from '@app/common/constants';
 
 /*
 *   Rota para gerencia de eventos.
@@ -18,7 +18,7 @@ export default async function handler(
 
     if (!token)
         res.status(401).send("É necessário estar autenticado.");
-    else if (token.permissao == AcessLevel.visitante)
+    else if (token.permissao == Permissao.visitante)
         res.status(401).send("É necessário ser um administrador ou professor para cadastrar um evento.")
     else {
 
@@ -70,10 +70,10 @@ export default async function handler(
                     if (evento == null)
                         res.status(400).json(`Não foi encontrado evento de id: ${req.body.id}`);
                     else {
-                        let canDelete = token.permissao == AcessLevel.admin;
-                        if (!canDelete) //se usuário é professor, verifica se é criador do evento
-                            canDelete = evento.criador.id == token.id;
-                        if (canDelete) {
+                        let canEdit = token.permissao == Permissao.admin;
+                        if (!canEdit) //se usuário é professor, verifica se é criador do evento
+                            canEdit = evento.criador.id == token.id;
+                        if (canEdit) {
                             const { descricao, localizacao, data_inicial, titulo, destaque,
                                 imagem_url, data_final, link_imagem, link_titulo,
                                 tipo, link_mais_informacoes, categoria_id } = req.body;
@@ -93,7 +93,7 @@ export default async function handler(
                                     if (categoria)
                                         evento.categoria = categoria;
                                 }
-                                if (destaque && token.permissao == AcessLevel.admin)//apenas admin pode colocar como destaque
+                                if (destaque && token.permissao == Permissao.admin)//apenas admin pode colocar como destaque
                                     evento.destaque = destaque;
                                 evento.updatedAt = new Date();
                                 evento = await EventoRepo.save(evento);
@@ -114,7 +114,7 @@ export default async function handler(
     else if (req.method === 'DELETE') {
         const { id } = req.query;
         if (id) {
-            let canDelete = token.permissao == AcessLevel.admin;
+            let canDelete = token.permissao == Permissao.admin;
             if (!canDelete) { //se usuário é professor
                 let evento = await EventoRepo.findOne({ where: { id: token.id } });
                 if (evento != null)// se usuário é criador do evento

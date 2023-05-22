@@ -1,4 +1,5 @@
-import { FormFieldState } from "@app/interfaces/form_interfaces";
+import dayjs, { Dayjs } from "dayjs";
+import { ChangeEvent } from "react";
 
 
 export class CustomForm{
@@ -8,13 +9,6 @@ export class CustomForm{
     constructor(formState: Map<string, FormFieldState>, setFormState: any){
         this.formState = formState;
         this.setFormState = setFormState;
-    }
-
-
-    addFormField(fieldId: string, validators: any[]){
-        let formStateMap = new Map(this.formState);  
-        // const currentValue = this.formState.get(fieldId);
-        formStateMap.set(fieldId, {value: '', validators: validators, valid: true, errorMessage: '', })
     }
 
     validateForm = (): boolean => {
@@ -45,14 +39,32 @@ export class CustomForm{
     }
 
     onInputChange = (e: any) => {
-        const newValue = e.target.value;
+        const newValue = e.target?.value ?? e.$d;
+        const currentValue = this.formState.get(e.target.id ?? e.target.name);
+        let formStateMap = new Map(this.formState);
+        formStateMap.set(e.target.id ?? e.target.name, {...currentValue, value: newValue})
+        this.setFormState(formStateMap)
+    }
+
+    onDateInputChange = (data: Dayjs, id: string) => {
+        const currentValue = this.formState.get(id);
+        let formStateMap = new Map(this.formState);
+        formStateMap.set(id, {...currentValue, value: data});
+        this.setFormState(formStateMap);
+    }
+
+    onFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if(!e.target?.files){
+            return;
+        }
+        const newValue = e.target?.files[0]
         const currentValue = this.formState.get(e.target.id);
         let formStateMap = new Map(this.formState);
         formStateMap.set(e.target.id, {...currentValue, value: newValue})
         this.setFormState(formStateMap)
     }
 
-    getValue = (fieldId: string): string => {
+    getValue = (fieldId: string): string | dayjs.Dayjs | File => {
         return this.formState.get(fieldId)?.value ?? ""
     }
 

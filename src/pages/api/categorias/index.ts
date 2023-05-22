@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { CategoriaRepo } from '@app/database'
-import { Categoria } from '@app/entities/Categoria';
+import { CategoriaRepo } from '@app/server/database'
+import { Categoria } from '@app/server/entities/categoria.entity';
 
 /*
 *Valida corpo de requisição

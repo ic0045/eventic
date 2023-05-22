@@ -1,0 +1,26 @@
+.cadastro__form {
+    padding: 1rem;
+    background-color: white;
+    margin: 1rem;
+    border-radius: .3rem;
+}
+
+.imagem {
+    display: none;
+}
+
+@media (min-width: 900px) {
+    .cadastro__form {
+        padding: 2rem;
+        background-color: white;
+        margin: 5rem;
+    }
+
+    .imagem {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+
+    }
+}
