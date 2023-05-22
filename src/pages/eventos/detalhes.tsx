@@ -29,7 +29,7 @@ interface Evento {
   linkImagem: string
   linkTitulo: string
   tipo: string
-  linkMaisInfomacoes: string
+  linkMaisInformacoes: string
 }
 
 function EventDetails({ data }: { data: Evento[] }) {
@@ -53,7 +53,7 @@ function EventDetails({ data }: { data: Evento[] }) {
     "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Jnho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
   ];
 
-  function getData(d: string,x:string) {
+  function getData(d: string, x: string) {
     if (d === null) {
       return null
     }
@@ -67,7 +67,7 @@ function EventDetails({ data }: { data: Evento[] }) {
 
   return (
 
-    <Container maxWidth="xl">
+    <>
       <Typography sx={{ borderRadius: '0.3rem', backgroundColor: 'white', boxShadow: 3, padding: '1rem' }} variant="h5" mb={3}>
         {data[0].titulo}
       </Typography>
@@ -107,13 +107,13 @@ function EventDetails({ data }: { data: Evento[] }) {
               Detalhes
             </Typography>
             <Typography variant="body2" gutterBottom>
-              {getData(data[0].dataInicial,'Início')}
+              {getData(data[0].dataInicial, 'Início')}
               <IconButton target="_blank" href="https://calendar.google.com/" aria-label="calendar">
                 <EventIcon />
               </IconButton>
             </Typography>
             <Typography variant="body2" gutterBottom>
-              {getData(data[0].datafinal,'Fim')}
+              {getData(data[0].datafinal, 'Fim')}
             </Typography>
             <Typography variant="body2" gutterBottom>
               Local: {data[0].localizacao}
@@ -123,9 +123,12 @@ function EventDetails({ data }: { data: Evento[] }) {
               </IconButton>
 
             </Typography>
-            <Typography variant="body2" gutterBottom>
-              Mais informacoes: <a href={data[0].linkMaisInfomacoes || 'www.google.com'}>{data[0].linkMaisInfomacoes}</a>
-            </Typography>
+            {data[0].linkMaisInformacoes ?
+              <Typography variant="body2" gutterBottom>
+                Mais informacões: <a href={data[0].linkMaisInformacoes || 'www.google.com'}>{data[0].linkMaisInformacoes}</a>
+              </Typography> : <></>
+            }
+
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
               <SubscribeButton />
               <IconButton aria-label="share">
@@ -137,7 +140,7 @@ function EventDetails({ data }: { data: Evento[] }) {
         </Grid>
       </Grid>
 
-    </Container>
+    </>
   );
 };
 
