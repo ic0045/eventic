@@ -7,6 +7,7 @@ import { FunctionComponent } from "react"
 interface LoginFormProps {
     formInstance: CustomForm
     isLoginSuccess: boolean;
+    formErrorMessage: string;
     onLoginSubmit: any
      
 }
@@ -16,7 +17,7 @@ interface LoginFormProps {
     return (
         <>
         {
-            !props.isLoginSuccess && <Alert severity="error">E-mail e/ou senha inválidos</Alert>
+            !props.isLoginSuccess && <Alert severity="error">{props.formErrorMessage}</Alert>
         }
             <div className={styles.login}> 
                 <TextField error={!props.formInstance.isValid("email")} id="email" label="E-mail" value={props.formInstance.getValue('email')} onChange={props.formInstance.onInputChange} helperText={props.formInstance.getErrorMessage('email')} /> 
