@@ -56,7 +56,6 @@ const Login: NextPage = () => {
       password: formInstance.getValue("senha"),
       redirect: false
     }).catch((error) => {
-      console.log(error);
       setLoginSuccess(false);
     })
     .then((response) => {
