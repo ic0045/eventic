@@ -40,7 +40,7 @@ const AddEditForm = ({ edit }: { edit: boolean }) => (
         <TextInput fullWidth source="primeiroNome" validate={[required(), minLength(2), maxLength(15)]} />
         <TextInput fullWidth source="segundoNome" validate={[required(), minLength(2), maxLength(15)]} />
         <TextInput fullWidth source="email" validate={[required(), email()]} />
-        <TextInput fullWidth source="senha" type='password' validate={[required(), minLength(8)]} />
+        {!edit && <TextInput fullWidth source="senha" type='password' validate={[required(), minLength(8)]} />}
         <RadioButtonGroupInput fullWidth source="permissao"
             choices={Object.keys(Permissao).map((v, i) => ({ id: v, name: Object.values(Permissao)[i] }))}
             validate={[required()]}
