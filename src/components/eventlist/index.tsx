@@ -47,15 +47,15 @@ export default function ListCard(props: Props) {
                     {month}
                 </Typography>
             </Box>
-
-            <Link href={{
+            
+            <Link  href={{
                 pathname: '/eventos/detalhes',
                 query: {
                     id: props.id
                 }
             }}>
                 <Box>
-                    <Typography component="div" variant="h5">
+                    <Typography color='primary' component="div" variant="h5">
                         {props.title}
                     </Typography>
                     <Typography variant="subtitle1" color="text.secondary" component="div">

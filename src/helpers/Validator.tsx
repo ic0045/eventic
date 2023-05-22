@@ -36,4 +36,17 @@ export class Validator {
       errorMessage: errorMessageToBeShown ?? "Preencha uma data válida",
     }
   }
+
+  static equal(valorA: string): (valorB: string) => ValidatorResponse {
+    console.log(`valorA`, valorA);
+    return (valorB: string) => {
+      console.log(`valorB`, valorA);
+      console.log(`valorB`, valorB);
+      return {
+        isValid: valorA === valorB,
+        errorMessage: "Os valores precisam ser iguais"
+      }
+    }
+
+  }
 }
