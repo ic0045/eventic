@@ -1,14 +1,15 @@
-import api from "./config/axiosConfig";
+import { BaseAPI } from "./BaseAPI";
 
-export class UsuarioAPI {
+export class UsuarioAPI extends BaseAPI {
 
     static async cadastrar(usuario: UsuarioPostRequest){
-        const response = await api.request({
-            url: '/api/usuarios/cadastro',
+
+        const response = await fetch(`${this.apiURL}/usuarios/cadastro`, {
             method: 'POST',
-            data: usuario
+            body: JSON.stringify(usuario),
+            headers: {"Content-type": "application/json; charset=UTF-8"}
         })
 
-        return response.data;
+        return response.json();
     }
 }

@@ -52,10 +52,12 @@ const Login: NextPage = () => {
       email: formInstance.getValue("email"),
       password: formInstance.getValue("senha"),
       callbackUrl: process.env.NEXT_PUBLIC_URL
-    }).catch(() => {
+    }).catch((error) => {
       setLoginSuccess(false);
     })
-    .then(() => {})
+    .then((response) => {
+      console.log(response)
+    })
     .finally(() => {
       setIsLoading(false);
     });

@@ -1,0 +1,8 @@
+.alterarsenha {
+    display: flex;
+    flex-direction: column;   
+}
+
+.alterarsenha > * {
+    margin-top: 1rem;
+}
