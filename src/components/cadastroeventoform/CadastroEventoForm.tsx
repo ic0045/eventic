@@ -42,6 +42,7 @@ export const CadastroEventoForm: FunctionComponent<CadastroEventoFormProps> = (
       )}
       <div className={styles.cadastro}>
         <TextField
+          sx={{marginTop:'1rem'}}
           error={!props.formInstance.isValid("titulo")}
           id="titulo"
           value={props.formInstance.getValue("titulo")}
@@ -50,6 +51,7 @@ export const CadastroEventoForm: FunctionComponent<CadastroEventoFormProps> = (
           label="Título"
         />
         <TextField
+          sx={{marginTop:'1rem'}}
           error={!props.formInstance.isValid("local")}
           id="local"
           value={props.formInstance.getValue("local")}
@@ -160,6 +162,7 @@ export const CadastroEventoForm: FunctionComponent<CadastroEventoFormProps> = (
           ))}
         </Select>
         <TextField
+          sx={{marginTop:'1rem'}}
           label="Tipo"
           error={!props.formInstance.isValid("tipo")}
           id="tipo"
@@ -168,6 +171,7 @@ export const CadastroEventoForm: FunctionComponent<CadastroEventoFormProps> = (
           helperText={props.formInstance.getErrorMessage("tipo")}
         />
         <TextField
+          sx={{marginTop:'1rem'}}
           label="Descrição"
           placeholder="Descrição"
           rows={5}
@@ -188,6 +192,7 @@ export const CadastroEventoForm: FunctionComponent<CadastroEventoFormProps> = (
           />
         </div>
         <Button
+          sx={{marginTop:'1rem'}}
           variant="contained"
           color="success"
           onClick={props.onCadastroSubmit}
