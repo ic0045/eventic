@@ -1,9 +1,9 @@
 import {
     BooleanField, Datagrid, DateField, List, TextField, SimpleForm, SimpleList,
-    TextInput, CreateButton, DateInput, EditButton, BooleanInput, Edit, Create, ReferenceField, ReferenceInput
+    TextInput, CreateButton, DateInput, EditButton, BooleanInput, Edit, Create, ReferenceField, ReferenceInput, DeleteButton, RadioButtonGroupInput, required, SelectInput
 } from 'react-admin';
 import { Theme, useMediaQuery } from '@mui/material';
-import { ApiResource } from '@app/common/constants';
+import { ApiResource, NotificarEm } from '@app/common/constants';
 
 export const InscricaoList = () => {
     const isSmall = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
@@ -19,10 +19,12 @@ export const InscricaoList = () => {
                 )
                 :
                 (
-                    <Datagrid rowClick="edit">
-                        <ReferenceField fullWidth source="evento.id" reference={ApiResource.EVENTOS} label="Evento" />
-                        <ReferenceField fullWidth source="usuario.id" reference={ApiResource.USUARIOS} label="Usuário" />
+                    <Datagrid >
+                        <ReferenceField sortable={false} fullWidth source="evento.id" reference={ApiResource.EVENTOS} label="Evento" />
+                        <ReferenceField sortable={false} fullWidth source="usuario.id" reference={ApiResource.USUARIOS} label="Usuário" />
                         <TextField fullWidth source="notificarEm" />
+                        <EditButton />
+                        <DeleteButton />
                     </Datagrid>
 
                 )
@@ -31,25 +33,29 @@ export const InscricaoList = () => {
     );
 };
 
-
+const AddEditForm = ({ edit }: { edit: boolean }) => (
+    <SimpleForm sx={{ maxWidth: 500 }}>
+        {edit && <TextInput fullWidth source="id" disabled />}
+        <ReferenceInput fullWidth source="evento.id" reference={ApiResource.EVENTOS} sort={ {field: 'titulo', order: 'ASC' }} >
+            <SelectInput fullWidth label="Evento" validate={[required()]} />
+        </ReferenceInput>
+        <ReferenceInput fullWidth source="usuario.id" reference={ApiResource.USUARIOS} sort={ {field: 'primeiroNome', order: 'ASC' }} >
+            <SelectInput fullWidth label="Evento" validate={[required()]} />
+        </ReferenceInput>
+        <RadioButtonGroupInput fullWidth source="notificarEm"
+            choices={Object.keys(NotificarEm).map((v,i) => ({ id: v, name:  Object.values(NotificarEm)[i]}))}
+            validate={[required()]}
+        />
+    </SimpleForm>
+)
 export const InscricaoEdit = () => (
     <Edit title={"Editar Inscrição"} actions={<EditButton title='Editar' />}>
-        <SimpleForm>
-            <TextInput source="id" disabled />
-            <ReferenceInput fullWidth source="evento.id" reference={ApiResource.EVENTOS} label="Evento" />
-            <ReferenceInput fullWidth source="usuario.id" reference={ApiResource.USUARIOS} label="Usuário" />
-            <TextInput fullWidth source="notificarEm" />
-        </SimpleForm>
+        <AddEditForm edit />
     </Edit>
 );
 
 export const InscricaoCreate = () => (
     <Create title={"Inscrever Usuário"} actions={<EditButton title='Editar' />}>
-        <SimpleForm>
-            <TextInput fullWidth source="id" disabled />
-            <ReferenceInput fullWidth source="evento.id" reference={ApiResource.EVENTOS} label="Evento" />
-            <ReferenceInput fullWidth source="usuario.id" reference={ApiResource.USUARIOS} label="Usuário" />
-            <TextInput fullWidth source="notificarEm" />
-        </SimpleForm>
+        <AddEditForm edit={false} />
     </Create>
 );
