@@ -104,22 +104,22 @@ export class Evento {
   @OneToMany(() => Inscricao, (inscricao) => inscricao.evento)
   inscricoes: Relation<Inscricao>[];
 
-  // readonly fieldTitle
-  protected eventoTituloCompleto: String;
+  // // readonly fieldTitle
+  // protected eventoTituloCompleto: String;
 
-  @AfterLoad()
-  getCalculatedFields() {
-    const inicio = moment(this.dataInicial);
-    if (this.dataInicial && this.datafinal) {
-      const fim = moment(this.dataInicial);
+  // @AfterLoad()
+  // getCalculatedFields() {
+  //   const inicio = moment(this.dataInicial);
+  //   if (this.dataInicial && this.datafinal) {
+  //     const fim = moment(this.dataInicial);
 
-      if (inicio.diff(fim, 'days') == 0) { //mesmo dia
-        this.eventoTituloCompleto = `${this.titulo} ${inicio.format('DD/MM/YY, hh:mm')} - ${fim.format('hh:mm')}`;
-      } else {
-        this.eventoTituloCompleto = `${this.titulo} ${inicio.format('DD/MM/YY, hh:mm')} - ${fim.format('DD/MM/YY, hh:mm')}`;
-      }
-    } else {
-      this.eventoTituloCompleto = `${this.titulo} ${inicio.format('DD/MM/YY, hh:mm')}`;
-    }
-  }
+  //     if (inicio.diff(fim, 'days') == 0) { //mesmo dia
+  //       this.eventoTituloCompleto = `${this.titulo} ${inicio.format('DD/MM/YY, hh:mm')} - ${fim.format('hh:mm')}`;
+  //     } else {
+  //       this.eventoTituloCompleto = `${this.titulo} ${inicio.format('DD/MM/YY, hh:mm')} - ${fim.format('DD/MM/YY, hh:mm')}`;
+  //     }
+  //   } else {
+  //     this.eventoTituloCompleto = `${this.titulo} ${inicio.format('DD/MM/YY, hh:mm')}`;
+  //   }
+  // }
 }

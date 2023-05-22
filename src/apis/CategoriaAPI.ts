@@ -1,14 +1,8 @@
-import api from "./config/axiosConfig";
+import { BaseAPI } from "./BaseAPI";
 
-export class CategoriaAPI {
-
-    static async get(categoria: CategoriaGetRequest){
-        const response = await api.request({
-            url: '/api/categorias',
-            method: 'GET',
-            data: categoria
-        })
-
-        return response.data;
+export class CategoriaAPI extends BaseAPI {
+    static async get(categoria: CategoriaGetRequest){   
+        const response = await fetch(`${this.apiURL}/categorias`);
+        return await response.json();
     }
 }

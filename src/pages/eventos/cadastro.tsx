@@ -17,10 +17,12 @@ import { Evento } from "@app/server/entities/evento.entity";
 import { FormMode } from "@app/common/constants";
 
 interface CadastroEventoProps {
-  evento: Evento
+  evento: Evento;
 }
 
-const CadastroEvento: NextPage<CadastroEventoProps> = (props: CadastroEventoProps) => {
+const CadastroEvento: NextPage<CadastroEventoProps> = (
+  props: CadastroEventoProps
+) => {
   const [isLoading, setIsLoading] = useState(false);
   const [formErrorMessage, setFormErrorMessage] = useState("");
   const session = useSession();
@@ -156,20 +158,41 @@ const CadastroEvento: NextPage<CadastroEventoProps> = (props: CadastroEventoProp
       )) as string;
     }
 
-    EventoAPI.cadastrar({
-      titulo: formInstance.getValue("titulo") as string,
-      tipo: formInstance.getValue("tipo") as string,
-      descricao: formInstance.getValue("descricao") as string,
-      localizacao: formInstance.getValue("local") as string,
-      data_inicial: juntarDataHorario(
-        formInstance.getValue("dataInicio") as Dayjs,
-        formInstance.getValue("horarioInicio") as Dayjs
-      ).toISOString(),
-      usuario_id: session.data?.user.id ?? "1",
-      imagem: base64 as string,
-      imagem_url: "url"
-    })
-      .catch((error) => {
+    let request: Promise<any>;
+
+    if (formMode == FormMode.EDIT) {
+      request = EventoAPI.editar({
+        id: props.evento.id,
+        titulo: formInstance.getValue("titulo") as string,
+        tipo: formInstance.getValue("tipo") as string,
+        descricao: formInstance.getValue("descricao") as string,
+        localizacao: formInstance.getValue("local") as string,
+        data_inicial: juntarDataHorario(
+          formInstance.getValue("dataInicio") as Dayjs,
+          formInstance.getValue("horarioInicio") as Dayjs
+        ).toISOString(),
+        usuario_id: session.data?.user.id ?? "1",
+        imagem: base64 as string,
+        imagem_url: "url",
+      });
+    } else {
+      request = EventoAPI.cadastrar({
+        titulo: formInstance.getValue("titulo") as string,
+        tipo: formInstance.getValue("tipo") as string,
+        descricao: formInstance.getValue("descricao") as string,
+        localizacao: formInstance.getValue("local") as string,
+        data_inicial: juntarDataHorario(
+          formInstance.getValue("dataInicio") as Dayjs,
+          formInstance.getValue("horarioInicio") as Dayjs
+        ).toISOString(),
+        usuario_id: session.data?.user.id ?? "1",
+        imagem: base64 as string,
+        imagem_url: "url",
+      });
+    }
+
+    request
+      ?.catch((error) => {
         setFormErrorMessage(error.response.data.errorMsg);
         setIsLoading(false);
       })
@@ -222,22 +245,22 @@ const CadastroEvento: NextPage<CadastroEventoProps> = (props: CadastroEventoProp
 
 export const getServerSideProps = async (context: any) => {
   const session = await getServerSession(context.req, context.res, {});
-  if(!session){
-      return {
-          props: {},
-          redirect: {
-              destination: '/auth/login',
-              permanent: false
-          }
-      }
+  if (!session) {
+    return {
+      props: {},
+      redirect: {
+        destination: "/auth/login",
+        permanent: false,
+      },
+    };
   }
 
   const { id } = context.query;
   let data: Evento[] = [];
-  
-  if(id){
+
+  if (id) {
     const apiURL = process.env.NEXT_PUBLIC_URL;
-    const res = await fetch(`${apiURL}/api/eventos?id=${id}`)
+    const res = await fetch(`${apiURL}/api/eventos?id=${id}`);
     data = await res.json();
   }
 

@@ -109,7 +109,7 @@ const CadastroUsuario: NextPage = () => {
   const formInstance = new CustomForm(formState, setFormState);
 
   const redirectoToLogin = () => {
-    router.push("/login");
+    router.push("/auth/login");
   };
   const onCadastroSubmit = async (e: Event) => {
     if (!formInstance.validateForm()) {
