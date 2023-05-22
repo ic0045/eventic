@@ -59,10 +59,10 @@ export class Evento {
   @Column("character varying", { name: "imagem_url" })
   imagemUrl: string;
 
-  @Column("timestamp without time zone", { name: "created_at" })
+  @Column("timestamp", { name: "created_at" , nullable: false, default: () => 'CURRENT_TIMESTAMP'  })
   createdAt: Date;
 
-  @Column("timestamp without time zone", { name: "updated_at", nullable: true })
+  @Column("timestamp", { name: "updated_at", nullable: true , onUpdate: 'CURRENT_TIMESTAMP',  })
   updatedAt: Date | null;
 
   @Column("timestamp without time zone", { name: "datafinal", nullable: true })

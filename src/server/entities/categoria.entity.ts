@@ -60,4 +60,5 @@ export class Categoria{
     updateDates() {
         this.icone == null ? Categoria.DEFAULT_CATEGORIA_ICON_PATH : this.icone;
     }
+
 }
