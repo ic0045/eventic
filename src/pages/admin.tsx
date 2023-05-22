@@ -3,7 +3,7 @@ import type { NextPage } from "next";
 import { getServerSession } from "next-auth";
 import dynamic from "next/dynamic";
 
-const AdminPortal = dynamic(() => import("../components/admin/AdminPortal"), { ssr: false });
+const AdminPortal = dynamic(() => import("../components/admin/adminportal"), { ssr: false });
 
 const Home: NextPage = () => {
   return <AdminPortal />;
