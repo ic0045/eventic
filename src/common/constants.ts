@@ -15,13 +15,13 @@ export enum FormMode {
 *  Níveis de permissão de usuário
 */
 export enum Permissao {
-    admin = 'admin', 
-    servidor = 'servidor',
-    visitante = 'visitante',
+    admin = 'Administrador', 
+    servidor = 'Servidor',
+    visitante = 'Visitante',
 }
 
 
 export enum NotificarEm {
-    UMA_HORA_ANTES = 'uma_hora_antes',
-    UM_DIA_ANTES = 'um_dia_antes',
+    uma_hora_antes = 'Uma hora antes do evento',
+    um_dia_antes = 'Um dia antes do evento',
 }
