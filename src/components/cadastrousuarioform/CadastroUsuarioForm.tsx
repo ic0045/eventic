@@ -27,7 +27,7 @@ export const CadastroUsuarioForm: FunctionComponent<
         <Alert severity="error">{props.errorMessage}</Alert>
       )}
       <div className={styles.cadastro}>
-        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+        <Grid sx={{marginTop:'1rem'}} container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item xs={12} md={6}>
             <TextField
               error={!props.formInstance.isValid("nome")}
@@ -52,6 +52,7 @@ export const CadastroUsuarioForm: FunctionComponent<
           </Grid>
         </Grid>
         <TextField
+          sx={{marginTop:'1rem'}}
           error={!props.formInstance.isValid("email")}
           id="email"
           value={props.formInstance.getValue("email")}
@@ -60,6 +61,7 @@ export const CadastroUsuarioForm: FunctionComponent<
           label="E-mail"
         />
         <TextField
+          sx={{marginTop:'1rem'}}
           error={!props.formInstance.isValid("senha")}
           id="senha"
           value={props.formInstance.getValue("senha")}
@@ -102,6 +104,7 @@ export const CadastroUsuarioForm: FunctionComponent<
           />
         </div>
         <Button
+          sx={{marginTop:'1rem'}}
           variant="contained"
           color="success"
           onClick={props.onCadastroSubmit}
