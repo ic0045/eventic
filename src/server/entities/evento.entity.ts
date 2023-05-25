@@ -1,7 +1,8 @@
 import {
-  AfterLoad,
   Column,
   Entity,
+  EntitySubscriberInterface,
+  EventSubscriber,
   JoinColumn,
   ManyToOne,
   OneToMany,
@@ -11,7 +12,7 @@ import {
 import { Usuario } from "@app/server/entities/usuario.entity";
 import { Inscricao } from "@app/server/entities/inscricao.entity";
 import { Categoria } from "@app/server/entities/categoria.entity";
-import moment from "moment";
+import { InscricaoRepo } from "../database";
 
 @Entity("evento", { schema: "public" })
 export class Evento {
@@ -104,6 +105,8 @@ export class Evento {
   @OneToMany(() => Inscricao, (inscricao) => inscricao.evento)
   inscricoes: Relation<Inscricao>[];
 
+  qtInscricoes : number;
+
   // // readonly fieldTitle
   // protected eventoTituloCompleto: String;
 
@@ -122,4 +125,26 @@ export class Evento {
   //     this.eventoTituloCompleto = `${this.titulo} ${inicio.format('DD/MM/YY, hh:mm')}`;
   //   }
   // }
+}
+
+@EventSubscriber()
+export class EventoSubscriber implements EntitySubscriberInterface<Evento>{
+  listenTo(){
+    return Evento;
+  }
+
+  /*
+  * Obtém número de inscritos no evento
+  */
+  async afterLoad(entity : Evento){
+    entity.qtInscricoes =  await InscricaoRepo
+                          .createQueryBuilder('inscricao')
+                          .where("inscricao.evento = :eventoId", { eventoId: entity.id })
+                          .getCount();
+    // entity.qtInscricoes =  await InscricaoRepo
+    //                       .createQueryBuilder('inscricao')
+    //                       .innerJoinAndSelect(Evento,'evento')
+    //                       .where("inscricao.evento = :eventoId", { idEvento })
+    //                       .getCount();
+  }
 }

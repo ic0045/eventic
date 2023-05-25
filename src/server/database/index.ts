@@ -2,7 +2,7 @@ import "reflect-metadata"
 import { DataSource } from "typeorm"
 import * as dotenv from 'dotenv'
 import { Usuario } from "@app/server/entities/usuario.entity"
-import { Evento } from "@app/server/entities/evento.entity"
+import { Evento, EventoSubscriber } from "@app/server/entities/evento.entity"
 import { Inscricao } from "@app/server/entities/inscricao.entity"
 import { PreferenciasUsuario } from "@app/server/entities/preferenciasusuario.entity"
 import { Categoria } from "@app/server/entities/categoria.entity"
@@ -26,7 +26,7 @@ export const datasource = new DataSource({
         PreferenciasUsuario,
     ],
     migrations: [],
-    subscribers: [],
+    subscribers: [EventoSubscriber],
     ssl: { 
         rejectUnauthorized: false
     }
