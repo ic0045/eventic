@@ -11,13 +11,14 @@ export class RecuperarSenhaAPI extends BaseAPI {
         return await response.json();
     }
 
-    static async alterarSenha(alterarSenhaRequest: AlterarSenhaRequest){
+    //Retorna um boolean status.ok indicando se houve sucesso na alteração de senha
+    static async alterarSenha(alterarSenhaRequest: AlterarSenhaRequest) : Promise<boolean>{
         const response = await fetch(`${this.apiURL}/usuarios/recuperasenha/redefine`, {
             method: 'POST',
             body: JSON.stringify(alterarSenhaRequest),
             headers: {"Content-type": "application/json; charset=UTF-8"}
         })
 
-        return await response.json();
+        return await response.ok;
     }
 }
