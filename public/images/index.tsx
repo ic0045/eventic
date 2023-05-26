@@ -14,7 +14,6 @@ interface Props {
     initialDate: string
     title: string
     location: string
-    subscribeButton: boolean
 }
 
 export default function ListCard(props: Props) {
@@ -69,8 +68,7 @@ export default function ListCard(props: Props) {
             </Link>
 
             <Box sx={{ display: 'flex', flexDirection: 'column', marginLeft: 'auto' }}>
-            {props.subscribeButton ? <SubscribeButton /> : <></>}
-                {/* <SubscribeButton /> */}
+                <SubscribeButton />
                 <IconButton sx={{ marginTop: 'auto' }} aria-label="share">
                     <ShareIcon fontSize='small' />
                 </IconButton>

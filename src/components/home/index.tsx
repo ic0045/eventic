@@ -271,7 +271,7 @@ export default function Home({ data, categorias, eventosCategoria }: { data: Eve
     };
 
 
-    const events = (eventList: Array<EventoPorPeriodo>) =>
+    const events = (eventList: Array<EventoPorPeriodo>,hasSubscribeButton: boolean) =>
     (
         eventList.map((eventosPorPeriodo) =>
             <>
@@ -279,7 +279,7 @@ export default function Home({ data, categorias, eventosCategoria }: { data: Eve
                     <>
                         <Typography variant="h5" mt={8} mb={3}>{eventosPorPeriodo.nome}</Typography>
                         {eventosPorPeriodo.eventos.map((card) =>
-                            <EventList key={card.id} id={card.id} title={card.titulo} location={card.localizacao} initialDate={card.dataInicial} />
+                            <EventList key={card.id} id={card.id} subscribeButton={hasSubscribeButton} title={card.titulo} location={card.localizacao} initialDate={card.dataInicial} />
                         )}
                     </> :
                     <>
@@ -288,7 +288,7 @@ export default function Home({ data, categorias, eventosCategoria }: { data: Eve
                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
                             {eventosPorPeriodo.eventos.map((card: Evento) =>
 
-                                <EventCard key={card.id} id={card.id} image={card.imagemUrl} title={card.titulo} location={card.localizacao} initialDate={card.dataInicial} />
+                                <EventCard key={card.id} id={card.id} subscribeButton={hasSubscribeButton} image={card.imagemUrl} title={card.titulo} location={card.localizacao} initialDate={card.dataInicial} />
                             )}
                         </Box>
                     </>
@@ -385,12 +385,12 @@ export default function Home({ data, categorias, eventosCategoria }: { data: Eve
                         </Box>
 
                         <TabPanel sx={{ padding: 0 }} value='0'>
-                            {events(eventToMapOld)}
+                            {events(eventToMapOld,false)}
                             {/* {eventToMapOld ? events(eventToMapOld) : buscaFalhou} */}
                         </TabPanel>
 
                         <TabPanel sx={{ padding: 0 }} value='1'>
-                            {events(eventToMapNew)}
+                            {events(eventToMapNew,true)}
                         </TabPanel>
                     </TabContext>
                 </Box>

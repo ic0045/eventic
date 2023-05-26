@@ -14,6 +14,7 @@ interface Props {
     image: string
     title: string
     location: string
+    subscribeButton: boolean
 }
 
 export default function EventCard(props: Props) {
@@ -34,6 +35,14 @@ export default function EventCard(props: Props) {
     const diaSemana = dias[data.getDay()]
     const horario = data.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
+    let defaultImage = "/images/default.png"
+    const imagemPrincipal = props.image || '';
+  
+    const handleErro = (event: React.SyntheticEvent<HTMLImageElement, Event>) => {
+      event.currentTarget.src = defaultImage;
+    };
+  
+
 
 
     return (
@@ -49,17 +58,25 @@ export default function EventCard(props: Props) {
                     <CardMedia
                         component="img"
                         sx={{ width: 150, height: 150, objectFit: 'contain' }}
-                        image={props.image}
+                        image={imagemPrincipal}
                         alt="evento-image"
+                        onError={handleErro}
                     />
                 </Link>
             </Box>
 
             <Box sx={{ flexGrow: 1 }} >
                 <CardContent>
-                    <Typography component="div" variant="h5">
-                        {props.title}
-                    </Typography>
+                    <Link style={{ color: "black" }} href={{
+                        pathname: '/eventos/detalhes',
+                        query: {
+                            id: props.id
+                        }
+                    }}>
+                        <Typography component="div" variant="h5">
+                            {props.title}
+                        </Typography>
+                    </Link>
 
                     <Box mt={2} sx={{ display: 'flex', gap: '1rem' }}>
                         <Box>
@@ -83,7 +100,7 @@ export default function EventCard(props: Props) {
 
                 </CardContent>
                 <Box mb={1} sx={{ display: 'flex', justifyContent: 'flex-end', marginRight: '0.5rem' }}>
-                    <SubscribeButton />
+                    {props.subscribeButton ? <SubscribeButton /> : <></>}
                     <IconButton aria-label="share">
                         <ShareIcon fontSize='small' />
                     </IconButton>

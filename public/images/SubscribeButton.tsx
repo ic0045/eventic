@@ -7,7 +7,6 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 import Link from 'next/link';
 import { useSession } from "next-auth/react";
-import { DialogContent, DialogContentText } from "@mui/material";
 
 export default function SubscribeButton() {
 
@@ -16,23 +15,8 @@ export default function SubscribeButton() {
 
   const [subscribed, setSubscribed] = useState(false)
 
-  const [mensagem, setMensagem] = useState("")
-
   const handleClickOpen = () => {
-    if (session) {
-      if (subscribed) {
-        setMensagem("Inscrição	removida")
-        setSubscribed(false)
-      }
-      else {
-        setMensagem("Evento salvo com sucesso")
-        setSubscribed(true)
-      }
-    }
-    else {
-      setMensagem("Você precisa estar logado para se inscrever!")
-    }
-
+    session ? setSubscribed(!subscribed) : undefined
     setOpen(true);
   };
 
@@ -40,7 +24,9 @@ export default function SubscribeButton() {
     setOpen(false);
   };
 
-
+  const mensagem = (
+    <h1></h1>
+  )
 
   return (
     <div>
@@ -53,28 +39,16 @@ export default function SubscribeButton() {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle sx={{ maxWidth: '300px' }} id="alert-dialog-title">
-          {mensagem}
+        <DialogTitle id="alert-dialog-title">
+          {session ? "Evento salvo com sucesso, você será notificado por email 3 dias antes do evento" : "Você precisa estar logado para se inscrever!"}
         </DialogTitle>
-
-        {session && subscribed ?
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              Você será notificado por email 3 dias antes do evento
-            </DialogContentText>
-          </DialogContent>
-          : <></>}
-
-
         <DialogActions>
           <Button onClick={handleClose}>Fechar</Button>
-          {session ? <></> :
-            <Link href='/auth/login'>
-              <Button onClick={handleClose} autoFocus>
-                Login
-              </Button>
-            </Link>
-          }
+          <Link href='/auth/login'>
+            <Button onClick={handleClose} autoFocus>
+              Login
+            </Button>
+          </Link>
         </DialogActions>
       </Dialog>
     </div>
