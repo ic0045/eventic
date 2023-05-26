@@ -79,7 +79,6 @@ function EventDetails({ data }: { data: Evento[] }) {
     event.currentTarget.src = defaultImage;
   };
 
-
   return (
 
     <>
@@ -138,7 +137,7 @@ function EventDetails({ data }: { data: Evento[] }) {
             <Typography variant="body2" gutterBottom>
               Local: {data[0].localizacao}
               <Tooltip title="Ver no mapa">
-                <IconButton target="_blank" href="https://www.google.com/maps/place/Instituto+de+Geoci%C3%AAncias+da+UFBA/@-12.9980058,-38.5097059,17z/data=!3m1!4b1!4m6!3m5!1s0x716049f49530915:0xeee17285dd935415!8m2!3d-12.9980058!4d-38.5071256!16s%2Fg%2F1q5bwgf_d" aria-label="location ">
+                <IconButton target="_blank" href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data[0].localizacao)}`} aria-label="location ">
                   <PlaceIcon />
                 </IconButton>
               </Tooltip>
