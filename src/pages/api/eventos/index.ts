@@ -18,23 +18,37 @@ export default async function handler(
     *   Body:           None               
     */
     if(req.method === 'GET'){
-        const {id, data_inicial, destaque, categoria_id, criador_id, localizacao, titulo,tipo} = req.query;
-        const where : { [key:string]: any} = {};
+        const {id, data_inicial, destaque, categoria_id, criador_id,
+             localizacao, titulo,tipo, q } = req.query;
+        let where : { [key:string]: any} | [] = {};
         const relations : { [key:string]: any} = {};
 
-        if(id) where.id = id;
-        if(titulo) where.titulo = ILike(`%${titulo}%`);
-        if(localizacao) where.localizacao = ILike(`%${localizacao}%`);;
-        if(destaque) where.destaque = destaque;
-        if(data_inicial) where.dataInicial = data_inicial;
-        if(tipo) where.tipo = ILike(`%${tipo}%`);;
-        if(categoria_id){
-            where.categoria = {id: categoria_id};
+        if(q && typeof q === 'string'){ //busca geral por trecho
+            let trecho = q.trim();
             relations.categoria = true;
-        }
-        if(criador_id){
-            where.criador = {id: criador_id};
-            relations.usuario = true;
+            where = [
+                {titulo: ILike(`%${trecho}%`)},
+                {localizacao: ILike(`%${trecho}%`)},
+                {tipo: ILike(`%${trecho}%`)}
+            ]
+        }else{
+            if(id) where.id = id;
+            if(titulo && typeof titulo === 'string') 
+                where.titulo = ILike(`%${titulo.trim()}%`);
+            if(localizacao && typeof localizacao === 'string') 
+                where.localizacao = ILike(`%${localizacao.trim()}%`);;
+            if(tipo && typeof tipo === 'string') 
+                where.tipo = ILike(`%${tipo.trim()}%`);;
+            if(destaque) where.destaque = destaque;
+            if(data_inicial) where.dataInicial = data_inicial;
+            if(categoria_id){
+                where.categoria = {id: categoria_id};
+                relations.categoria = true;
+            }
+            if(criador_id){
+                where.criador = {id: criador_id};
+                relations.usuario = true;
+            }
         }
         try{
             const eventos = await EventoRepo.find({where: where, relations: relations});

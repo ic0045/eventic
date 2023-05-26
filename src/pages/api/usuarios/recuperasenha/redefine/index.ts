@@ -20,7 +20,8 @@ export default async function handler(
                     const user = await UsuarioRepo.findOne({where: {id: id}});
                     if (user != null) {
                         user.senha = await hashPassword(senha);
-                        res.redirect(process.env.PUBLIC_URL+"/auth/login");
+                        await UsuarioRepo.save(user);
+                        res.status(200).json("Senha alterada com sucesso.")
                     } else { res.status(400).json("Nenhum usuário encontrado para o id: " + id) }
                 } catch (e) { res.status(500).json(e) }
             }
