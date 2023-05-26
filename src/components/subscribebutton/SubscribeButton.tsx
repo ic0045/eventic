@@ -7,7 +7,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 import Link from 'next/link';
 import { useSession } from "next-auth/react";
-import { DialogContent, DialogContentText } from "@mui/material";
+import { DialogContent, DialogContentText, Tooltip } from "@mui/material";
 
 export default function SubscribeButton() {
 
@@ -44,9 +44,11 @@ export default function SubscribeButton() {
 
   return (
     <div>
-      <IconButton onClick={handleClickOpen} aria-label="notification">
-        <NotificationsActiveIcon sx={subscribed ? { color: '#FFCB00' } : undefined} />
-      </IconButton>
+      <Tooltip title="Inscrever-se">
+        <IconButton onClick={handleClickOpen} aria-label="notification">
+          <NotificationsActiveIcon sx={subscribed ? { color: '#FFCB00' } : undefined} />
+        </IconButton>
+      </Tooltip>
       <Dialog
         open={open}
         onClose={handleClose}

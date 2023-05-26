@@ -8,6 +8,7 @@ import { useState } from "react";
 import SubscribeButton from "@app/components/subscribebutton/SubscribeButton"
 import Link from 'next/link';
 import styles from './eventdetails.module.css'
+import ShareButton from "@app/components/sharebutton/ShareButton"
 
 interface Props {
     id: string

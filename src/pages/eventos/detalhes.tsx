@@ -8,6 +8,7 @@ import EventIcon from '@mui/icons-material/Event';
 import PlaceIcon from '@mui/icons-material/Place';
 import { useState } from "react";
 import SubscribeButton from "@app/components/subscribebutton/SubscribeButton"
+import ShareButton from "@app/components/sharebutton/ShareButton"
 import Navbar from "@app/components/common/navbar/Navbar";
 import { getServerSession } from "next-auth";
 
@@ -150,9 +151,7 @@ function EventDetails({ data }: { data: Evento[] }) {
 
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
               {new Date(data[0].dataInicial).getTime() >= Date.now() ? <SubscribeButton /> : <></>}
-              <IconButton aria-label="share">
-                <ShareIcon />
-              </IconButton>
+              <ShareButton url={process.env.NEXT_PUBLIC_URL + "/eventos/detalhes?id=" + data[0].id} />
             </Box>
           </Box>
 

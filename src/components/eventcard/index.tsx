@@ -7,6 +7,7 @@ import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import { useState } from "react";
 import SubscribeButton from "@app/components/subscribebutton/SubscribeButton"
 import Link from 'next/link';
+import ShareButton from "@app/components/sharebutton/ShareButton"
 
 interface Props {
     id: string
@@ -101,9 +102,7 @@ export default function EventCard(props: Props) {
                 </CardContent>
                 <Box mb={1} sx={{ display: 'flex', justifyContent: 'flex-end', marginRight: '0.5rem' }}>
                     {props.subscribeButton ? <SubscribeButton /> : <></>}
-                    <IconButton aria-label="share">
-                        <ShareIcon fontSize='small' />
-                    </IconButton>
+                    <ShareButton url={process.env.NEXT_PUBLIC_URL + "/eventos/detalhes?id=" + props.id} />
                 </Box>
             </Box>
 
