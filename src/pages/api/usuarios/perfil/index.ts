@@ -1,10 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { UsuarioRepo } from '@app/server/database'
-import { getToken } from "next-auth/jwt";
-import {UsuarioValidator} from '../util';
+import {UsuarioValidator, sendAlertChangeEmail} from '../util';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../../auth/[...nextauth]';
 
 /*
-*   Rota para edição de perfil. Não altera senha, permissão e e-mail.
+*   Rota para edição e obter perfil. Não altera senha e permissão.
 *   Restrição:       Usuário logado
 *   Nível de acesso: Todos
 */
@@ -12,12 +13,12 @@ export default async function handler(
     req : NextApiRequest,
     res : NextApiResponse<any>
 ){
-    const token = await getToken({req}) as any;
-    if(!token) 
+    const session = await getServerSession(req,res,authOptions);
+    if(!session) 
         res.status(401).send("É necessário estar autenticado.");
     else{
         try{
-            let usuario = await UsuarioRepo.findOne({where: {id: token.id}});
+            let usuario = await UsuarioRepo.findOne({where: {id: session.user.id}});
             if( usuario == null)
                 res.status(400).json(`Não foi encontrado usuário de id: ${req.body.id}`);
             else{
@@ -36,6 +37,11 @@ export default async function handler(
                         usuario.celular = req.body.celular;
                         usuario.fotoPerfil = req.body.foto_perfil;
                         usuario.cpf = req.body.cpf;
+                        if(usuario.email != req.body.email){
+                            //Se houve mudança de e-mail, notifica email antigo
+                            await sendAlertChangeEmail(usuario.email);
+                            usuario.email = req.body.email
+                        }
                         usuario = await UsuarioRepo.save(usuario);
                         res.status(200).json(usuario);
                     }
