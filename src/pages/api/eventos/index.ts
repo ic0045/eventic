@@ -14,14 +14,16 @@ export default async function handler(
     /*
     *   Busca eventos.
     *   Query Params:   id, data_inicial, destaque, categoria_id, criador_id,
-    *                    localizacao, titulo
+    *                    localizacao, titulo, tipo, q, page, limit
     *   Body:           None               
     */
     if(req.method === 'GET'){
         const {id, data_inicial, destaque, categoria_id, criador_id,
-             localizacao, titulo,tipo, q } = req.query;
+             localizacao, titulo,tipo, q, page, limit } = req.query;
         let where : { [key:string]: any} | [] = {};
         const relations : { [key:string]: any} = {};
+        const pagination = (limit && typeof limit === 'string' && parseInt(limit) <=50)? parseInt(limit) : 25;
+        const pg = (page && typeof page === 'string')? parseInt(page) : 0; 
 
         if(q && typeof q === 'string'){ //busca geral por trecho
             let trecho = q.trim();
@@ -51,7 +53,13 @@ export default async function handler(
             }
         }
         try{
-            const eventos = await EventoRepo.find({where: where, relations: relations});
+            const eventos = await EventoRepo.find({
+                where: where, 
+                relations: relations,
+                order:{createdAt: "DESC"},
+                skip: pagination*pg,
+                take: pagination,
+            });
             res.status(200).json(eventos);
         }catch(e){console.log(e);res.status(500).json(e)}
     } 
