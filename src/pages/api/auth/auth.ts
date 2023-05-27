@@ -1,6 +1,4 @@
 import bcrypt from 'bcrypt'
-import { NextRequest, NextResponse } from "next/server";
-import { getToken } from "next-auth/jwt";
 import { authOptions } from './[...nextauth]';
 import { getServerSession , Session } from 'next-auth';
 import { UsuarioRepo } from '@app/server/database';
@@ -64,13 +62,3 @@ export async function getCustomSession(session: Session):Promise<Session>{
     }
     return session
 }
-
-    // const token = await getToken({req});
-
-    // if(!token)
-    //     return NextResponse.redirect(new URL('/auth/login'));
-    
-    // if(token?.permissao == roleRequired)
-    //     return true;
-
-    // return NextResponse.redirect(new URL('/accessdenied'));
