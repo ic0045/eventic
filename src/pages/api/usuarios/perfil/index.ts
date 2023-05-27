@@ -14,7 +14,7 @@ export default async function handler(
 ){
     const token = await getToken({req}) as any;
     if(!token) 
-        res.status(401).send("É necessário estar autenticado.");
+        res.status(401).json({erromsg:"É necessário estar autenticado."});
     else{
         try{
             let usuario = await UsuarioRepo.findOne({where: {id: token.id}});
