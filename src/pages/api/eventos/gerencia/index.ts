@@ -3,7 +3,6 @@ import { CategoriaRepo, EventoRepo, UsuarioRepo } from '@app/server/database'
 import EventoValidator from '../util';
 import { Evento } from '@app/server/entities/evento.entity';
 import { getToken } from "next-auth/jwt";
-import { Permissao } from '@app/common/constants';
 
 /*
 *   Rota para gerencia de eventos.
@@ -18,7 +17,7 @@ export default async function handler(
 
     if (!token)
         res.status(401).send("É necessário estar autenticado.");
-    else if (token.permissao == Permissao.visitante)
+    else if (token.permissao == 'visitante')
         res.status(401).send("É necessário ser um administrador ou professor para cadastrar um evento.")
     else {
 
@@ -70,7 +69,7 @@ export default async function handler(
                     if (evento == null)
                         res.status(400).json(`Não foi encontrado evento de id: ${req.body.id}`);
                     else {
-                        let canEdit = token.permissao == Permissao.admin;
+                        let canEdit = token.permissao == 'admin';
                         if (!canEdit) //se usuário é professor, verifica se é criador do evento
                             canEdit = evento.criador.id == token.id;
                         if (canEdit) {
@@ -93,7 +92,7 @@ export default async function handler(
                                     if (categoria)
                                         evento.categoria = categoria;
                                 }
-                                if (destaque && token.permissao == Permissao.admin)//apenas admin pode colocar como destaque
+                                if (destaque && token.permissao == 'admin')//apenas admin pode colocar como destaque
                                     evento.destaque = destaque;
                                 evento.updatedAt = new Date();
                                 evento = await EventoRepo.save(evento);
@@ -114,7 +113,7 @@ export default async function handler(
     else if (req.method === 'DELETE') {
         const { id } = req.query;
         if (id) {
-            let canDelete = token.permissao == Permissao.admin;
+            let canDelete = token.permissao == 'admin';
             if (!canDelete) { //se usuário é professor
                 let evento = await EventoRepo.findOne({ where: { id: token.id } });
                 if (evento != null)// se usuário é criador do evento

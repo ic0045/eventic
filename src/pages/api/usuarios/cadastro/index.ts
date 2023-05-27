@@ -3,7 +3,6 @@ import { UsuarioRepo } from '@app/server/database'
 import { Usuario } from '@app/server/entities/usuario.entity'
 import {UsuarioValidator, sendConfirmEmail} from '../util'
 import { hashPassword } from '../../auth/auth'
-import { Permissao } from '@app/common/constants'
 
 /*
 *   Rota cadastro de usuário. Usuários são criados como visitantes.
@@ -22,7 +21,7 @@ export default async function handler(
                     {where: {email: req.body.email.toLocaleLowerCase()}});
                 if(!existingUsuario){
                     let usuario = Usuario.createFromObj(req.body);
-                    usuario.permissao = Permissao.visitante; //admins não são criados por esta rota
+                    usuario.permissao = 'visitante' ; //admins não são criados por esta rota
                     usuario.senha = await hashPassword(usuario.senha);
                     usuario = await UsuarioRepo.save(usuario);
                     if( await sendConfirmEmail(usuario.email, usuario.id) ){

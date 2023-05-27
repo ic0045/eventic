@@ -1,25 +1,13 @@
-import { Permissao } from "@app/common/constants";
-import type { NextPage } from "next";
-import { getServerSession } from "next-auth";
+import type { GetServerSideProps, NextPage } from "next";
 import dynamic from "next/dynamic";
+import { redirectIfNotAuthorized } from "./api/auth/auth";
 
 const AdminPortal = dynamic(() => import("../components/admin/adminportal"), { ssr: false });
 
 const Home: NextPage = () => {
   return <AdminPortal />;
 };
-// export const getServerSideProps = async (context: any) => {
-//   const session = await getServerSession(context.req, context.res, {});
-//   if(session && session.user.permissao !== Permissao.admin){
-//       return {
-//           props: {},
-//           redirect: {
-//               destination: '/?err=Forbidden',
-//               permanent: false
-//           }
-//       }
-//   }
-
-//   return {props: {}}
-// }
+export const getServerSideProps: GetServerSideProps = async ({req, res}) => {
+  return await redirectIfNotAuthorized(req, res, 'admin')
+}
 export default Home;
