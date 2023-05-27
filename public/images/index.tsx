@@ -8,14 +8,12 @@ import { useState } from "react";
 import SubscribeButton from "@app/components/subscribebutton/SubscribeButton"
 import Link from 'next/link';
 import styles from './eventdetails.module.css'
-import ShareButton from "@app/components/sharebutton/ShareButton"
 
 interface Props {
     id: string
     initialDate: string
     title: string
     location: string
-    subscribeButton: boolean
 }
 
 export default function ListCard(props: Props) {
@@ -70,8 +68,7 @@ export default function ListCard(props: Props) {
             </Link>
 
             <Box sx={{ display: 'flex', flexDirection: 'column', marginLeft: 'auto' }}>
-            {props.subscribeButton ? <SubscribeButton /> : <></>}
-                {/* <SubscribeButton /> */}
+                <SubscribeButton />
                 <IconButton sx={{ marginTop: 'auto' }} aria-label="share">
                     <ShareIcon fontSize='small' />
                 </IconButton>

@@ -1,4 +1,4 @@
-import { Box, Container, Grid, Tooltip } from "@mui/material";
+import { Box, Container, Grid } from "@mui/material";
 import styles from './detalhes.module.css'
 import Typography from "@mui/material/Typography";
 import IconButton from '@mui/material/IconButton';
@@ -8,17 +8,12 @@ import EventIcon from '@mui/icons-material/Event';
 import PlaceIcon from '@mui/icons-material/Place';
 import { useState } from "react";
 import SubscribeButton from "@app/components/subscribebutton/SubscribeButton"
-import ShareButton from "@app/components/sharebutton/ShareButton"
 import Navbar from "@app/components/common/navbar/Navbar";
 import { getServerSession } from "next-auth";
-
-import { SiGooglecalendar } from 'react-icons/si';
 
 import { GetServerSideProps } from 'next';
 
 import { useSearchParams } from 'next/navigation'
-
-// import defaultImage from '../public/images/default.jpg';
 
 interface Evento {
   id: string
@@ -35,7 +30,7 @@ interface Evento {
   linkTitulo: string
   tipo: string
   linkMaisInformacoes: string
-  qtInscricoes: number
+  qtInscricoes:number
 }
 
 function EventDetails({ data }: { data: Evento[] }) {
@@ -56,7 +51,7 @@ function EventDetails({ data }: { data: Evento[] }) {
   const [subscribed, setSubscribed] = useState(false)
 
   const meses = [
-    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
+    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Jnho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
   ];
 
   function getData(d: string, x: string) {
@@ -66,18 +61,10 @@ function EventDetails({ data }: { data: Evento[] }) {
     const date = new Date(d)
     const day = date.getDate()
     const month = meses[date.getMonth()]
-    const year = date.getFullYear()
     const horario = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-    return `${x}: ${day} de ${month} de ${year} | ${horario}`
+    return `${x}: ${day} - ${month} | ${horario}`
   }
-
-  let defaultImage = "/images/default.png"
-  const imagemPrincipal = data[0]?.imagemUrl || '';
-
-  const handleErro = (event: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    event.currentTarget.src = defaultImage;
-  };
 
   return (
 
@@ -92,10 +79,8 @@ function EventDetails({ data }: { data: Evento[] }) {
               height={600}
               width={600}
               className={styles.img}
-              src={imagemPrincipal}
+              src={searchParams.get('image') || data[0].imagemUrl}
               alt='evento-imagem'
-              unoptimized
-              onError={handleErro}
             />
           </Box>
 
@@ -124,23 +109,20 @@ function EventDetails({ data }: { data: Evento[] }) {
             </Typography>
             <Typography variant="body2" gutterBottom>
               {getData(data[0].dataInicial, 'Início')}
-              <Tooltip title="Adicionar a agenda">
-                <IconButton target="_blank" href="https://calendar.google.com/" aria-label="calendar">
-                  {/* <EventIcon /> */}
-                  <SiGooglecalendar size={20} />
-                </IconButton>
-              </Tooltip>
+              <IconButton target="_blank" href="https://calendar.google.com/" aria-label="calendar">
+                <EventIcon />
+              </IconButton>
             </Typography>
             <Typography variant="body2" gutterBottom>
               {getData(data[0].datafinal, 'Fim')}
             </Typography>
             <Typography variant="body2" gutterBottom>
               Local: {data[0].localizacao}
-              <Tooltip title="Ver no mapa">
-                <IconButton target="_blank" href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data[0].localizacao)}`} aria-label="location ">
-                  <PlaceIcon />
-                </IconButton>
-              </Tooltip>
+
+              <IconButton target="_blank" href="https://www.google.com/maps/place/Instituto+de+Geoci%C3%AAncias+da+UFBA/@-12.9980058,-38.5097059,17z/data=!3m1!4b1!4m6!3m5!1s0x716049f49530915:0xeee17285dd935415!8m2!3d-12.9980058!4d-38.5071256!16s%2Fg%2F1q5bwgf_d" aria-label="location ">
+                <PlaceIcon />
+              </IconButton>
+
             </Typography>
             {data[0].linkMaisInformacoes ?
               <Typography variant="body2" gutterBottom>
@@ -149,8 +131,10 @@ function EventDetails({ data }: { data: Evento[] }) {
             }
 
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-              {new Date(data[0].dataInicial).getTime() >= Date.now() ? <SubscribeButton /> : <></>}
-              <ShareButton url={process.env.NEXT_PUBLIC_URL + "/eventos/detalhes?id=" + data[0].id} />
+              <SubscribeButton />
+              <IconButton aria-label="share">
+                <ShareIcon />
+              </IconButton>
             </Box>
           </Box>
 
