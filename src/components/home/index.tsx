@@ -18,6 +18,7 @@ import 'moment/locale/pt-br';
 import Image from 'next/image';
 import CircularProgress from '@mui/material/CircularProgress';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { setCookie, getCookie } from '@app/utils/cookieUtils';
 
 
 interface Evento {
@@ -189,6 +190,7 @@ export default function Home({ data, categorias, eventosCategoria }: { data: Eve
             setEventToMapOld(listaCategorias[category].eventosPorDiaAnteriores);
             setEventToMapNew(listaCategorias[category].eventosPorDiaNovos);
         }
+        setCookie('period', evento);
     }
 
     function handleCategoryChange(event: SelectChangeEvent) {
@@ -310,6 +312,27 @@ export default function Home({ data, categorias, eventosCategoria }: { data: Eve
         </Box>
     )
 
+    useEffect(() => {
+        // Ao carregar o componente, tenta recuperar os valores das variáveis do cookie
+        const savedlistView = getCookie('listView');
+        const savedPeriod = getCookie('period');
+
+        if (savedlistView) {
+            setListView(savedlistView);
+        }
+
+        if (savedPeriod) {
+            setPeriod(savedPeriod);
+        }
+    }, []);
+
+    const handleSave = () => {
+        // Salva as duas variáveis no cookie
+        setCookie('listView', listView);
+        setCookie('period', period);
+    }
+
+
     const mobile = useMediaQuery('(max-width: 720px)');
     return (
         <>
@@ -371,9 +394,9 @@ export default function Home({ data, categorias, eventosCategoria }: { data: Eve
                         </Select>
                     </FormControl>
                     <Box sx={{ marginLeft: '0.5rem' }}>
-                        <ViewModuleIcon onClick={() => setListView(false)} sx={{ color: 'black', opacity: listView ? 0.5 : 1, alignSelf: 'center', cursor: 'pointer', border: '1px solid', marginRight: '0.5rem', borderColor: listView ? 'gray' : 'black', borderRadius: '4px' }} fontSize="large" />
+                        <ViewModuleIcon onClick={() => { setListView(false); setCookie('listView', listView); }} sx={{ color: 'black', opacity: listView ? 0.5 : 1, alignSelf: 'center', cursor: 'pointer', border: '1px solid', marginRight: '0.5rem', borderColor: listView ? 'gray' : 'black', borderRadius: '4px' }} fontSize="large" />
 
-                        <ViewListIcon onClick={() => setListView(true)} sx={{ color: 'black', opacity: listView ? 1 : 0.5, alignSelf: 'center', cursor: 'pointer', border: '1px solid', marginRight: '0.5rem', borderColor: listView ? 'black' : 'gray', borderRadius: '4px' }} fontSize="large" />
+                        <ViewListIcon onClick={() => { setListView(true), setCookie('listView', listView); }} sx={{ color: 'black', opacity: listView ? 1 : 0.5, alignSelf: 'center', cursor: 'pointer', border: '1px solid', marginRight: '0.5rem', borderColor: listView ? 'black' : 'gray', borderRadius: '4px' }} fontSize="large" />
                     </Box>
                 </Box>
                 <Box>
