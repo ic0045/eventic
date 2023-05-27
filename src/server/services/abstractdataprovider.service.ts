@@ -4,7 +4,7 @@ import { FindOptionsOrder, In, ObjectLiteral, Repository } from "typeorm";
 type CustomGetManyReferenceParams = GetManyReferenceParams & { pagination?: any, range: number[] };
 
 export default class ServerAbstractDataProvider<T extends ObjectLiteral> {
-    private repository: Repository<T>;
+    protected repository: Repository<T>;
     constructor(repository: Repository<T>) {
         this.repository = repository;
     }

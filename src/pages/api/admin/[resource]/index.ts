@@ -8,6 +8,9 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { DataProvider, PaginationPayload, SortPayload } from "react-admin";
 import { EntitySchema, ObjectLiteral, Repository } from "typeorm";
 import { Inscricao } from "@app/server/entities/inscricao.entity";
+import EventoDataProvider from "@app/server/services/eventodataprovider.service";
+import { getServerSession } from "next-auth";
+import InscricaoDataProvider from "@app/server/services/inscricaodataprovider.service";
 
 /**
  *  @see https://www.npmjs.com/package/ra-data-simple-rest
@@ -20,6 +23,9 @@ export default async function handler(
     res: NextApiResponse<any>
 ) {
 
+    const sessao = await getServerSession(req, res, {});
+    const filter: any = req.query?.filter ? JSON.parse(req.query?.filter as string) : undefined;
+    
     if (req.query.resource === ApiResource.CATEGORIAS) {
         const provider = new ServerAbstractDataProvider<Categoria>(CategoriaRepo);
         return await execute(req, res, provider);
@@ -31,12 +37,12 @@ export default async function handler(
     }
 
     if (req.query.resource === ApiResource.EVENTOS) {
-        const provider = new ServerAbstractDataProvider<Evento>(EventoRepo);
+        const provider = new EventoDataProvider(sessao);
         return await execute(req, res, provider);
     }
 
     if (req.query.resource === ApiResource.INSCRICOES) {
-        const provider = new ServerAbstractDataProvider<Inscricao>(InscricaoRepo);
+        const provider = new InscricaoDataProvider(sessao);
         return await execute(req, res, provider);
     }
     res.status(400).send(`Falta definir um middleware para o recurso ${req.query.resource}`)
