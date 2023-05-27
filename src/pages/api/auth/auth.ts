@@ -2,8 +2,8 @@ import bcrypt from 'bcrypt'
 import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { authOptions } from './[...nextauth]';
-import { getServerSession } from 'next-auth';
-import { Permissao } from '@app/common/constants';
+import { getServerSession , Session } from 'next-auth';
+import { UsuarioRepo } from '@app/server/database';
 
 
 /*
@@ -24,28 +24,45 @@ export async function checkPassword(password : string, dbPassword : string) : Pr
 /*
 * Função que verifica se usuário possui autorização para acessar um recurso
 */
-export async function redirectIfNotAuthorized(req :any, res:any, roleRequired : Permissao){
-    const session = await getServerSession(req,res,authOptions);
+export async function redirectIfNotAuthorized(req :any, res:any, role: Permissao){
+    let session = await getServerSession(req,res,authOptions);
 
         if(!session){
-            return{
+            return({
+                props:{},
                 redirect:{
-                    destination: `${process.env.NEXT_PUBLIC_URL}/auth/login`,
+                    destination: `${process.env.NEXT_PUBLIC_URL}/auth/login?error=NotLogged"`,
                     permanet:false,
                 }
-            }
+            })
         }
-        if(roleRequired === session.user.permissao){
-            return{
-                props:{}
-            }
+
+        session = await getCustomSession(session);
+        if(role !== session.user.permissao){
+            return(
+                {
+                    props:{},
+                    redirect: {
+                    destination: `${process.env.NEXT_PUBLIC_URL}/auth/login?error=Forbidden`,
+                    permanent: false,
+                    }
+                }
+            )
         }
-        else{
-            return{
-                destination: `${process.env.NEXT_PUBLIC_URL}/auth/login?error=Forbidden`,
-                permanet:false,
-            }
-        }
+
+        return({
+            props:{}
+        })
+       
+}
+
+export async function getCustomSession(session: Session):Promise<Session>{
+    const user = await UsuarioRepo.findOne({ where: { email: session.user.email.toLocaleLowerCase() } });
+    if (user) {
+      const { primeiroNome, segundoNome, permissao, fotoPerfil } = user;
+      session.user = { ...session.user, primeiroNome, segundoNome, permissao, fotoPerfil }
+    }
+    return session
 }
 
     // const token = await getToken({req});

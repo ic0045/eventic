@@ -14,7 +14,7 @@ export enum FormMode {
 /*
 *  Níveis de permissão de usuário
 */
-export enum Permissao {
+export enum PermissaoEnum {
     admin = 'Administrador', 
     servidor = 'Servidor',
     visitante = 'Visitante',

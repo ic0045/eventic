@@ -119,10 +119,11 @@ interface UsuarioPostRequest {
     segundo_nome: string,
     email: string,
     senha: string,
-    permissao: import("@app/common/constants").Permissao,
+    permissao: Permissao,
     celular?: string,
     cpf?: string,
     cep?: string,
     foto_perfil: string
 }
 
+type Permissao = 'admin'| 'servidor' | 'visitante';

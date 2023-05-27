@@ -3,8 +3,8 @@ import {
     TextInput, CreateButton, DateInput, EditButton, BooleanInput, Edit, Create, DeleteButton, RadioButtonGroupInput, email, required, minLength, maxLength, regex
 } from 'react-admin';
 import { Theme, useMediaQuery } from '@mui/material';
-import { Permissao } from '@app/common/constants';
 import { Regex } from '@app/helpers/Helpers';
+import { PermissaoEnum } from '@app/common/constants';
 
 export const UsuarioList = () => {
     const isSmall = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
@@ -42,7 +42,7 @@ const AddEditForm = ({ edit }: { edit: boolean }) => (
         <TextInput fullWidth source="email" validate={[required(), email()]} />
         {!edit && <TextInput fullWidth source="senha" type='password' validate={[required(), minLength(8)]} />}
         <RadioButtonGroupInput fullWidth source="permissao"
-            choices={Object.keys(Permissao).map((v, i) => ({ id: v, name: Object.values(Permissao)[i] }))}
+            choices={Object.keys(PermissaoEnum).map((v, i) => ({ id: v, name: Object.values(PermissaoEnum)[i] }))}
             validate={[required()]}
         />
         <TextInput  type="tel" fullWidth source="celular" validate={[minLength(11), maxLength(11), regex(Regex.celular, 'Celular Inválido')]} />
