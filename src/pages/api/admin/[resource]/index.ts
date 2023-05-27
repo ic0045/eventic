@@ -11,6 +11,7 @@ import { Inscricao } from "@app/server/entities/inscricao.entity";
 import EventoDataProvider from "@app/server/services/eventodataprovider.service";
 import { getServerSession } from "next-auth";
 import InscricaoDataProvider from "@app/server/services/inscricaodataprovider.service";
+import UsuarioDataProvider from "@app/server/services/usuariodataprovider.service";
 
 /**
  *  @see https://www.npmjs.com/package/ra-data-simple-rest
@@ -32,7 +33,7 @@ export default async function handler(
     }
 
     if (req.query.resource === ApiResource.USUARIOS) {
-        const provider = new ServerAbstractDataProvider<Usuario>(UsuarioRepo);
+        const provider = new UsuarioDataProvider(sessao);
         return await execute(req, res, provider);
     }
 
