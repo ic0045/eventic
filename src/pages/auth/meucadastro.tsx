@@ -1,17 +1,34 @@
-import { NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 import styles from "./alterarsenha.module.css";
 
 import { Layout } from "@app/components/common/layout/Layout";
 import { Box, Button, Typography } from "@mui/material";
 
+import { useState } from 'react';
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import Image from 'next/image';
 
-const MeuCadastro: NextPage = () => {
+interface User {
+  id: string
+  primeiroNome: string
+  segundoNome: string
+  email: string
+  celular: string
+  cpf: string
+}
+
+
+function MeuCadastro() {
+
+  // const test = async () => {
+  //   const api = process.env.NEXT_PUBLIC_URL;
+  //   const res = await fetch(`${api}/api/usuarios/perfil`);
+  //   const data = await res.json();
+  //   return data
+  // }
 
   const { data: session, status } = useSession()
-
   let defaultImage = "/images/userDefault.jpeg"
   const imagemPrincipal = session?.user.fotoPerfil || '';
 
@@ -39,16 +56,22 @@ const MeuCadastro: NextPage = () => {
             onError={handleErro}
           />
 
-          <Box sx={{display:'flex',flexDirection:'column'}}>
-            <Typography mb={2}  variant="h6">Nome: {session?.user.primeiroNome} {session?.user.segundoNome}</Typography>
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Typography mb={2} variant="h6">Nome: {session?.user.primeiroNome} {session?.user.segundoNome}</Typography>
+            {/* <Typography variant="h6">Email: {session?.user.email}</Typography> */}
             <Typography variant="h6">Email: {session?.user.email}</Typography>
-            <Box sx={{marginTop:'auto'}}>
+            <Box sx={{ marginTop: 'auto' }}>
               <Link href='/auth/cadastro' style={{ marginRight: '1rem' }}>
                 <Button variant="contained" color="primary" >
                   Editar Cadastro
                 </Button>
               </Link>
-              <Link href='/auth/cadastro'>
+              <Link href='/auth/cadastro' style={{ marginRight: '1rem' }}>
+                <Button variant="contained" color="secondary" >
+                  Alterar Email
+                </Button>
+              </Link>
+              <Link href='/auth/alterarsenha' >
                 <Button variant="contained" color="secondary" >
                   Alterar Senha
                 </Button>
@@ -62,4 +85,5 @@ const MeuCadastro: NextPage = () => {
     </>
   );
 };
+
 export default MeuCadastro;

@@ -326,13 +326,6 @@ export default function Home({ data, categorias, eventosCategoria }: { data: Eve
         }
     }, []);
 
-    const handleSave = () => {
-        // Salva as duas variáveis no cookie
-        setCookie('listView', listView);
-        setCookie('period', period);
-    }
-
-
     const mobile = useMediaQuery('(max-width: 720px)');
     return (
         <>
