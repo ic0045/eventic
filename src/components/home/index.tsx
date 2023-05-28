@@ -23,7 +23,7 @@ import { setCookie, getCookie } from '@app/utils/cookieUtils';
 import { criaListaCategorias } from '@app/utils/organizaEventos';
 
 
-export default function Home({ data, categorias, eventosCategoria }: { data: Evento[], categorias: Categoria[], eventosCategoria: Array<EventoPorCategoria> }) {
+export default function Home({ data, categorias, eventosCategoria, home }: { data: Evento[], categorias: Categoria[], eventosCategoria: Array<EventoPorCategoria>, home: boolean }) {
 
     // Cria listas de eventos para cada categoria
     let [listaCategorias, setListaCategorias] = useState(criaListaCategorias(eventosCategoria, data));
@@ -68,6 +68,9 @@ export default function Home({ data, categorias, eventosCategoria }: { data: Eve
         if (savedPeriod) {
             setPeriod(savedPeriod);
             update(savedPeriod)
+        }
+        if (!home) {
+            handleUserEvents()
         }
     }, []);
 
@@ -144,6 +147,19 @@ export default function Home({ data, categorias, eventosCategoria }: { data: Eve
         setIsLoading(false)
     };
 
+    // Mostra somente os eventos do usuario se ele estiver na pagina Minhas inscricoes
+    const handleUserEvents = async () => {
+        const api = process.env.NEXT_PUBLIC_URL
+
+        // Pega os Eventos do usuario
+        const res = await fetch(`${api}/api/usuarios/eventos`)
+        const data = await res.json()
+
+        const eventosCategoria = [{ nome: '', eventos: [] }]
+
+        setListaCategorias(criaListaCategorias(eventosCategoria, data))
+    }
+
     function limpaBusca() {
         setListaCategorias(listaCategoriasBackup)
         setInputValue('')
@@ -201,31 +217,35 @@ export default function Home({ data, categorias, eventosCategoria }: { data: Eve
     const mobile = useMediaQuery('(max-width: 720px)');
     return (
         <>
-            <Box sx={{ borderRadius: '0.3rem', backgroundColor: 'white', boxShadow: 3 }}>
-                <Paper
-                    component="form"
-                    sx={{ display: 'flex', alignItems: 'center', padding: '1rem', }}
-                >
-                    {isLoading ? <CircularProgress /> :
-                        <IconButton onClick={handleClick} type="button" aria-label="search">
-                            <SearchIcon />
-                        </IconButton>
-                    }
-                    <InputBase
-                        onKeyDown={handleKeyDown}
-                        value={inputValue}
-                        onChange={(e) => { setInputValue(e.target.value) }}
-                        sx={{ ml: 1, flex: 1 }}
-                        placeholder="Filtrar por nome de Evento"
-                        inputProps={{ 'aria-label': 'busca de eventos' }}
-                    />
-                </Paper>
-            </Box>
-            <Button onClick={limpaBusca} variant="text">Limpar Busca</Button>
+            {home &&
+                <Box sx={{ borderRadius: '0.3rem', backgroundColor: 'white', boxShadow: 3 }}>
+                    <Paper
+                        component="form"
+                        sx={{ display: 'flex', alignItems: 'center', padding: '1rem', }}
+                    >
+                        {isLoading ? <CircularProgress /> :
+                            <IconButton onClick={handleClick} type="button" aria-label="search">
+                                <SearchIcon />
+                            </IconButton>
+                        }
+                        <InputBase
+                            onKeyDown={handleKeyDown}
+                            value={inputValue}
+                            onChange={(e) => { setInputValue(e.target.value) }}
+                            sx={{ ml: 1, flex: 1 }}
+                            placeholder="Filtrar por nome de Evento"
+                            inputProps={{ 'aria-label': 'busca de eventos' }}
+                        />
+                    </Paper>
+                </Box>
+            }
+            {home &&
+                <Button onClick={limpaBusca} variant="text">Limpar Busca</Button>
+            }
             {/* flexDirection: 'column',alignItems:'flex-start' */}
             <Box mt={2} sx={{ borderRadius: '0.3rem', backgroundColor: 'white', padding: '1rem', boxShadow: 3 }}>
                 <Box mb={2} sx={{ display: 'flex', flexWrap: 'wrap', flexDirection: mobile ? 'column' : 'row', alignItems: mobile ? 'flex-start' : 'center', gap: '0.5rem' }}>
-                    <Typography sx={{ marginRight: 'auto' }} variant="h3">Eventos</Typography>
+                    <Typography sx={{ marginRight: 'auto' }} variant="h3">{home ? 'Eventos' : 'Meus eventos'}</Typography>
                     <FormControl variant="standard" sx={{ m: 1, minWidth: 150 }}>
                         <InputLabel id="demo-simple-select-label">Período</InputLabel>
                         <Select
@@ -241,23 +261,25 @@ export default function Home({ data, categorias, eventosCategoria }: { data: Eve
                             <MenuItem value={3}>Mês</MenuItem>
                         </Select>
                     </FormControl>
-                    <FormControl variant="standard" sx={{ m: 1, minWidth: 150 }}>
-                        <InputLabel id="demo-simple-select-label">Categoria</InputLabel>
-                        <Select
-                            inputProps={{ MenuProps: { disableScrollLock: true } }}
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={category}
-                            label="Categoria"
-                            // onChange={(event: SelectChangeEvent) => (setCategory(event.target.value))}
-                            onChange={handleCategoryChange}
-                        >
-                            <MenuItem value='Todas'>Todas</MenuItem>
-                            {categorias.map((categoria) =>
-                                <MenuItem key={categoria.id} value={categoria.nome}>{categoria.nome}</MenuItem>
-                            )}
-                        </Select>
-                    </FormControl>
+                    {home &&
+                        <FormControl variant="standard" sx={{ m: 1, minWidth: 150 }}>
+                            <InputLabel id="demo-simple-select-label">Categoria</InputLabel>
+                            <Select
+                                inputProps={{ MenuProps: { disableScrollLock: true } }}
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={category}
+                                label="Categoria"
+                                // onChange={(event: SelectChangeEvent) => (setCategory(event.target.value))}
+                                onChange={handleCategoryChange}
+                            >
+                                <MenuItem value='Todas'>Todas</MenuItem>
+                                {categorias.map((categoria) =>
+                                    <MenuItem key={categoria.id} value={categoria.nome}>{categoria.nome}</MenuItem>
+                                )}
+                            </Select>
+                        </FormControl>
+                    }
                     <Box sx={{ marginLeft: '0.5rem' }}>
                         <ViewModuleIcon onClick={() => { setListView(false); setCookie('listView', 'false'); }} sx={{ color: 'black', opacity: listView ? 0.5 : 1, alignSelf: 'center', cursor: 'pointer', border: '1px solid', marginRight: '0.5rem', borderColor: listView ? 'gray' : 'black', borderRadius: '4px' }} fontSize="large" />
 

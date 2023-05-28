@@ -4,29 +4,45 @@ import styles from "./alterarsenha.module.css";
 import { Layout } from "@app/components/common/layout/Layout";
 import { Box, Button, Typography } from "@mui/material";
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import Image from 'next/image';
 
 interface User {
-  id: string
-  primeiroNome: string
-  segundoNome: string
-  email: string
-  celular: string
-  cpf: string
+  id: string;
+  primeiroNome: string;
+  segundoNome: string;
+  email: string;
+  celular: string;
+  cpf: string;
 }
 
+const initialState: User = {
+  id: '',
+  primeiroNome: '',
+  segundoNome: '',
+  email: '',
+  celular: '',
+  cpf: '',
+};
 
 function MeuCadastro() {
 
-  // const test = async () => {
-  //   const api = process.env.NEXT_PUBLIC_URL;
-  //   const res = await fetch(`${api}/api/usuarios/perfil`);
-  //   const data = await res.json();
-  //   return data
-  // }
+
+  const [data, setData] = useState<User>(initialState);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const api = process.env.NEXT_PUBLIC_URL;
+      const res = await fetch(`${api}/api/usuarios/perfil`);
+      const fetchedData = await res.json();
+      setData(fetchedData as User);
+    };
+
+    fetchData();
+  }, []);
+
 
   const { data: session, status } = useSession()
   let defaultImage = "/images/userDefault.jpeg"
@@ -58,8 +74,10 @@ function MeuCadastro() {
 
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <Box mb={2}>
-              <Typography mb={2} variant="h6">Nome: {session?.user.primeiroNome} {session?.user.segundoNome}</Typography>
-              <Typography variant="h6">Email: {session?.user.email}</Typography>
+              <Typography mb={1} variant="h6">{`Nome: ${data.primeiroNome} ${data.segundoNome}`}</Typography>
+              <Typography mb={1} variant="h6">{`Email: ${data.email}`}</Typography>
+              <Typography mb={1} variant="h6">{`Celular: ${data.celular ? data.celular : 'Não informado'}`}</Typography>
+              <Typography variant="h6">{`Cpf: ${data.cpf ? data.cpf : 'Não informado'}`}</Typography>
             </Box>
             <Box sx={{ marginTop: 'auto' }}>
               <Link href='/auth/cadastro' style={{ marginRight: '1rem' }}>

@@ -4,7 +4,7 @@ import Home from '@app/components/home';
 
 export default function HomePage({ data, categorias, eventosCategoria }: { data: Evento[], categorias: Categoria[], eventosCategoria: Array<EventoPorCategoria> }) {
     return (
-            <Home data={data} categorias={categorias} eventosCategoria={eventosCategoria}></Home>
+            <Home data={data} categorias={categorias} eventosCategoria={eventosCategoria} home={true}></Home>
     )
 }
 
