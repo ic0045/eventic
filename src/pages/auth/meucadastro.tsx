@@ -40,7 +40,7 @@ function MeuCadastro() {
     <>
       <Box sx={{ borderRadius: '0.3rem', backgroundColor: 'white', padding: '1rem', boxShadow: 3 }}>
         <Typography mb={5} variant="h3">Meus Cadastro</Typography>
-        <Box sx={{ display: 'flex', gap: '2rem' }}>
+        <Box sx={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
           <Image
             style={{
               height: 'auto',
@@ -57,18 +57,14 @@ function MeuCadastro() {
           />
 
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <Typography mb={2} variant="h6">Nome: {session?.user.primeiroNome} {session?.user.segundoNome}</Typography>
-            {/* <Typography variant="h6">Email: {session?.user.email}</Typography> */}
-            <Typography variant="h6">Email: {session?.user.email}</Typography>
+            <Box mb={2}>
+              <Typography mb={2} variant="h6">Nome: {session?.user.primeiroNome} {session?.user.segundoNome}</Typography>
+              <Typography variant="h6">Email: {session?.user.email}</Typography>
+            </Box>
             <Box sx={{ marginTop: 'auto' }}>
               <Link href='/auth/cadastro' style={{ marginRight: '1rem' }}>
                 <Button variant="contained" color="primary" >
                   Editar Cadastro
-                </Button>
-              </Link>
-              <Link href='/auth/cadastro' style={{ marginRight: '1rem' }}>
-                <Button variant="contained" color="secondary" >
-                  Alterar Email
                 </Button>
               </Link>
               <Link href='/auth/alterarsenha' >
