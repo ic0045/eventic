@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import SubscribeButton from "@app/components/subscribebutton/SubscribeButton"
 import Link from 'next/link';
 import ShareButton from "@app/components/sharebutton/ShareButton"
+import CircularProgress from '@mui/material/CircularProgress';
 
 interface Props {
     id: string
@@ -20,6 +21,7 @@ interface Props {
     inscrito: boolean
     setIdIncricoes: React.Dispatch<React.SetStateAction<string[]>>
     idIncricoes: string[]
+    isLoadingSubButton: boolean
 }
 
 export default function EventCard(props: Props) {
@@ -100,7 +102,7 @@ export default function EventCard(props: Props) {
 
                 </CardContent>
                 <Box mb={1} sx={{ display: 'flex', justifyContent: 'flex-end', marginRight: '0.5rem' }}>
-                    {props.subscribeButton ? <SubscribeButton eventoId={props.eventoId} inscrito={props.inscrito} setIdIncricoes={props.setIdIncricoes} idIncricoes ={props.idIncricoes} /> : <></>}
+                    {props.subscribeButton && (props.isLoadingSubButton ? <CircularProgress size={28}/> : <SubscribeButton eventoId={props.eventoId} inscrito={props.inscrito} setIdIncricoes={props.setIdIncricoes} idIncricoes={props.idIncricoes} />)}
                     <ShareButton url={process.env.NEXT_PUBLIC_URL + "/eventos/detalhes?id=" + props.id} />
                 </Box>
             </Box>

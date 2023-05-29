@@ -19,6 +19,7 @@ import { GetServerSideProps } from 'next';
 import { useSearchParams } from 'next/navigation'
 
 import moment from 'moment';
+import CircularProgress from '@mui/material/CircularProgress';
 
 // import defaultImage from '../public/images/default.jpg';
 
@@ -95,9 +96,13 @@ function EventDetails({ data }: { data: Evento[] }) {
   &location=${data[0].localizacao}
   `
 
+  // Roda a roda de loading enquanto espera carrega o estado do evento, se esta ou nao inscrito
+  const [isLoadingSubButton, setIsLoadingSubButton] = useState(false);
+
   // Controla a lista de eventos inscritos
   let [idIncricoes, setIdIncricoes] = useState<string[]>([])
   const getUserEvents = async () => {
+    setIsLoadingSubButton(true)
     const api = process.env.NEXT_PUBLIC_URL;
 
     // Pega os Eventos do usuário
@@ -110,11 +115,12 @@ function EventDetails({ data }: { data: Evento[] }) {
       listId = data.map(evento => evento.id)
     }
     setIdIncricoes(listId)
+    setIsLoadingSubButton(false)
   };
 
   useEffect(() => {
     getUserEvents()
-}, []);
+  }, []);
 
   return (
 
@@ -186,7 +192,7 @@ function EventDetails({ data }: { data: Evento[] }) {
             }
 
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-              {new Date(data[0].dataInicial).getTime() >= Date.now() ? <SubscribeButton eventoId={data[0].id} inscrito={idIncricoes.includes(data[0].id)} /> : <></>}
+              {new Date(data[0].dataInicial).getTime() >= Date.now() && (isLoadingSubButton ? <CircularProgress size={28} /> : <SubscribeButton eventoId={data[0].id} inscrito={idIncricoes.includes(data[0].id)} />)}
               <ShareButton url={process.env.NEXT_PUBLIC_URL + "/eventos/detalhes?id=" + data[0].id} />
             </Box>
           </Box>

@@ -92,6 +92,12 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
     // Roda a roda de loading enquanto espera o resultado da busca
     const [isLoading, setIsLoading] = useState(false);
 
+    // Roda a roda de loading enquanto espera carrega o estado do evento, se esta ou nao inscrito
+    const [isLoadingSubButton, setIsLoadingSubButton] = useState(false);
+
+    // Loading meus eventos
+    const [isLoadingMeusEventos, setIsLoadingMeusEventos] = useState(false);
+
     // Controla a lista de eventos inscritos
     let [idIncricoes, setIdIncricoes] = useState<string[]>([])
 
@@ -190,14 +196,14 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
         const api = process.env.NEXT_PUBLIC_URL
 
         // Pega os Eventos
-        const res = await fetch(`${api}/api/eventos?titulo=${inputValue}`)
+        const res = await fetch(`${api}/api/eventos?q=${inputValue}`)
         const data = await res.json()
 
         // Pega os Eventos por Categoria
         const eventosCategoria = []
         if (categorias) {
             for (const categoria of categorias) {
-                const res = await fetch(`${api}/api/eventos?categoria_id=${categoria.id}&titulo=${inputValue}`);
+                const res = await fetch(`${api}/api/eventos?categoria_id=${categoria.id}&q=${inputValue}`);
                 const newData = await res.json();
                 eventosCategoria.push({ nome: categoria.nome, eventos: newData })
             }
@@ -209,6 +215,7 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
 
     // Mostra somente os eventos do usuario se ele estiver na pagina Minhas inscricoes
     const handleUserEvents = async () => {
+        setIsLoadingMeusEventos(true)
         const api = process.env.NEXT_PUBLIC_URL
 
         // Pega os Eventos do usuario
@@ -218,9 +225,11 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
         const eventosCategoria = [{ nome: '', eventos: [] }]
 
         setListaCategorias(criaListaCategorias(eventosCategoria, data))
+        setIsLoadingMeusEventos(false)
     }
 
     const getUserEvents = async () => {
+        setIsLoadingSubButton(true)
         const api = process.env.NEXT_PUBLIC_URL;
 
         // Pega os Eventos do usuário
@@ -233,6 +242,7 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
             listId = data.map(evento => evento.id)
         }
         setIdIncricoes(listId)
+        setIsLoadingSubButton(false)
     };
 
 
@@ -257,7 +267,7 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
                     <>
                         <Typography variant="h5" mt={8} mb={3}>{eventosPorPeriodo.nome}</Typography>
                         {eventosPorPeriodo.eventos.map((card) =>
-                            <EventList idIncricoes={idIncricoes} setIdIncricoes={setIdIncricoes} inscrito={idIncricoes.includes(card.id)} key={card.id} eventoId={card.id} id={card.id} subscribeButton={hasSubscribeButton} title={card.titulo} location={card.localizacao} initialDate={card.dataInicial} />
+                            <EventList isLoadingSubButton={isLoadingSubButton} idIncricoes={idIncricoes} setIdIncricoes={setIdIncricoes} inscrito={idIncricoes.includes(card.id)} key={card.id} eventoId={card.id} id={card.id} subscribeButton={hasSubscribeButton} title={card.titulo} location={card.localizacao} initialDate={card.dataInicial} />
                         )}
                     </> :
                     <>
@@ -266,7 +276,7 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
                             {eventosPorPeriodo.eventos.map((card: Evento) =>
 
-                                <EventCard idIncricoes={idIncricoes} setIdIncricoes={setIdIncricoes} inscrito={idIncricoes.includes(card.id)} key={card.id} eventoId={card.id} id={card.id} subscribeButton={hasSubscribeButton} image={card.imagemUrl} title={card.titulo} location={card.localizacao} initialDate={card.dataInicial} />
+                                <EventCard isLoadingSubButton={isLoadingSubButton} idIncricoes={idIncricoes} setIdIncricoes={setIdIncricoes} inscrito={idIncricoes.includes(card.id)} key={card.id} eventoId={card.id} id={card.id} subscribeButton={hasSubscribeButton} image={card.imagemUrl} title={card.titulo} location={card.localizacao} initialDate={card.dataInicial} />
                             )}
                         </Box>
                     </>
@@ -362,26 +372,30 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
                         <ViewListIcon onClick={() => { setListView(true), setCookie('listView', 'true'); }} sx={{ color: 'black', opacity: listView ? 1 : 0.5, alignSelf: 'center', cursor: 'pointer', border: '1px solid', marginRight: '0.5rem', borderColor: listView ? 'black' : 'gray', borderRadius: '4px' }} fontSize="large" />
                     </Box>
                 </Box>
-                <Box>
-                    <TabContext value={aba}>
-                        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                            <TabList onChange={(e, newValue) => { setAba(newValue) }}>
-                                <Tab label='Anteriores' value='0'></Tab>
-                                <Tab label='Próximos' value='1'></Tab>
-                            </TabList>
+                {isLoadingMeusEventos ?
+                (<Grid container alignItems='center' justifyContent='center' sx={{height:'20vh'}}>
+                    <CircularProgress size={100} /> 
+                </Grid>):
+                   (<Box>
+                        <TabContext value={aba}>
+                            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                                <TabList onChange={(e, newValue) => { setAba(newValue) }}>
+                                    <Tab label='Anteriores' value='0'></Tab>
+                                    <Tab label='Próximos' value='1'></Tab>
+                                </TabList>
 
-                        </Box>
+                            </Box>
 
-                        <TabPanel sx={{ padding: 0 }} value='0'>
-                            {events(eventToMapOld, false)}
-                            {/* {eventToMapOld ? events(eventToMapOld) : buscaFalhou} */}
-                        </TabPanel>
+                            <TabPanel sx={{ padding: 0 }} value='0'>
+                                {events(eventToMapOld, false)}
+                            </TabPanel>
 
-                        <TabPanel sx={{ padding: 0 }} value='1'>
-                            {events(eventToMapNew, true)}
-                        </TabPanel>
-                    </TabContext>
-                </Box>
+                            <TabPanel sx={{ padding: 0 }} value='1'>
+                                {events(eventToMapNew, true)}
+                            </TabPanel>
+                        </TabContext>
+                    </Box>)
+                }
             </Box>
         </>
 

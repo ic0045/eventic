@@ -9,6 +9,7 @@ import SubscribeButton from "@app/components/subscribebutton/SubscribeButton"
 import Link from 'next/link';
 import styles from './eventdetails.module.css'
 import ShareButton from "@app/components/sharebutton/ShareButton"
+import CircularProgress from '@mui/material/CircularProgress';
 
 interface Props {
     id: string
@@ -20,6 +21,7 @@ interface Props {
     inscrito: boolean
     setIdIncricoes: React.Dispatch<React.SetStateAction<string[]>>
     idIncricoes: string[]
+    isLoadingSubButton: boolean
 }
 
 export default function ListCard(props: Props) {
@@ -53,15 +55,15 @@ export default function ListCard(props: Props) {
                     {month}
                 </Typography>
             </Box>
-            
-            <Link  href={{
+
+            <Link href={{
                 pathname: '/eventos/detalhes',
                 query: {
                     id: props.id
                 }
             }}>
                 <Box>
-                    <Typography style={{color: "black"}} component="div" variant="h5">
+                    <Typography style={{ color: "black" }} component="div" variant="h5">
                         {props.title}
                     </Typography>
                     <Typography variant="subtitle1" color="text.secondary" component="div">
@@ -74,7 +76,7 @@ export default function ListCard(props: Props) {
             </Link>
 
             <Box sx={{ display: 'flex', flexDirection: 'column', marginLeft: 'auto' }}>
-            {props.subscribeButton ? <SubscribeButton eventoId={props.eventoId} inscrito={props.inscrito} setIdIncricoes={props.setIdIncricoes} idIncricoes ={props.idIncricoes} /> : <></>}
+                {props.subscribeButton && (props.isLoadingSubButton ? <CircularProgress size={28} /> : <SubscribeButton eventoId={props.eventoId} inscrito={props.inscrito} setIdIncricoes={props.setIdIncricoes} idIncricoes={props.idIncricoes} />)}
                 {/* <SubscribeButton /> */}
                 <IconButton sx={{ marginTop: 'auto' }} aria-label="share">
                     <ShareIcon fontSize='small' />
