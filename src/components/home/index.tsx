@@ -23,11 +23,56 @@ import { setCookie, getCookie } from '@app/utils/cookieUtils';
 import { criaListaCategorias } from '@app/utils/organizaEventos';
 
 
-export default function Home({ data, categorias, eventosCategoria, home }: { data: Evento[], categorias: Categoria[], eventosCategoria: Array<EventoPorCategoria>, home: boolean }) {
+export default function Home({ data, categorias, eventosCategoria, home }: { data?: Evento[], categorias?: Categoria[], eventosCategoria?: Array<EventoPorCategoria>, home: boolean }) {
 
     // Cria listas de eventos para cada categoria
-    let [listaCategorias, setListaCategorias] = useState(criaListaCategorias(eventosCategoria, data));
-    const listaCategoriasBackup = criaListaCategorias(eventosCategoria, data)
+    const listaVazia: ListaCategorias =
+    {
+        Todas: {
+            eventosPorDiaAnteriores: [
+                {
+                    nome: '',
+                    eventos: []
+                }
+            ],
+            eventosPorDiaNovos: [
+                {
+                    nome: '',
+                    eventos: []
+                }
+            ],
+            eventosPorSemanaAnteriores: [
+                {
+                    nome: '',
+                    eventos: []
+                }
+            ],
+            eventosPorSemanaNovos: [
+                {
+                    nome: '',
+                    eventos: []
+                }
+            ],
+            eventosPorMesAnteriores: [
+                {
+                    nome: '',
+                    eventos: []
+                }
+            ],
+            eventosPorMesNovos: [
+                {
+                    nome: '',
+                    eventos: []
+                }
+            ],
+        }
+    }
+    // let [listaCategorias, setListaCategorias] = useState(criaListaCategorias(eventosCategoria, data));
+    // const listaCategoriasBackup = criaListaCategorias(eventosCategoria, data)
+
+    let [listaCategorias, setListaCategorias] = useState((data && categorias && eventosCategoria && home) ? criaListaCategorias(eventosCategoria, data) : listaVazia);
+    const listaCategoriasBackup = (data && categorias && eventosCategoria && home) ? criaListaCategorias(eventosCategoria, data) : listaVazia
+
 
     // Controla os filtros categoria e periodo
     const [category, setCategory] = useState('Todas');
@@ -47,12 +92,28 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
     // Roda a roda de loading enquanto espera o resultado da busca
     const [isLoading, setIsLoading] = useState(false);
 
+    // Roda a roda de loading enquanto espera carrega o estado do evento, se esta ou nao inscrito
+    const [isLoadingSubButton, setIsLoadingSubButton] = useState(false);
+
+    // Loading meus eventos
+    const [isLoadingMeusEventos, setIsLoadingMeusEventos] = useState(false);
+
+    // Controla a lista de eventos inscritos
+    let [idIncricoes, setIdIncricoes] = useState<string[]>([])
+
     // Atualiza os eventos exibidos ao pesquisar
     useEffect(() => {
         if (listaCategorias) {
+            console.log(listaCategorias)
             update()
         }
     }, [listaCategorias]);
+
+    useEffect(() => {
+        if (idIncricoes) {
+            console.log('carregando inscricoes')
+        }
+    }, [idIncricoes]);
 
     // Ao carregar o componente, tenta recuperar os valores das variáveis do cookie
     useEffect(() => {
@@ -72,6 +133,9 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
         if (!home) {
             handleUserEvents()
         }
+
+        getUserEvents()
+
     }, []);
 
     function update(periodo: string = period) {
@@ -132,15 +196,17 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
         const api = process.env.NEXT_PUBLIC_URL
 
         // Pega os Eventos
-        const res = await fetch(`${api}/api/eventos?titulo=${inputValue}`)
+        const res = await fetch(`${api}/api/eventos?q=${inputValue}`)
         const data = await res.json()
 
         // Pega os Eventos por Categoria
         const eventosCategoria = []
-        for (const categoria of categorias) {
-            const res = await fetch(`${api}/api/eventos?categoria_id=${categoria.id}&titulo=${inputValue}`);
-            const newData = await res.json();
-            eventosCategoria.push({ nome: categoria.nome, eventos: newData })
+        if (categorias) {
+            for (const categoria of categorias) {
+                const res = await fetch(`${api}/api/eventos?categoria_id=${categoria.id}&q=${inputValue}`);
+                const newData = await res.json();
+                eventosCategoria.push({ nome: categoria.nome, eventos: newData })
+            }
         }
 
         setListaCategorias(criaListaCategorias(eventosCategoria, data))
@@ -149,6 +215,7 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
 
     // Mostra somente os eventos do usuario se ele estiver na pagina Minhas inscricoes
     const handleUserEvents = async () => {
+        setIsLoadingMeusEventos(true)
         const api = process.env.NEXT_PUBLIC_URL
 
         // Pega os Eventos do usuario
@@ -158,7 +225,26 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
         const eventosCategoria = [{ nome: '', eventos: [] }]
 
         setListaCategorias(criaListaCategorias(eventosCategoria, data))
+        setIsLoadingMeusEventos(false)
     }
+
+    const getUserEvents = async () => {
+        setIsLoadingSubButton(true)
+        const api = process.env.NEXT_PUBLIC_URL;
+
+        // Pega os Eventos do usuário
+        const res = await fetch(`${api}/api/usuarios/eventos`);
+        const data: Promise<Evento[] | { errorMsg: string }> = await res.json();
+
+
+        let listId: string[] = []
+        if (Array.isArray(data)) {
+            listId = data.map(evento => evento.id)
+        }
+        setIdIncricoes(listId)
+        setIsLoadingSubButton(false)
+    };
+
 
     function limpaBusca() {
         setListaCategorias(listaCategoriasBackup)
@@ -181,7 +267,7 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
                     <>
                         <Typography variant="h5" mt={8} mb={3}>{eventosPorPeriodo.nome}</Typography>
                         {eventosPorPeriodo.eventos.map((card) =>
-                            <EventList key={card.id} id={card.id} subscribeButton={hasSubscribeButton} title={card.titulo} location={card.localizacao} initialDate={card.dataInicial} />
+                            <EventList isLoadingSubButton={isLoadingSubButton} idIncricoes={idIncricoes} setIdIncricoes={setIdIncricoes} inscrito={idIncricoes.includes(card.id)} key={card.id} eventoId={card.id} id={card.id} subscribeButton={hasSubscribeButton} title={card.titulo} location={card.localizacao} initialDate={card.dataInicial} />
                         )}
                     </> :
                     <>
@@ -190,7 +276,7 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
                             {eventosPorPeriodo.eventos.map((card: Evento) =>
 
-                                <EventCard key={card.id} id={card.id} subscribeButton={hasSubscribeButton} image={card.imagemUrl} title={card.titulo} location={card.localizacao} initialDate={card.dataInicial} />
+                                <EventCard isLoadingSubButton={isLoadingSubButton} idIncricoes={idIncricoes} setIdIncricoes={setIdIncricoes} inscrito={idIncricoes.includes(card.id)} key={card.id} eventoId={card.id} id={card.id} subscribeButton={hasSubscribeButton} image={card.imagemUrl} title={card.titulo} location={card.localizacao} initialDate={card.dataInicial} />
                             )}
                         </Box>
                     </>
@@ -274,7 +360,7 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
                                 onChange={handleCategoryChange}
                             >
                                 <MenuItem value='Todas'>Todas</MenuItem>
-                                {categorias.map((categoria) =>
+                                {categorias && categorias.map((categoria) =>
                                     <MenuItem key={categoria.id} value={categoria.nome}>{categoria.nome}</MenuItem>
                                 )}
                             </Select>
@@ -286,26 +372,30 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
                         <ViewListIcon onClick={() => { setListView(true), setCookie('listView', 'true'); }} sx={{ color: 'black', opacity: listView ? 1 : 0.5, alignSelf: 'center', cursor: 'pointer', border: '1px solid', marginRight: '0.5rem', borderColor: listView ? 'black' : 'gray', borderRadius: '4px' }} fontSize="large" />
                     </Box>
                 </Box>
-                <Box>
-                    <TabContext value={aba}>
-                        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                            <TabList onChange={(e, newValue) => { setAba(newValue) }}>
-                                <Tab label='Anteriores' value='0'></Tab>
-                                <Tab label='Próximos' value='1'></Tab>
-                            </TabList>
+                {isLoadingMeusEventos ?
+                (<Grid container alignItems='center' justifyContent='center' sx={{height:'20vh'}}>
+                    <CircularProgress size={100} /> 
+                </Grid>):
+                   (<Box>
+                        <TabContext value={aba}>
+                            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                                <TabList onChange={(e, newValue) => { setAba(newValue) }}>
+                                    <Tab label='Anteriores' value='0'></Tab>
+                                    <Tab label='Próximos' value='1'></Tab>
+                                </TabList>
 
-                        </Box>
+                            </Box>
 
-                        <TabPanel sx={{ padding: 0 }} value='0'>
-                            {events(eventToMapOld, false)}
-                            {/* {eventToMapOld ? events(eventToMapOld) : buscaFalhou} */}
-                        </TabPanel>
+                            <TabPanel sx={{ padding: 0 }} value='0'>
+                                {events(eventToMapOld, false)}
+                            </TabPanel>
 
-                        <TabPanel sx={{ padding: 0 }} value='1'>
-                            {events(eventToMapNew, true)}
-                        </TabPanel>
-                    </TabContext>
-                </Box>
+                            <TabPanel sx={{ padding: 0 }} value='1'>
+                                {events(eventToMapNew, true)}
+                            </TabPanel>
+                        </TabContext>
+                    </Box>)
+                }
             </Box>
         </>
 
