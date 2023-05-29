@@ -13,167 +13,81 @@ import ViewListIcon from '@mui/icons-material/ViewList';
 import ViewModuleIcon from '@mui/icons-material/ViewModule';
 import SearchIcon from '@mui/icons-material/Search';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import moment from 'moment';
-import 'moment/locale/pt-br';
+
+
 import Image from 'next/image';
 import CircularProgress from '@mui/material/CircularProgress';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { setCookie, getCookie } from '@app/utils/cookieUtils';
 
-
-interface Evento {
-    id: string
-    descricao: string
-    localizacao: string
-    dataInicial: string
-    titulo: string
-    destaque: boolean
-    imagemUrl: string
-    createdAt: string
-    updatedAt: string
-    datafinal: string
-    linkImagem: string
-    linkTitulo: string
-    tipo: string
-    linkMaisInfomacoes: string
-}
-
-interface EventoPorPeriodo {
-    nome: string;
-    eventos: Evento[];
-}
-
-interface EventoPorCategoria {
-    nome: string;
-    eventos: Evento[];
-}
-
-interface Categoria {
-    id: string
-    nome: string
-    icone: string
-}
-
-interface ObjetoCategoria {
-    eventosPorDiaAnteriores: Array<EventoPorPeriodo>
-    eventosPorDiaNovos: Array<EventoPorPeriodo>
-    eventosPorSemanaAnteriores: Array<EventoPorPeriodo>
-    eventosPorSemanaNovos: Array<EventoPorPeriodo>
-    eventosPorMesAnteriores: Array<EventoPorPeriodo>
-    eventosPorMesNovos: Array<EventoPorPeriodo>
-}
-
-interface ListaCategorias {
-    [key: string]: ObjetoCategoria;
-}
-
-export default function Home({ data, categorias, eventosCategoria }: { data: Evento[], categorias: Categoria[], eventosCategoria: Array<EventoPorCategoria> }) {
-
-    moment.locale('pt-br');
-
-    function separaEventosPorPeriodo(eventos: Evento[], periodo: 'semana' | 'mes') {
-        const eventosPorPeriodo: Array<EventoPorPeriodo> = [];
-
-        eventos.forEach((evento) => {
-            let periodoIndex: number;
-            let nomePeriodo: string;
-
-            if (periodo === 'semana') {
-                periodoIndex = moment(evento.dataInicial).week();
-                const dataInicioSemana = moment(evento.dataInicial).startOf('week').format('D [de] MMMM');
-                const dataFimSemana = moment(evento.dataInicial).add(6, 'days').format('D [de] MMMM');
-                nomePeriodo = `Semana de ${dataInicioSemana} a ${dataFimSemana}`;
-            } else if (periodo === 'mes') {
-                periodoIndex = moment(evento.dataInicial).month();
-                nomePeriodo = moment(evento.dataInicial).format('MMMM YYYY');
-            } else {
-                throw new Error('Período inválido. Escolha entre "semana" e "mes".');
-            }
-
-            if (!eventosPorPeriodo[periodoIndex]) {
-                eventosPorPeriodo[periodoIndex] = {
-                    nome: nomePeriodo,
-                    eventos: [],
-                };
-            }
-            eventosPorPeriodo[periodoIndex].eventos.push(evento);
-        });
-
-        return eventosPorPeriodo;
-    }
+import { criaListaCategorias } from '@app/utils/organizaEventos';
 
 
-    function organizaEventos(eventos: Evento[]) {
+export default function Home({ data, categorias, eventosCategoria, home }: { data: Evento[], categorias: Categoria[], eventosCategoria: Array<EventoPorCategoria>, home: boolean }) {
 
-        // Ordena os eventos por data
-        eventos = eventos.sort((a, b) =>
-            new Date(a.dataInicial).getTime() -
-            new Date(b.dataInicial).getTime()
-        );
-        // Separando os eventos em dois arrays: um para as datas que já passaram e outro para as novas datas
-        const eventosAntigos: Evento[] = eventos.filter(evento => new Date(evento.dataInicial).getTime() < Date.now());
-        const eventosNovos: Evento[] = eventos.filter(evento => new Date(evento.dataInicial).getTime() >= Date.now());
-
-        let eventosPorDiaAnteriores = [{ nome: '', eventos: [...eventosAntigos] }]
-        let eventosPorDiaNovos = [{ nome: '', eventos: [...eventosNovos] }]
-
-        let eventosPorSemanaAnteriores = separaEventosPorPeriodo(eventosAntigos, 'semana');
-        let eventosPorSemanaNovos = separaEventosPorPeriodo(eventosNovos, 'semana');
-
-        let eventosPorMesAnteriores = separaEventosPorPeriodo(eventosAntigos, 'mes');
-        let eventosPorMesNovos = separaEventosPorPeriodo(eventosNovos, 'mes');
-
-        return [eventosPorDiaAnteriores, eventosPorDiaNovos, eventosPorSemanaAnteriores, eventosPorSemanaNovos, eventosPorMesAnteriores, eventosPorMesNovos]
-    }
-
-
-    function criaListaCategorias(eventosCategoria: Array<EventoPorCategoria>, data: Evento[]) {
-
-        const eventosOrganizados = organizaEventos(data)
-        let [eventosPorDiaAnteriores, eventosPorDiaNovos, eventosPorSemanaAnteriores, eventosPorSemanaNovos, eventosPorMesAnteriores, eventosPorMesNovos] = eventosOrganizados
-
-        const listaCategorias: ListaCategorias = {
-            Todas: {
-                eventosPorDiaAnteriores: eventosPorDiaAnteriores,
-                eventosPorDiaNovos: eventosPorDiaNovos,
-                eventosPorSemanaAnteriores: eventosPorSemanaAnteriores,
-                eventosPorSemanaNovos: eventosPorSemanaNovos,
-                eventosPorMesAnteriores: eventosPorMesAnteriores,
-                eventosPorMesNovos: eventosPorMesNovos
-            }
-        }
-
-        for (const categoria of eventosCategoria) {
-            const [eventosPorDiaAnteriores, eventosPorDiaNovos, eventosPorSemanaAnteriores, eventosPorSemanaNovos, eventosPorMesAnteriores, eventosPorMesNovos] = organizaEventos(categoria.eventos)
-            const eventoOrganizado = {
-                eventosPorDiaAnteriores: eventosPorDiaAnteriores,
-                eventosPorDiaNovos: eventosPorDiaNovos,
-                eventosPorSemanaAnteriores: eventosPorSemanaAnteriores,
-                eventosPorSemanaNovos: eventosPorSemanaNovos,
-                eventosPorMesAnteriores: eventosPorMesAnteriores,
-                eventosPorMesNovos: eventosPorMesNovos
-            }
-            listaCategorias[categoria.nome] = eventoOrganizado
-        }
-
-        return listaCategorias
-    }
-
+    // Cria listas de eventos para cada categoria
     let [listaCategorias, setListaCategorias] = useState(criaListaCategorias(eventosCategoria, data));
-
     const listaCategoriasBackup = criaListaCategorias(eventosCategoria, data)
-    // const listaCategoriasBackup: ListaCategorias = _.cloneDeep(listaCategorias);
 
+    // Controla os filtros categoria e periodo
     const [category, setCategory] = useState('Todas');
     const [period, setPeriod] = useState('1');
 
-    const [aba, setAba] = useState('1')
-
+    // Controla a visualização lista/card
     const [listView, setListView] = useState(false)
 
+    // Controla as abas Novos/Anteriores
+    const [aba, setAba] = useState('1')
     const [eventToMapOld, setEventToMapOld] = useState(listaCategorias['Todas'].eventosPorDiaAnteriores)
     const [eventToMapNew, setEventToMapNew] = useState(listaCategorias['Todas'].eventosPorDiaNovos)
 
+    // Controla o valor do campo de pesquisa
+    const [inputValue, setInputValue] = useState('');
+
+    // Roda a roda de loading enquanto espera o resultado da busca
+    const [isLoading, setIsLoading] = useState(false);
+
+    // Atualiza os eventos exibidos ao pesquisar
+    useEffect(() => {
+        if (listaCategorias) {
+            update()
+        }
+    }, [listaCategorias]);
+
+    // Ao carregar o componente, tenta recuperar os valores das variáveis do cookie
+    useEffect(() => {
+        const list = getCookie('listView')
+        const savedlistView = list ? JSON.parse(list) : false;
+
+        const savedPeriod = getCookie('period');
+
+        if (savedlistView) {
+            setListView(savedlistView);
+        }
+
+        if (savedPeriod) {
+            setPeriod(savedPeriod);
+            update(savedPeriod)
+        }
+        if (!home) {
+            handleUserEvents()
+        }
+    }, []);
+
+    function update(periodo: string = period) {
+        if (periodo == '3') {
+            setEventToMapOld(listaCategorias[category].eventosPorMesAnteriores);
+            setEventToMapNew(listaCategorias[category].eventosPorMesNovos);
+        }
+        if (periodo == '2') {
+            setEventToMapOld(listaCategorias[category].eventosPorSemanaAnteriores);
+            setEventToMapNew(listaCategorias[category].eventosPorSemanaNovos);
+        }
+        if (periodo == '1') {
+            setEventToMapOld(listaCategorias[category].eventosPorDiaAnteriores);
+            setEventToMapNew(listaCategorias[category].eventosPorDiaNovos);
+        }
+    }
 
     function handlePeriodChange(event: SelectChangeEvent) {
         const evento = event.target.value
@@ -211,32 +125,7 @@ export default function Home({ data, categorias, eventosCategoria }: { data: Eve
     }
 
 
-    function update() {
-        if (period == '3') {
-            setEventToMapOld(listaCategorias[category].eventosPorMesAnteriores);
-            setEventToMapNew(listaCategorias[category].eventosPorMesNovos);
-        }
-        if (period == '2') {
-            setEventToMapOld(listaCategorias[category].eventosPorSemanaAnteriores);
-            setEventToMapNew(listaCategorias[category].eventosPorSemanaNovos);
-        }
-        if (period == '1') {
-            setEventToMapOld(listaCategorias[category].eventosPorDiaAnteriores);
-            setEventToMapNew(listaCategorias[category].eventosPorDiaNovos);
-        }
-    }
-
-    const [inputValue, setInputValue] = useState('');
-
-
-    useEffect(() => {
-        if (listaCategorias) {
-            update()
-        }
-    }, [listaCategorias]);
-
-    const [isLoading, setIsLoading] = useState(false);
-
+    // Faz a busca na api 
     const handleClick = async () => {
         setIsLoading(true)
 
@@ -258,12 +147,23 @@ export default function Home({ data, categorias, eventosCategoria }: { data: Eve
         setIsLoading(false)
     };
 
+    // Mostra somente os eventos do usuario se ele estiver na pagina Minhas inscricoes
+    const handleUserEvents = async () => {
+        const api = process.env.NEXT_PUBLIC_URL
+
+        // Pega os Eventos do usuario
+        const res = await fetch(`${api}/api/usuarios/eventos`)
+        const data = await res.json()
+
+        const eventosCategoria = [{ nome: '', eventos: [] }]
+
+        setListaCategorias(criaListaCategorias(eventosCategoria, data))
+    }
+
     function limpaBusca() {
         setListaCategorias(listaCategoriasBackup)
         setInputValue('')
     }
-
-
 
     const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
@@ -312,48 +212,40 @@ export default function Home({ data, categorias, eventosCategoria }: { data: Eve
         </Box>
     )
 
-    useEffect(() => {
-        // Ao carregar o componente, tenta recuperar os valores das variáveis do cookie
-        const savedlistView = getCookie('listView');
-        const savedPeriod = getCookie('period');
 
-        if (savedlistView) {
-            setListView(savedlistView);
-        }
-
-        if (savedPeriod) {
-            setPeriod(savedPeriod);
-        }
-    }, []);
 
     const mobile = useMediaQuery('(max-width: 720px)');
     return (
         <>
-            <Box sx={{ borderRadius: '0.3rem', backgroundColor: 'white', boxShadow: 3 }}>
-                <Paper
-                    component="form"
-                    sx={{ display: 'flex', alignItems: 'center', padding: '1rem', }}
-                >
-                    {isLoading ? <CircularProgress /> :
-                        <IconButton onClick={handleClick} type="button" aria-label="search">
-                            <SearchIcon />
-                        </IconButton>
-                    }
-                    <InputBase
-                        onKeyDown={handleKeyDown}
-                        value={inputValue}
-                        onChange={(e) => { setInputValue(e.target.value) }}
-                        sx={{ ml: 1, flex: 1 }}
-                        placeholder="Filtrar por nome de Evento"
-                        inputProps={{ 'aria-label': 'busca de eventos' }}
-                    />
-                </Paper>
-            </Box>
-            <Button onClick={limpaBusca} variant="text">Limpar Busca</Button>
+            {home &&
+                <Box sx={{ borderRadius: '0.3rem', backgroundColor: 'white', boxShadow: 3 }}>
+                    <Paper
+                        component="form"
+                        sx={{ display: 'flex', alignItems: 'center', padding: '1rem', }}
+                    >
+                        {isLoading ? <CircularProgress /> :
+                            <IconButton onClick={handleClick} type="button" aria-label="search">
+                                <SearchIcon />
+                            </IconButton>
+                        }
+                        <InputBase
+                            onKeyDown={handleKeyDown}
+                            value={inputValue}
+                            onChange={(e) => { setInputValue(e.target.value) }}
+                            sx={{ ml: 1, flex: 1 }}
+                            placeholder="Filtrar por nome de Evento"
+                            inputProps={{ 'aria-label': 'busca de eventos' }}
+                        />
+                    </Paper>
+                </Box>
+            }
+            {home &&
+                <Button onClick={limpaBusca} variant="text">Limpar Busca</Button>
+            }
             {/* flexDirection: 'column',alignItems:'flex-start' */}
             <Box mt={2} sx={{ borderRadius: '0.3rem', backgroundColor: 'white', padding: '1rem', boxShadow: 3 }}>
                 <Box mb={2} sx={{ display: 'flex', flexWrap: 'wrap', flexDirection: mobile ? 'column' : 'row', alignItems: mobile ? 'flex-start' : 'center', gap: '0.5rem' }}>
-                    <Typography sx={{ marginRight: 'auto' }} variant="h3">Eventos</Typography>
+                    <Typography sx={{ marginRight: 'auto' }} variant="h3">{home ? 'Eventos' : 'Meus eventos'}</Typography>
                     <FormControl variant="standard" sx={{ m: 1, minWidth: 150 }}>
                         <InputLabel id="demo-simple-select-label">Período</InputLabel>
                         <Select
@@ -369,27 +261,29 @@ export default function Home({ data, categorias, eventosCategoria }: { data: Eve
                             <MenuItem value={3}>Mês</MenuItem>
                         </Select>
                     </FormControl>
-                    <FormControl variant="standard" sx={{ m: 1, minWidth: 150 }}>
-                        <InputLabel id="demo-simple-select-label">Categoria</InputLabel>
-                        <Select
-                            inputProps={{ MenuProps: { disableScrollLock: true } }}
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={category}
-                            label="Categoria"
-                            // onChange={(event: SelectChangeEvent) => (setCategory(event.target.value))}
-                            onChange={handleCategoryChange}
-                        >
-                            <MenuItem value='Todas'>Todas</MenuItem>
-                            {categorias.map((categoria) =>
-                                <MenuItem key={categoria.id} value={categoria.nome}>{categoria.nome}</MenuItem>
-                            )}
-                        </Select>
-                    </FormControl>
+                    {home &&
+                        <FormControl variant="standard" sx={{ m: 1, minWidth: 150 }}>
+                            <InputLabel id="demo-simple-select-label">Categoria</InputLabel>
+                            <Select
+                                inputProps={{ MenuProps: { disableScrollLock: true } }}
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={category}
+                                label="Categoria"
+                                // onChange={(event: SelectChangeEvent) => (setCategory(event.target.value))}
+                                onChange={handleCategoryChange}
+                            >
+                                <MenuItem value='Todas'>Todas</MenuItem>
+                                {categorias.map((categoria) =>
+                                    <MenuItem key={categoria.id} value={categoria.nome}>{categoria.nome}</MenuItem>
+                                )}
+                            </Select>
+                        </FormControl>
+                    }
                     <Box sx={{ marginLeft: '0.5rem' }}>
-                        <ViewModuleIcon onClick={() => { setListView(false); setCookie('listView', listView); }} sx={{ color: 'black', opacity: listView ? 0.5 : 1, alignSelf: 'center', cursor: 'pointer', border: '1px solid', marginRight: '0.5rem', borderColor: listView ? 'gray' : 'black', borderRadius: '4px' }} fontSize="large" />
+                        <ViewModuleIcon onClick={() => { setListView(false); setCookie('listView', 'false'); }} sx={{ color: 'black', opacity: listView ? 0.5 : 1, alignSelf: 'center', cursor: 'pointer', border: '1px solid', marginRight: '0.5rem', borderColor: listView ? 'gray' : 'black', borderRadius: '4px' }} fontSize="large" />
 
-                        <ViewListIcon onClick={() => { setListView(true), setCookie('listView', listView); }} sx={{ color: 'black', opacity: listView ? 1 : 0.5, alignSelf: 'center', cursor: 'pointer', border: '1px solid', marginRight: '0.5rem', borderColor: listView ? 'black' : 'gray', borderRadius: '4px' }} fontSize="large" />
+                        <ViewListIcon onClick={() => { setListView(true), setCookie('listView', 'true'); }} sx={{ color: 'black', opacity: listView ? 1 : 0.5, alignSelf: 'center', cursor: 'pointer', border: '1px solid', marginRight: '0.5rem', borderColor: listView ? 'black' : 'gray', borderRadius: '4px' }} fontSize="large" />
                     </Box>
                 </Box>
                 <Box>
