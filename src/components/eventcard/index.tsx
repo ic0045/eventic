@@ -4,7 +4,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import ShareIcon from '@mui/icons-material/Share';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SubscribeButton from "@app/components/subscribebutton/SubscribeButton"
 import Link from 'next/link';
 import ShareButton from "@app/components/sharebutton/ShareButton"
@@ -18,11 +18,11 @@ interface Props {
     subscribeButton: boolean
     eventoId: string
     inscrito: boolean
+    setIdIncricoes: React.Dispatch<React.SetStateAction<string[]>>
+    idIncricoes: string[]
 }
 
 export default function EventCard(props: Props) {
-
-    const [subscribed, setSubscribed] = useState(false)
 
     const meses = [
         "JAN", "FEV", "MAR", "ABR", "MAI", "JUN", "JUL", "AGO", "SET", "OUT", "NOV", "DEZ",
@@ -40,13 +40,10 @@ export default function EventCard(props: Props) {
 
     let defaultImage = "/images/default.png"
     const imagemPrincipal = props.image || '';
-  
+
     const handleErro = (event: React.SyntheticEvent<HTMLImageElement, Event>) => {
-      event.currentTarget.src = defaultImage;
+        event.currentTarget.src = defaultImage;
     };
-  
-
-
 
     return (
 
@@ -103,7 +100,7 @@ export default function EventCard(props: Props) {
 
                 </CardContent>
                 <Box mb={1} sx={{ display: 'flex', justifyContent: 'flex-end', marginRight: '0.5rem' }}>
-                    {props.subscribeButton ? <SubscribeButton eventoId={props.eventoId} inscrito={props.inscrito}/> : <></>}
+                    {props.subscribeButton ? <SubscribeButton eventoId={props.eventoId} inscrito={props.inscrito} setIdIncricoes={props.setIdIncricoes} idIncricoes ={props.idIncricoes} /> : <></>}
                     <ShareButton url={process.env.NEXT_PUBLIC_URL + "/eventos/detalhes?id=" + props.id} />
                 </Box>
             </Box>

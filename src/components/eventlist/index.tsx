@@ -18,6 +18,8 @@ interface Props {
     subscribeButton: boolean
     eventoId: string
     inscrito: boolean
+    setIdIncricoes: React.Dispatch<React.SetStateAction<string[]>>
+    idIncricoes: string[]
 }
 
 export default function ListCard(props: Props) {
@@ -72,7 +74,7 @@ export default function ListCard(props: Props) {
             </Link>
 
             <Box sx={{ display: 'flex', flexDirection: 'column', marginLeft: 'auto' }}>
-            {props.subscribeButton ? <SubscribeButton eventoId={props.eventoId} inscrito={props.inscrito} /> : <></>}
+            {props.subscribeButton ? <SubscribeButton eventoId={props.eventoId} inscrito={props.inscrito} setIdIncricoes={props.setIdIncricoes} idIncricoes ={props.idIncricoes} /> : <></>}
                 {/* <SubscribeButton /> */}
                 <IconButton sx={{ marginTop: 'auto' }} aria-label="share">
                     <ShareIcon fontSize='small' />

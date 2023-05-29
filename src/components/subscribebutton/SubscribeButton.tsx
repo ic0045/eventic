@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
@@ -10,7 +10,7 @@ import { useSession } from "next-auth/react";
 import { DialogContent, DialogContentText, Tooltip } from "@mui/material";
 import CircularProgress from '@mui/material/CircularProgress';
 
-export default function SubscribeButton({ eventoId,inscrito }: { eventoId: string,inscrito: boolean }) {
+export default function SubscribeButton({ eventoId, inscrito, idIncricoes, setIdIncricoes }: { eventoId: string, inscrito: boolean, idIncricoes?: string[], setIdIncricoes?: React.Dispatch<React.SetStateAction<string[]>> }) {
 
   const [open, setOpen] = useState(false);
   const { data: session } = useSession();
@@ -18,6 +18,10 @@ export default function SubscribeButton({ eventoId,inscrito }: { eventoId: strin
   const [subscribed, setSubscribed] = useState(inscrito)
 
   const [mensagem, setMensagem] = useState("")
+
+  useEffect(() => {
+    setSubscribed(inscrito)
+  }, [inscrito]);
 
   // const handleClickOpen = () => {
   //   if (session) {
@@ -65,10 +69,21 @@ export default function SubscribeButton({ eventoId,inscrito }: { eventoId: strin
       setIsLoading(false)
       if (response.ok) {
         if (subscribed) {
+          if (idIncricoes && setIdIncricoes) {
+            let newIdIncricoes = idIncricoes
+            newIdIncricoes = idIncricoes.filter(id => id !== eventoId);
+            setIdIncricoes(newIdIncricoes)
+          }
+
           setMensagem("Inscrição	removida")
           setSubscribed(false)
         }
         else {
+          if (idIncricoes && setIdIncricoes) {
+            let newIdIncricoes = idIncricoes
+            newIdIncricoes.push(eventoId)
+            setIdIncricoes(newIdIncricoes)
+          }
           setMensagem("Evento salvo com sucesso")
           setSubscribed(true)
         }
@@ -87,7 +102,7 @@ export default function SubscribeButton({ eventoId,inscrito }: { eventoId: strin
 
   return (
     <div>
-      {isLoading ? <CircularProgress size={32}/> :
+      {isLoading ? <CircularProgress size={32} /> :
         <>
           <Tooltip title="Inscrever-se">
             <IconButton onClick={handleButtonClick} aria-label="notification">

@@ -6,7 +6,7 @@ import Image from 'next/image';
 import ShareIcon from '@mui/icons-material/Share';
 import EventIcon from '@mui/icons-material/Event';
 import PlaceIcon from '@mui/icons-material/Place';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SubscribeButton from "@app/components/subscribebutton/SubscribeButton"
 import ShareButton from "@app/components/sharebutton/ShareButton"
 import Navbar from "@app/components/common/navbar/Navbar";
@@ -95,6 +95,27 @@ function EventDetails({ data }: { data: Evento[] }) {
   &location=${data[0].localizacao}
   `
 
+  // Controla a lista de eventos inscritos
+  let [idIncricoes, setIdIncricoes] = useState<string[]>([])
+  const getUserEvents = async () => {
+    const api = process.env.NEXT_PUBLIC_URL;
+
+    // Pega os Eventos do usuário
+    const res = await fetch(`${api}/api/usuarios/eventos`);
+    const data: Promise<Evento[] | { errorMsg: string }> = await res.json();
+
+
+    let listId: string[] = []
+    if (Array.isArray(data)) {
+      listId = data.map(evento => evento.id)
+    }
+    setIdIncricoes(listId)
+  };
+
+  useEffect(() => {
+    getUserEvents()
+}, []);
+
   return (
 
     <>
@@ -165,7 +186,7 @@ function EventDetails({ data }: { data: Evento[] }) {
             }
 
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-              {new Date(data[0].dataInicial).getTime() >= Date.now() ? <SubscribeButton eventoId={data[0].id} inscrito={true} /> : <></>}
+              {new Date(data[0].dataInicial).getTime() >= Date.now() ? <SubscribeButton eventoId={data[0].id} inscrito={idIncricoes.includes(data[0].id)} /> : <></>}
               <ShareButton url={process.env.NEXT_PUBLIC_URL + "/eventos/detalhes?id=" + data[0].id} />
             </Box>
           </Box>

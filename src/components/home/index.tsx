@@ -23,11 +23,56 @@ import { setCookie, getCookie } from '@app/utils/cookieUtils';
 import { criaListaCategorias } from '@app/utils/organizaEventos';
 
 
-export default function Home({ data, categorias, eventosCategoria, home }: { data: Evento[], categorias: Categoria[], eventosCategoria: Array<EventoPorCategoria>, home: boolean }) {
+export default function Home({ data, categorias, eventosCategoria, home }: { data?: Evento[], categorias?: Categoria[], eventosCategoria?: Array<EventoPorCategoria>, home: boolean }) {
 
     // Cria listas de eventos para cada categoria
-    let [listaCategorias, setListaCategorias] = useState(criaListaCategorias(eventosCategoria, data));
-    const listaCategoriasBackup = criaListaCategorias(eventosCategoria, data)
+    const listaVazia: ListaCategorias =
+    {
+        Todas: {
+            eventosPorDiaAnteriores: [
+                {
+                    nome: '',
+                    eventos: []
+                }
+            ],
+            eventosPorDiaNovos: [
+                {
+                    nome: '',
+                    eventos: []
+                }
+            ],
+            eventosPorSemanaAnteriores: [
+                {
+                    nome: '',
+                    eventos: []
+                }
+            ],
+            eventosPorSemanaNovos: [
+                {
+                    nome: '',
+                    eventos: []
+                }
+            ],
+            eventosPorMesAnteriores: [
+                {
+                    nome: '',
+                    eventos: []
+                }
+            ],
+            eventosPorMesNovos: [
+                {
+                    nome: '',
+                    eventos: []
+                }
+            ],
+        }
+    }
+    // let [listaCategorias, setListaCategorias] = useState(criaListaCategorias(eventosCategoria, data));
+    // const listaCategoriasBackup = criaListaCategorias(eventosCategoria, data)
+
+    let [listaCategorias, setListaCategorias] = useState((data && categorias && eventosCategoria && home) ? criaListaCategorias(eventosCategoria, data) : listaVazia);
+    const listaCategoriasBackup = (data && categorias && eventosCategoria && home) ? criaListaCategorias(eventosCategoria, data) : listaVazia
+
 
     // Controla os filtros categoria e periodo
     const [category, setCategory] = useState('Todas');
@@ -47,12 +92,22 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
     // Roda a roda de loading enquanto espera o resultado da busca
     const [isLoading, setIsLoading] = useState(false);
 
+    // Controla a lista de eventos inscritos
+    let [idIncricoes, setIdIncricoes] = useState<string[]>([])
+
     // Atualiza os eventos exibidos ao pesquisar
     useEffect(() => {
         if (listaCategorias) {
+            console.log(listaCategorias)
             update()
         }
     }, [listaCategorias]);
+
+    useEffect(() => {
+        if (idIncricoes) {
+            console.log('carregando inscricoes')
+        }
+    }, [idIncricoes]);
 
     // Ao carregar o componente, tenta recuperar os valores das variáveis do cookie
     useEffect(() => {
@@ -72,6 +127,9 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
         if (!home) {
             handleUserEvents()
         }
+
+        getUserEvents()
+
     }, []);
 
     function update(periodo: string = period) {
@@ -137,10 +195,12 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
 
         // Pega os Eventos por Categoria
         const eventosCategoria = []
-        for (const categoria of categorias) {
-            const res = await fetch(`${api}/api/eventos?categoria_id=${categoria.id}&titulo=${inputValue}`);
-            const newData = await res.json();
-            eventosCategoria.push({ nome: categoria.nome, eventos: newData })
+        if (categorias) {
+            for (const categoria of categorias) {
+                const res = await fetch(`${api}/api/eventos?categoria_id=${categoria.id}&titulo=${inputValue}`);
+                const newData = await res.json();
+                eventosCategoria.push({ nome: categoria.nome, eventos: newData })
+            }
         }
 
         setListaCategorias(criaListaCategorias(eventosCategoria, data))
@@ -159,6 +219,22 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
 
         setListaCategorias(criaListaCategorias(eventosCategoria, data))
     }
+
+    const getUserEvents = async () => {
+        const api = process.env.NEXT_PUBLIC_URL;
+
+        // Pega os Eventos do usuário
+        const res = await fetch(`${api}/api/usuarios/eventos`);
+        const data: Promise<Evento[] | { errorMsg: string }> = await res.json();
+
+
+        let listId: string[] = []
+        if (Array.isArray(data)) {
+            listId = data.map(evento => evento.id)
+        }
+        setIdIncricoes(listId)
+    };
+
 
     function limpaBusca() {
         setListaCategorias(listaCategoriasBackup)
@@ -181,7 +257,7 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
                     <>
                         <Typography variant="h5" mt={8} mb={3}>{eventosPorPeriodo.nome}</Typography>
                         {eventosPorPeriodo.eventos.map((card) =>
-                            <EventList inscrito={true} key={card.id} eventoId={card.id} id={card.id} subscribeButton={hasSubscribeButton} title={card.titulo} location={card.localizacao} initialDate={card.dataInicial} />
+                            <EventList idIncricoes={idIncricoes} setIdIncricoes={setIdIncricoes} inscrito={idIncricoes.includes(card.id)} key={card.id} eventoId={card.id} id={card.id} subscribeButton={hasSubscribeButton} title={card.titulo} location={card.localizacao} initialDate={card.dataInicial} />
                         )}
                     </> :
                     <>
@@ -190,7 +266,7 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
                             {eventosPorPeriodo.eventos.map((card: Evento) =>
 
-                                <EventCard inscrito={false} key={card.id} eventoId={card.id} id={card.id} subscribeButton={hasSubscribeButton} image={card.imagemUrl} title={card.titulo} location={card.localizacao} initialDate={card.dataInicial} />
+                                <EventCard idIncricoes={idIncricoes} setIdIncricoes={setIdIncricoes} inscrito={idIncricoes.includes(card.id)} key={card.id} eventoId={card.id} id={card.id} subscribeButton={hasSubscribeButton} image={card.imagemUrl} title={card.titulo} location={card.localizacao} initialDate={card.dataInicial} />
                             )}
                         </Box>
                     </>
@@ -274,7 +350,7 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
                                 onChange={handleCategoryChange}
                             >
                                 <MenuItem value='Todas'>Todas</MenuItem>
-                                {categorias.map((categoria) =>
+                                {categorias && categorias.map((categoria) =>
                                     <MenuItem key={categoria.id} value={categoria.nome}>{categoria.nome}</MenuItem>
                                 )}
                             </Select>
