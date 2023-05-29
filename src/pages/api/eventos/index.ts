@@ -28,11 +28,19 @@ export default async function handler(
         if(q && typeof q === 'string'){ //busca geral por trecho
             let trecho = q.trim();
             relations.categoria = true;
+
+            let addWhere : { [key:string]: any} | [] = {};
+            if(categoria_id)
+                addWhere.categoria = {id: categoria_id};
+            if(criador_id){
+                addWhere.criador = {id: criador_id};
+                relations.criador = true;
+            }
             where = [
-                {titulo: ILike(`%${trecho}%`)},
-                {localizacao: ILike(`%${trecho}%`)},
-                {tipo: ILike(`%${trecho}%`)}
-            ]
+                {titulo: ILike(`%${trecho}%`), ...addWhere},
+                {localizacao: ILike(`%${trecho}%`), ...addWhere},
+                {tipo: ILike(`%${trecho}%`), ...addWhere}
+            ];
         }else{
             if(id) where.id = id;
             if(titulo && typeof titulo === 'string') 
@@ -49,7 +57,7 @@ export default async function handler(
             }
             if(criador_id){
                 where.criador = {id: criador_id};
-                relations.usuario = true;
+                relations.criador = true;
             }
         }
         try{
