@@ -18,6 +18,8 @@ import { GetServerSideProps } from 'next';
 
 import { useSearchParams } from 'next/navigation'
 
+import moment from 'moment';
+
 // import defaultImage from '../public/images/default.jpg';
 
 interface Evento {
@@ -79,6 +81,20 @@ function EventDetails({ data }: { data: Evento[] }) {
     event.currentTarget.src = defaultImage;
   };
 
+  const dataInicialOriginal = moment(data[0].dataInicial)
+  const dataInicial = dataInicialOriginal.format('YYYYMMDDTHHmmssZ')
+
+  const dataFinalOriginal = moment(data[0].datafinal)
+  const dataFinal = dataFinalOriginal.format('YYYYMMDDTHHmmssZ')
+
+  const addAgenda = `
+  https://calendar.google.com/calendar/u/0/r/eventedit?
+  &text=${data[0].titulo}
+  &dates=${dataInicial}/${dataFinal}
+  &details=${encodeURIComponent(data[0].descricao)}
+  &location=${data[0].localizacao}
+  `
+
   return (
 
     <>
@@ -125,7 +141,7 @@ function EventDetails({ data }: { data: Evento[] }) {
             <Typography variant="body2" gutterBottom>
               {getData(data[0].dataInicial, 'Início')}
               <Tooltip title="Adicionar a agenda">
-                <IconButton target="_blank" href="https://calendar.google.com/" aria-label="calendar">
+                <IconButton target="_blank" href={addAgenda} aria-label="calendar">
                   {/* <EventIcon /> */}
                   <SiGooglecalendar size={20} />
                 </IconButton>
