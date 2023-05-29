@@ -16,6 +16,8 @@ interface Props {
     title: string
     location: string
     subscribeButton: boolean
+    eventoId: string
+    inscrito: boolean
 }
 
 export default function EventCard(props: Props) {
@@ -101,7 +103,7 @@ export default function EventCard(props: Props) {
 
                 </CardContent>
                 <Box mb={1} sx={{ display: 'flex', justifyContent: 'flex-end', marginRight: '0.5rem' }}>
-                    {props.subscribeButton ? <SubscribeButton /> : <></>}
+                    {props.subscribeButton ? <SubscribeButton eventoId={props.eventoId} inscrito={props.inscrito}/> : <></>}
                     <ShareButton url={process.env.NEXT_PUBLIC_URL + "/eventos/detalhes?id=" + props.id} />
                 </Box>
             </Box>

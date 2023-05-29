@@ -165,7 +165,7 @@ function EventDetails({ data }: { data: Evento[] }) {
             }
 
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-              {new Date(data[0].dataInicial).getTime() >= Date.now() ? <SubscribeButton /> : <></>}
+              {new Date(data[0].dataInicial).getTime() >= Date.now() ? <SubscribeButton eventoId={data[0].id} inscrito={true} /> : <></>}
               <ShareButton url={process.env.NEXT_PUBLIC_URL + "/eventos/detalhes?id=" + data[0].id} />
             </Box>
           </Box>
