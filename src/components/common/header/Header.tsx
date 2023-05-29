@@ -19,7 +19,7 @@ export const Header: FunctionComponent = () => {
   };
   
   return (
-    <Box sx={{ display: "flex",flexWrap:'wrap', marginTop: "1rem", marginBottom: "3rem" }}>
+    <Box sx={{ display: "flex",flexWrap:'wrap', marginTop: "1rem",  }}>
       <Link href="/">
         <Image width={337} height={83} src={"/images/logo.png"} alt="logo" />
       </Link>

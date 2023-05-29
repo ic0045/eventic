@@ -302,7 +302,7 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
 
     const mobile = useMediaQuery('(max-width: 720px)');
     return (
-        <>
+        <div style={{marginTop: '3rem'}}>
             {home &&
                 <Box sx={{ borderRadius: '0.3rem', backgroundColor: 'white', boxShadow: 3 }}>
                     <Paper
@@ -397,7 +397,7 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
                     </Box>)
                 }
             </Box>
-        </>
+        </div>
 
     )
 }

@@ -6,7 +6,6 @@ import CategoriaIcone from "@mui/icons-material/CategoryRounded";
 import UsuarioIcone from "@mui/icons-material/PersonSearchRounded";
 import EventoIcone from "@mui/icons-material/EventRounded";
 import InscricaoIcone from "@mui/icons-material/SubscriptionsRounded";
-import { Dashboard } from "./dashboard";
 import { EventoCreate, EventoEdit, EventoList } from "./forms/eventos.form";
 import { UsuarioList, UsuarioEdit, UsuarioCreate } from "./forms/usuarios.form";
 import { ApiResource } from "@app/common/constants";
@@ -26,7 +25,7 @@ const myTheme = {
   ...tema
 };
 const AdminPortal = () => (
-  <Admin theme={myTheme} i18nProvider={i18nProvider} layout={MyLayout} dataProvider={ClientDataProvider} dashboard={Dashboard}   >
+  <Admin theme={myTheme} i18nProvider={i18nProvider} layout={MyLayout} dataProvider={ClientDataProvider}   >
     <Resource options={{ label: 'Categorias' }} name={ApiResource.CATEGORIAS} recordRepresentation="nome" list={CategoriaList} edit={CategoriaEdit} create={CategoriaCreate} icon={CategoriaIcone} />
     <Resource options={{ label: 'Usuários' }} name={ApiResource.USUARIOS} recordRepresentation={(r)=> `${r.primeiroNome} ${r.segundoNome}  (${r.email})`} list={UsuarioList} edit={UsuarioEdit} create={UsuarioCreate} icon={UsuarioIcone} />
     <Resource options={{ label: 'Eventos' }} name={ApiResource.EVENTOS} recordRepresentation={(r) => `${r.titulo} (${r.localizacao})`} list={EventoList} edit={EventoEdit} create={EventoCreate} icon={EventoIcone}  />

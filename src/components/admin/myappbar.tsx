@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 
 
 export const MyAppBar = () => (
-    <AppBar color="primary" style={{marginTop: 100}}>
+    <AppBar elevation={0} color="transparent" position='static' alwaysOn>
         <TitlePortal />
         <Box flex="1" />
     </AppBar>
