@@ -1,27 +1,32 @@
 import { CustomForm } from "@app/helpers/CustomForm";
 import { Validator } from "@app/helpers/Validator";
-import {
-  Grid,
-  CircularProgress,
-  Box,
-  Modal,
-  Typography,
-} from "@mui/material";
+import { Grid, CircularProgress, Box, Modal, Typography } from "@mui/material";
 import styles from "./cadastro.module.css";
 import Image from "next/image";
 import { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Layout } from "@app/components/common/layout/Layout";
 import { CadastroUsuarioForm } from "@app/components/cadastrousuarioform/CadastroUsuarioForm";
 import { UsuarioAPI } from "@app/apis/UsuarioAPI";
 import { toBase64 } from "@app/helpers/Helpers";
+import { Session, getServerSession } from "next-auth";
+import { Usuario } from "@app/server/entities/usuario.entity";
+import { FormMode } from "@app/common/constants";
+import { authOptions } from "../api/auth/[...nextauth]";
 
-const CadastroUsuario: NextPage = () => {
+interface CadastroUsuarioProps {
+  usuario?: Usuario;
+}
+
+const CadastroUsuario: NextPage<CadastroUsuarioProps> = (
+  props: CadastroUsuarioProps
+) => {
   const [isLoading, setIsLoading] = useState(false);
   const [openModal, setOpenModal] = useState(false);
-  const [formErrorMessage, setFormErrorMessage] = useState('')
+  const [formMode, setFormMode] = useState(FormMode.CREATE);
+  const [formErrorMessage, setFormErrorMessage] = useState("");
   const session = useSession();
   const router = useRouter();
   const [cadastroSuccess, setCadastroSuccess] = useState(true);
@@ -38,73 +43,85 @@ const CadastroUsuario: NextPage = () => {
     p: 4,
   };
 
-  let formFields: Map<string, FormFieldState> = new Map([
-    [
-      "nome",
-      {
-        value: "",
-        validators: [Validator.required],
-        valid: true,
-        errorMessage: "",
-      },
-    ],
-    [
-      "sobrenome",
-      {
-        value: "",
-        validators: [Validator.required],
-        valid: true,
-        errorMessage: "",
-      },
-    ],
-    [
-      "email",
-      {
-        value: "",
-        validators: [Validator.required, Validator.email],
-        valid: true,
-        errorMessage: "",
-      },
-    ],
-    [
-      "senha",
-      {
-        value: "",
-        validators: [Validator.required],
-        valid: true,
-        errorMessage: "",
-      },
-    ],
-    [
-      "celular",
-      {
-        value: "",
-        validators: [],
-        valid: true,
-        errorMessage: "",
-      },
-    ],
-    [
-      "cpf",
-      {
-        value: "",
-        validators: [],
-        valid: true,
-        errorMessage: "",
-      },
-    ],
-    [
-      "imagem",
-      {
-        value: undefined,
-        validators: [],
-        valid: true,
-        errorMessage: "",
-      },
-    ]
-  ]);
+  useEffect(() => {
+    if (props.usuario) {
+      //setIsLoading(true);
+      setFormState(getFormInit(props.usuario));
+      setFormMode(FormMode.EDIT);
+    } else {
+      setFormState(getFormInit());
+    }
+  }, [props.usuario]);
 
-  const [formState, setFormState] = useState(formFields);
+  const getFormInit = (usuario?: Usuario): Map<string, FormFieldState> => {
+    return new Map([
+      [
+        "nome",
+        {
+          value: usuario?.primeiroNome ?? "",
+          validators: [Validator.required],
+          valid: true,
+          errorMessage: "",
+        },
+      ],
+      [
+        "sobrenome",
+        {
+          value: usuario?.segundoNome ?? "",
+          validators: [Validator.required],
+          valid: true,
+          errorMessage: "",
+        },
+      ],
+      [
+        "email",
+        {
+          value: usuario?.email ?? "",
+          validators: [Validator.required, Validator.email],
+          valid: true,
+          errorMessage: "",
+        },
+      ],
+      [
+        "senha",
+        {
+          value: "",
+          validators: [Validator.required],
+          valid: true,
+          errorMessage: "",
+        },
+      ],
+      [
+        "celular",
+        {
+          value: "",
+          validators: [],
+          valid: true,
+          errorMessage: "",
+        },
+      ],
+      [
+        "cpf",
+        {
+          value: "",
+          validators: [],
+          valid: true,
+          errorMessage: "",
+        },
+      ],
+      [
+        "imagem",
+        {
+          value: undefined,
+          validators: [],
+          valid: true,
+          errorMessage: "",
+        },
+      ],
+    ]);
+  };
+
+  const [formState, setFormState] = useState(getFormInit());
   const formInstance = new CustomForm(formState, setFormState);
 
   const redirectoToLogin = () => {
@@ -122,23 +139,38 @@ const CadastroUsuario: NextPage = () => {
     let base64: string = "";
 
     if (fotoPerfil) {
-      base64 = await toBase64(formInstance.getValue("imagem") as File) as string;
+      base64 = (await toBase64(
+        formInstance.getValue("imagem") as File
+      )) as string;
     }
 
-    UsuarioAPI.cadastrar({
-      primeiro_nome: formInstance.getValue("nome") as string,
-      segundo_nome: formInstance.getValue("sobrenome") as string,
+    const usuarioRequest: any = {
+      primeiroNome: formInstance.getValue("nome") as string,
+      segundoNome: formInstance.getValue("sobrenome") as string,
       email: formInstance.getValue("email") as string,
       senha: formInstance.getValue("senha") as string,
-      permissao: 'visitante',
-      foto_perfil: base64 as string
-    })
+      permissao: "visitante",
+      fotoPerfil: base64 as string,
+    };
+
+    let usuarioRequestPromise =
+      formMode == FormMode.EDIT
+        ? UsuarioAPI.editar({ ...usuarioRequest, id: props.usuario?.id })
+        : UsuarioAPI.cadastrar(usuarioRequest);
+
+    usuarioRequestPromise
       .catch((error) => {
+        console.log(error);
         setCadastroSuccess(false);
         setFormErrorMessage(error.response.data.errorMsg);
       })
       .then((response) => {
-        if (response) {
+        if (response.errorMsg) {
+          setCadastroSuccess(false);
+          setFormErrorMessage(response.errorMsg);
+          return;
+        }
+        if (props.usuario?.email !== formInstance.getValue('email')) {
           setOpenModal(true);
         }
       })
@@ -176,7 +208,7 @@ const CadastroUsuario: NextPage = () => {
         </Grid>
         <Grid item xs={12} md={6}>
           <div className={styles.cadastro__form}>
-            <h2>Cadastrar Usuario</h2>
+            <h2>{ props.usuario ? 'Atualizar' : 'Cadastrar' } Usuario</h2>
             {isLoading ? (
               <div className="loader">
                 <CircularProgress />
@@ -187,6 +219,7 @@ const CadastroUsuario: NextPage = () => {
                 onCadastroSubmit={onCadastroSubmit}
                 formInstance={formInstance}
                 errorMessage={formErrorMessage}
+                usuario={props.usuario}
               />
             )}
           </div>
@@ -194,6 +227,25 @@ const CadastroUsuario: NextPage = () => {
       </Grid>
     </div>
   );
+};
+
+export const getServerSideProps = async (context: any) => {
+  const session: Session | null = await getServerSession(
+    context.req,
+    context.res,
+    authOptions
+  );
+  if (session) {
+    const apiURL = process.env.NEXT_PUBLIC_URL;
+    const res = await fetch(`${apiURL}/api/admin/usuarios?id=${session.user.id}`);
+    const data = await res.json();
+
+    return {
+      props: { usuario: data},
+    };
+  }
+
+  return { props: {} };
 };
 
 export default CadastroUsuario;
