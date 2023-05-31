@@ -160,7 +160,6 @@ const CadastroUsuario: NextPage<CadastroUsuarioProps> = (
 
     usuarioRequestPromise
       .catch((error) => {
-        console.log(error);
         setCadastroSuccess(false);
         setFormErrorMessage(error.response.data.errorMsg);
       })
