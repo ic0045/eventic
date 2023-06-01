@@ -86,7 +86,7 @@ const CadastroUsuario: NextPage<CadastroUsuarioProps> = (
         "senha",
         {
           value: "",
-          validators: [Validator.required],
+          validators: usuario ? [Validator.tamanho(6)] : [Validator.tamanho(6), Validator.required],
           valid: true,
           errorMessage: "",
         },
@@ -146,6 +146,8 @@ const CadastroUsuario: NextPage<CadastroUsuarioProps> = (
 
     const usuarioRequest: any = {
       primeiroNome: formInstance.getValue("nome") as string,
+      primeiro_nome: formInstance.getValue("nome") as string,
+      segundo_nome: formInstance.getValue("sobrenome") as string,
       segundoNome: formInstance.getValue("sobrenome") as string,
       email: formInstance.getValue("email") as string,
       senha: formInstance.getValue("senha") as string,
@@ -171,6 +173,10 @@ const CadastroUsuario: NextPage<CadastroUsuarioProps> = (
         }
         if (props.usuario?.email !== formInstance.getValue('email')) {
           setOpenModal(true);
+        }
+
+        if(formMode == FormMode.EDIT){
+          router.push('/auth/meucadastro')
         }
       })
       .finally(() => {
