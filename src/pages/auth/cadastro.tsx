@@ -163,7 +163,6 @@ const CadastroUsuario: NextPage<CadastroUsuarioProps> = (
     usuarioRequestPromise
       .catch((error) => {
         setCadastroSuccess(false);
-        setFormErrorMessage(error.response.data.errorMsg);
       })
       .then((response) => {
         if (response.errorMsg) {
@@ -241,8 +240,13 @@ export const getServerSideProps = async (context: any) => {
     authOptions
   );
   if (session) {
+    const cookies = Object.keys(context.req.cookies).map((key) => {
+      return `${key}=${context.req.cookies[key]}`
+    }).join("; ");
     const apiURL = process.env.NEXT_PUBLIC_URL;
-    const res = await fetch(`${apiURL}/api/admin/usuarios?id=${session.user.id}`);
+    const res = await fetch(`${apiURL}/api/usuarios/perfil`, {
+      headers: {"Cookie": cookies}
+    });
     const data = await res.json();
 
     return {
