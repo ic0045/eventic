@@ -47,7 +47,7 @@ export default class EventoDataProvider extends ServerAbstractDataProvider<Event
     }
 
     return await this.repository.findOne(options);
-  }
+  } 
 
   public async getList({ filter, pagination, sort }: GetListParams) {
     const { page, perPage } = pagination;
@@ -83,30 +83,21 @@ export default class EventoDataProvider extends ServerAbstractDataProvider<Event
     return await this.repository.findAndCount(options);
   }
 
-  public getManyReference({
-    filter,
-    id,
-    pagination,
-    sort,
-    target,
-  }: GetManyReferenceParams & {
-    pagination?: any;
-    range: number[];
-  }): Promise<{}> {
-    throw new Error("Method not implemented.");
-  }
-
   public async update({
     id,
     data,
     previousData,
   }: UpdateParams<any>) {
-    const { id: xxx, ...rest } = data;
-    // @ts-ignore
-    await this.repository.update({ id: id }, rest);
-    // @ts-ignore`
-    const res = await this.repository.findOne({ where: { id: id } });
-    return res;
+
+    const evento = await this.repository.findOne({ where: {
+      id: id
+    }});
+
+    if(evento?.criador.id !== this.sessao?.user.id && this.sessao?.user.permissao !== 'admin'){
+      return new Evento();
+    }
+    
+    return await super.update({id, data, previousData});
   }
 
   public updateMany({
@@ -115,14 +106,27 @@ export default class EventoDataProvider extends ServerAbstractDataProvider<Event
   }: UpdateManyParams<any>): Promise<Identifier[]> {
     throw new Error("Method not implemented.");
   }
-  public create({ data, meta }: CreateParams<any>): Promise<any> {
-    throw new Error("Method not implemented.");
+
+  public async create({ data, meta }: CreateParams<any>): Promise<any> {
+    if(this.sessao?.user.permissao === 'visitante'){
+      return new Evento();
+    }
+
+    return super.create({data, meta});
   }
-  public delete({
+  public async delete({
     id,
     previousData,
   }: DeleteParams<any>): Promise<Evento | null> {
-    throw new Error("Method not implemented.");
+    const evento = await this.repository.findOne({ where: {
+      id: id
+    }});
+
+    if(evento?.criador.id !== this.sessao?.user.id && this.sessao?.user.permissao !== 'admin'){
+      return new Evento();
+    }
+
+    return super.delete({ id, previousData });
   }
   public deleteMany({ ids }: DeleteManyParams<any>): Promise<any[]> {
     throw new Error("Method not implemented.");
