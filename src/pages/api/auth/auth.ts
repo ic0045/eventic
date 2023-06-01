@@ -57,8 +57,8 @@ export async function redirectIfNotAuthorized(req :any, res:any, role: Permissao
 export async function getCustomSession(session: Session):Promise<Session>{
     const user = await UsuarioRepo.findOne({ where: { email: session.user.email.toLocaleLowerCase() } });
     if (user) {
-      const { primeiroNome, segundoNome, permissao, fotoPerfil, id } = user;
-      session.user = { ...session.user, id, primeiroNome, segundoNome, permissao, fotoPerfil }
+      const { primeiroNome, segundoNome, permissao, id } = user;
+      session.user = { ...session.user, id, primeiroNome, segundoNome, permissao }
     }
     return session
 }

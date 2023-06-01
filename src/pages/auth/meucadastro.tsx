@@ -46,7 +46,7 @@ function MeuCadastro() {
 
   const { data: session, status } = useSession()
   let defaultImage = "/images/userDefault.jpeg"
-  const imagemPrincipal = session?.user.fotoPerfil || '';
+  const imagemPrincipal = '';
 
   const handleErro = (event: React.SyntheticEvent<HTMLImageElement, Event>) => {
     event.currentTarget.src = defaultImage;
