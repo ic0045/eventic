@@ -40,14 +40,24 @@ export default async function handler(
                                 await InscricaoRepo.delete(inscricao.id);
                                 res.status(200).json("Inscricao deletada");
                             }else{ res.status(400).json({errorMsg: "O usuario não possui inscrição no evento"})}
-                        }else{//inscrever
-                            const inscricao = new Inscricao();
+                        }
+                        else{//inscrever
+                            let inscricao = await InscricaoRepo.findOne({where: {usuario: {id: usuario.id}, evento: {id:evento.id}}});
+                            if(inscricao != null){//Se usuário já inscrito
+                                res.status(200).json({msg: "Usuário já inscrito no evento"});
+                                return;
+                            }
+                            if(new Date(evento.dataInicial).getTime() < Date.now()){ //Verifica se o evento já passou
+                                res.status(400).json({errorMsg: "O evento já inicou ou já foi encerrado"});
+                                return;
+                            }
+                            inscricao = new Inscricao();
                             inscricao.evento = evento;
                             inscricao.usuario = usuario;
                             inscricao.createdAt = new Date();
                             await InscricaoRepo.save(inscricao);
                             res.status(200).send(`Usuário ${usuario.primeiroNome} cadastrado no evento ${evento.titulo}.`)
-                        }
+                        } 
                     }
                     else{ res.status(400).send(`O id ${evento_id} não corresponde a nenhum evento.`)}
                 }catch(e){res.status(500).json(e)}
