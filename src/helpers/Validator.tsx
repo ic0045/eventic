@@ -50,7 +50,7 @@ export class Validator {
   }
 
   static tamanho(length: number): (input: string) => ValidatorResponse {
-    const regex = new RegExp(`^(\S{${length},})?$`);
+    const regex = new RegExp(`^(\\S{${length},})?$`);
     return (input: string) => {
       return {
         isValid: regex.test(input),
