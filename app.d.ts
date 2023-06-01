@@ -120,9 +120,9 @@ interface UsuarioPostRequest {
     email: string,
     senha: string,
     permissao: Permissao,
-    celular?: string,
-    cpf?: string,
-    cep?: string,
+    // celular?: string,
+    // cpf?: string,
+    // cep?: string,
     foto_perfil: string
 }
 

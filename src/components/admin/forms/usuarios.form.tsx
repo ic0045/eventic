@@ -45,8 +45,8 @@ const AddEditForm = ({ edit }: { edit: boolean }) => (
             choices={Object.keys(PermissaoEnum).map((v, i) => ({ id: v, name: Object.values(PermissaoEnum)[i] }))}
             validate={[required()]}
         />
-        <TextInput  type="tel" fullWidth source="celular" validate={[minLength(11), maxLength(11), regex(Regex.celular, 'Celular Inválido')]} />
-        <TextInput fullWidth source="cpf" validate={[minLength(11), maxLength(11), regex(Regex.cpf, 'CPF Inválido')]} />
+        {/* <TextInput  type="tel" fullWidth source="celular" validate={[minLength(11), maxLength(11), regex(Regex.celular, 'Celular Inválido')]} />
+        <TextInput fullWidth source="cpf" validate={[minLength(11), maxLength(11), regex(Regex.cpf, 'CPF Inválido')]} /> */}
     </SimpleForm>
 )
 export const UsuarioEdit = () => (

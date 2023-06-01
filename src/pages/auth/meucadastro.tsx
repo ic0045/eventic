@@ -14,8 +14,8 @@ interface User {
   primeiroNome: string;
   segundoNome: string;
   email: string;
-  celular: string;
-  cpf: string;
+  // celular: string;
+  // cpf: string;
 }
 
 const initialState: User = {
@@ -23,8 +23,8 @@ const initialState: User = {
   primeiroNome: '',
   segundoNome: '',
   email: '',
-  celular: '',
-  cpf: '',
+  // celular: '',
+  // cpf: '',
 };
 
 function MeuCadastro() {
@@ -76,8 +76,8 @@ function MeuCadastro() {
             <Box mb={2}>
               <Typography mb={1} variant="h6">{`Nome: ${data.primeiroNome} ${data.segundoNome}`}</Typography>
               <Typography mb={1} variant="h6">{`Email: ${data.email}`}</Typography>
-              <Typography mb={1} variant="h6">{`Celular: ${data.celular ? data.celular : 'Não informado'}`}</Typography>
-              <Typography variant="h6">{`Cpf: ${data.cpf ? data.cpf : 'Não informado'}`}</Typography>
+              {/* <Typography mb={1} variant="h6">{`Celular: ${data.celular ? data.celular : 'Não informado'}`}</Typography>
+              <Typography variant="h6">{`Cpf: ${data.cpf ? data.cpf : 'Não informado'}`}</Typography> */}
             </Box>
             <Box sx={{ marginTop: 'auto' }}>
               <Link href='/auth/cadastro' style={{ marginRight: '1rem' }}>
