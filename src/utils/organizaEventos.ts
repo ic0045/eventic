@@ -12,8 +12,6 @@ interface Evento {
     createdAt: string
     updatedAt: string
     datafinal: string
-    linkImagem: string
-    linkTitulo: string
     tipo: string
     linkMaisInfomacoes: string
 }

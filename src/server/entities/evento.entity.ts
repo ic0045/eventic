@@ -27,7 +27,6 @@ export class Evento {
     evento.localizacao = obj.localizacao;
     evento.imagemUrl = obj.imagem_url;
     evento.tipo = obj.tipo;
-    evento.linkImagem = obj.link_imagem;
     evento.linkMaisInformacoes = obj.link_mais_informacoes;
     evento.dataInicial = obj.data_inicial;
     evento.datafinal = obj.data_final;
@@ -68,12 +67,6 @@ export class Evento {
 
   @Column("timestamp without time zone", { name: "datafinal", nullable: true })
   datafinal: Date | null;
-
-  @Column("character varying", { name: "link_imagem", nullable: true })
-  linkImagem: string | null;
-
-  @Column("character varying", { name: "link_titulo", nullable: true })
-  linkTitulo: string | null;
 
   @Column("character varying", { name: "tipo", nullable: true })
   tipo: string | null; //Categoria informada pelo usuário, caso não se adeque a nenhuma categoria

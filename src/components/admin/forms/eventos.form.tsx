@@ -40,9 +40,6 @@ const AddEditForm = ({ edit }: { edit: boolean }) => (
             <Box flex={1} mr={{ xs: 0, sm: '0.5em' }}>
                 <TextInput fullWidth source="titulo" label="Título" validate={[required(), minLength(5)]} />
             </Box>
-            <Box flex={1} mr={{ xs: 0, sm: '0.5em' }}>
-                <TextInput placeholder="https://www.exemplo.com.br" helperText="Link utilizado ao clicar no título." type="url" fullWidth source="linkTitulo" label="Link do Título" validate={regex(Regex.url, "Deve ser uma url válida")} />
-            </Box>
         </Box>
         <TextInput fullWidth helperText="Máx: 1000 caracteres" source="descricao" multiline type="textarea" label="Descrição" validate={[required(), minLength(5) , maxLength(1000)]} />
         <ReferenceInput  source="categoria.id" reference={ApiResource.CATEGORIAS} sort={ {field: 'nome', order: 'ASC' }} >
@@ -65,9 +62,6 @@ const AddEditForm = ({ edit }: { edit: boolean }) => (
         <Box display={{ xs: 'block', sm: 'flex', width: '100%' }}>
             <Box flex={1} mr={{ xs: 0, sm: '0.5em' }}>
                 <TextInput placeholder="https://www.exemplo.com.br/imagem.png" helperText="Imagem que será utilizada pra representar o evento." type="url" fullWidth source="imagemUrl" label="Imagem de Capa" validate={[required(), regex(Regex.url, "Deve ser uma url válida")]} />
-            </Box>
-            <Box flex={1} mr={{ xs: 0, sm: '0.5em' }}>
-                <TextInput placeholder="https://www.exemplo.com.br" helperText="Link utilizado ao clicar na imagem." type="url" fullWidth source="linkImagem" label="Link na Imagem" validate={regex(Regex.url, "Deve ser uma url válida")} />
             </Box>
         </Box>
         <TextInput fullWidth source="tipo" label="Tipo do Evento" placeholder="aula, apresentação de seminário..." />
