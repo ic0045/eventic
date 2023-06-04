@@ -12,4 +12,14 @@ export class UsuarioAPI extends BaseAPI {
 
         return response.json();
     }
+
+    static async editar(usuario: UsuarioPutRequest){
+        const response = await fetch(`${this.apiURL}/admin/usuarios?id=${usuario.id}`, {
+            method: 'PUT',
+            body: JSON.stringify(usuario),
+            headers: {"Content-type": "application/json; charset=UTF-8"}
+        })
+
+        return response.json();
+    }
 }
