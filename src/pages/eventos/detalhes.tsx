@@ -1,4 +1,4 @@
-import { Box, Container, Grid, Tooltip } from "@mui/material";
+import { Box, Button, Container, Grid, Tooltip,SvgIcon } from "@mui/material";
 import styles from './detalhes.module.css'
 import Typography from "@mui/material/Typography";
 import IconButton from '@mui/material/IconButton';
@@ -21,7 +21,16 @@ import { useSearchParams } from 'next/navigation'
 import moment from 'moment';
 import CircularProgress from '@mui/material/CircularProgress';
 
-// import defaultImage from '../public/images/default.jpg';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import Link from "next/link";
+
+import MyIcon from './logoCalendar.svg';
+
+const CustomIcon = (props: React.ComponentProps<typeof SvgIcon>) => (
+  <SvgIcon {...props}>
+    <MyIcon />
+  </SvgIcon>
+);
 
 interface Evento {
   id: string
@@ -42,6 +51,12 @@ interface Evento {
 }
 
 function EventDetails({ data }: { data: Evento[] }) {
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleLinkClick = () => {
+    setIsLoading(true);
+  };
 
   const searchParams = useSearchParams()
 
@@ -122,9 +137,18 @@ function EventDetails({ data }: { data: Evento[] }) {
     getUserEvents()
   }, []);
 
+  console.log(`https://www.google.com/maps?q=${encodeURIComponent(data[0].localizacao.replace(/ /g, '+'))}`)
+
   return (
 
-    <>
+    <Box mt={5}>
+      {isLoading ? <CircularProgress sx={{ marginBottom: '1rem' }} size={32}/> :
+        <Link href='/eventos'>
+          <Button onClick={handleLinkClick} sx={{ marginBottom: '1rem' }} startIcon={<ArrowBackIcon />}>
+            Voltar
+          </Button>
+        </Link>
+      }
       <Typography sx={{ borderRadius: '0.3rem', backgroundColor: 'white', boxShadow: 3, padding: '1rem' }} variant="h5" mb={3}>
         {data[0].titulo}
       </Typography>
@@ -147,7 +171,7 @@ function EventDetails({ data }: { data: Evento[] }) {
               {subscribed ? data[0].qtInscricoes + 1 : data[0].qtInscricoes}
             </Typography>
             <Typography variant="body1" gutterBottom align="center" >
-              Interessados
+              Interessado(s)
             </Typography>
           </Box>
         </Grid>
@@ -170,7 +194,10 @@ function EventDetails({ data }: { data: Evento[] }) {
               <Tooltip title="Adicionar a agenda">
                 <IconButton target="_blank" href={addAgenda} aria-label="calendar">
                   {/* <EventIcon /> */}
-                  <SiGooglecalendar size={20} />
+                  {/* <SiGooglecalendar size={20} /> */}
+                  {/* <LogoCalendar/> */}
+                  {/* <img src="/images/logoCalendar.svg" alt="Meu ícone" /> */}
+                  <CustomIcon/>
                 </IconButton>
               </Tooltip>
             </Typography>
@@ -197,10 +224,39 @@ function EventDetails({ data }: { data: Evento[] }) {
             </Box>
           </Box>
 
+          <Box mt={3} mb={3} sx={{ borderRadius: '0.3rem', backgroundColor: 'white', padding: '1rem', boxShadow: 3 }}>
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3906.14853818059!2d-49.10173628769766!3d-11.754584536484774!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x933e94c651c4f4a1%3A0x718556ca934e3cde!2sR.%20Jos%C3%A9%20Paf%2C%20123%2C%20Gurupi%20-%20TO%2C%2077420-040!5e0!3m2!1spt-BR!2sbr!4v1685713259469!5m2!1spt-BR!2sbr"
+              style={{ width: '100%', height: '300px' }}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            ></iframe>
+
+            {/* <iframe
+              src={`https://www.google.com/maps?q=${encodeURIComponent(data[0].localizacao.replace(/ /g, '+'))}`}
+              style={{ width: '100%', height: '300px' }}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            ></iframe> */}
+
+            {/* $(document).ready( function(){
+    var addr = 'Any Street 670, Any City';
+    function(){  
+
+        var embed= "<iframe width='425' height='350' frameborder='0'  
+        scrolling='no' marginheight='0' marginwidth='0'    
+        src='https://maps.google.com/maps?&amp;q="+   
+        encodeURIComponent( addr ) +  
+        "&amp;output=embed'></iframe>";  
+
+        $('.place').html(embed);
+    });
+}); */}
+          </Box>
         </Grid>
       </Grid>
 
-    </>
+    </Box>
   );
 };
 

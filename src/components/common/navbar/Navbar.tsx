@@ -16,7 +16,7 @@ export default function Navbar() {
     return (
 
         <Box sx={{ display: 'flex', marginTop: '1rem', marginBottom: '3rem' }}>
-            <Link href='/'>
+            <Link href='/eventos'>
                 <Image
                     width={337}
                     height={83}

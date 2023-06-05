@@ -29,11 +29,11 @@ export default function AccountMenu(props: { session: Session }) {
     signOut();
   };
 
-  const formatNameInitials = (primeiroNome: string) => {
-    if (!(primeiroNome)) {
-      return "BR";
+  const formatNameInitials = (primeiroNome: string, segundoNome: string) => {
+    if (primeiroNome && segundoNome) {
+      return `${primeiroNome[0]}${segundoNome[0]}`;
     }
-    return `${primeiroNome[0]}`;
+    return "BR";
   };
 
   return (
@@ -50,7 +50,7 @@ export default function AccountMenu(props: { session: Session }) {
           >
             <Avatar sx={{ backgroundColor: "#00B03B", width: 46, height: 46 }}>
               {formatNameInitials(
-                props.session.user.name
+                props.session.user.primeiroNome, props.session.user.segundoNome
               )}
             </Avatar>
           </IconButton>
@@ -94,19 +94,21 @@ export default function AccountMenu(props: { session: Session }) {
         {/* <Link href="#">
           <MenuItem>Seja Bem Vindo {props.session.user.name}</MenuItem>
         </Link> */}
-        <Link style={{color: "black"}} href="/eventos">
+        <Link style={{ color: "black" }} href="/eventos">
           <MenuItem onClick={handleClose}>Página Inicial</MenuItem>
         </Link>
-        <Link style={{color: "black"}} href="/auth/meucadastro">
+        <Link style={{ color: "black" }} href="/auth/meucadastro">
           <MenuItem onClick={handleClose}>Meu Cadastro</MenuItem>
         </Link>
-        <Link style={{color: "black"}} href="/eventos/minhasinscricoes">
+        <Link style={{ color: "black" }} href="/eventos/minhasinscricoes">
           <MenuItem onClick={handleClose}>Minhas Inscrições</MenuItem>
         </Link>
         <Divider />
-        <Link style={{color: "black"}} href="/admin#">
-          <MenuItem onClick={handleClose}>Painel Administrativo</MenuItem>
-        </Link>
+        {props.session.user.permissao.toString() != 'Visitante' &&
+          <Link style={{ color: "black" }} href="/admin#">
+            <MenuItem onClick={handleClose}>Painel Administrativo</MenuItem>
+          </Link>
+        }
         <Divider />
         <MenuItem onClick={handleSair}>
           <ListItemIcon>

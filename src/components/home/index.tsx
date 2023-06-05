@@ -302,7 +302,7 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
 
     const mobile = useMediaQuery('(max-width: 720px)');
     return (
-        <div style={{marginTop: '3rem'}}>
+        <Box mt={5} style={{marginTop: '3rem'}}>
             {home &&
                 <Box sx={{ borderRadius: '0.3rem', backgroundColor: 'white', boxShadow: 3 }}>
                     <Paper
@@ -319,7 +319,7 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
                             value={inputValue}
                             onChange={(e) => { setInputValue(e.target.value) }}
                             sx={{ ml: 1, flex: 1 }}
-                            placeholder="Filtrar por nome de Evento"
+                            placeholder="Filtre pelo nome do evento"
                             inputProps={{ 'aria-label': 'busca de eventos' }}
                         />
                     </Paper>
@@ -397,7 +397,7 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
                     </Box>)
                 }
             </Box>
-        </div>
+        </Box>
 
     )
 }

@@ -54,7 +54,7 @@ function MeuCadastro() {
 
   return (
     <>
-      <Box sx={{ borderRadius: '0.3rem', backgroundColor: 'white', padding: '1rem', boxShadow: 3 }}>
+      <Box mt={5} sx={{ borderRadius: '0.3rem', backgroundColor: 'white', padding: '1rem', boxShadow: 3 }}>
         <Typography mb={5} variant="h3">Meus Cadastro</Typography>
         <Box sx={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
           <Image
