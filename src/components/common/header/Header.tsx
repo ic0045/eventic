@@ -20,8 +20,8 @@ export const Header: FunctionComponent = () => {
   
   return (
     <Box sx={{ display: "flex",flexWrap:'wrap', marginTop: "1rem",  }}>
-      <Link href="/">
-        <Image width={337} height={83} src={"/images/logo.png"} alt="logo" />
+      <Link href="/eventos">
+        <Image width={300} height={80} src={"/images/logo.png"} alt="logo" />
       </Link>
       <Box sx={{ marginLeft: "auto", alignSelf: "center" }}>
         {status == 'authenticated' && session ? (

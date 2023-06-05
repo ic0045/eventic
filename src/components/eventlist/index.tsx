@@ -77,10 +77,10 @@ export default function ListCard(props: Props) {
 
             <Box sx={{ display: 'flex', flexDirection: 'column', marginLeft: 'auto' }}>
                 {props.subscribeButton && (props.isLoadingSubButton ? <CircularProgress size={28} /> : <SubscribeButton eventoId={props.eventoId} inscrito={props.inscrito} setIdIncricoes={props.setIdIncricoes} idIncricoes={props.idIncricoes} />)}
-                {/* <SubscribeButton /> */}
-                <IconButton sx={{ marginTop: 'auto' }} aria-label="share">
-                    <ShareIcon fontSize='small' />
-                </IconButton>
+                
+                <Box sx={{ marginTop: 'auto' }} >
+                    <ShareButton url={process.env.NEXT_PUBLIC_URL + "/eventos/detalhes?id=" + props.id} />
+                </Box>
             </Box>
         </Box >
     );

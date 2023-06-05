@@ -104,7 +104,7 @@ export default function SubscribeButton({ eventoId, inscrito, idIncricoes, setId
     <div>
       {isLoading ? <CircularProgress size={32} /> :
         <>
-          <Tooltip title="Inscrever-se">
+          <Tooltip title={subscribed? "Desinscrever-se": "Inscrever-se"}>
             <IconButton onClick={handleButtonClick} aria-label="notification">
               <NotificationsActiveIcon sx={subscribed ? { color: '#FFCB00' } : undefined} />
             </IconButton>

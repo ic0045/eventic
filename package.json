@@ -57,6 +57,7 @@
     "typescript": "5.0.2"
   },
   "devDependencies": {
+    "@svgr/webpack": "^8.0.1",
     "pre-commit": "^1.2.2"
   }
 }
