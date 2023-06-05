@@ -29,8 +29,8 @@ export class EventoAPI extends BaseAPI {
      * @param evento 
      * @returns 
      */
-    static async findLast(startAt: number, pageSize: number) {
-        const res = await fetch(`${this.apiURL}/eventos?startAt=${startAt}&pageSize=${pageSize}`)
+    static async findLast(page: number, limit: number) {
+        const res = await fetch(`${this.apiURL}/eventos?page=${page}&limit=${limit}`)
         return await res.json();
     }
 

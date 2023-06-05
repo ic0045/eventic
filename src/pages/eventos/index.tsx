@@ -12,7 +12,7 @@ export async function getServerSideProps() {
     const api = process.env.PUBLIC_URL
 
     // Pega os Eventos
-    const data = await EventoAPI.findLast(0,100);
+    const data = await EventoAPI.findLast(0,50);
 
     // Pega as Categorias
     const resCategoria = await fetch(`${api}/api/categorias`)
