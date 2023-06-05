@@ -263,21 +263,6 @@ export class UsuarioValidator{
         return regex.test(email);
     }
 
-    // /*
-    //  * Valida cpf do usuário
-    //  */
-    // static validateCpf(cpf : string) : boolean{
-    //     if(cpf.length < 11)
-    //         return false;
-    //     if(/[a-zA-Z]/.test(cpf))
-    //         return false;
-    //     const digitsMatch = cpf.match(/\d/g);
-    //     const digits : number = digitsMatch? digitsMatch.length : 0;
-    //     if(digits < 11)
-    //         return false;
-    //     return true;
-    // }
-
     /*
      * Valida senha do usuário
      */

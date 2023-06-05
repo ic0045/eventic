@@ -61,10 +61,10 @@ export class Usuario {
   })
   fotoPerfil: string | null;
 
-  @Column("timestamp without time zone", { name: "created_at" })
+  @Column("timestamp without time zone", { name: "created_at", default: new Date() })
   createdAt: Date;
 
-  @Column("timestamp without time zone", { name: "updated_at", nullable: true })
+  @Column("timestamp without time zone", { name: "updated_at", nullable: true, default: new Date() })
   updatedAt: Date | null;
 
   @OneToMany(() => Evento, (evento) => evento.criador)
