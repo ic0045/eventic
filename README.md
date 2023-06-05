@@ -1,4 +1,4 @@
-# EVENTIC - Sistema de Eventos do Instituto de Computação da UFBA 
+# [EVENTIC - Sistema de Eventos do Instituto de Computação da UFBA](https://eventic.onrender.com) 
 
 ## Sobre o projeto
 <div align="justify">
@@ -55,8 +55,8 @@ Visando solucionar esse problema e atender a demanda do Instituto da Computaçã
 
 ## Ambientes
 
-- [Produção](https://seicomp.onrender.com)
-- [Desenvolvimento](https://seicomp-dev.onrender.com)
+- [Produção](https://eventic.onrender.com)
+- [Desenvolvimento](https://eventic-dev.onrender.com)
 
 ## Tecnologias
 
@@ -68,10 +68,9 @@ Visando solucionar esse problema e atender a demanda do Instituto da Computaçã
 
 ### Backend
 
-- [NodeJS 18](https://nodejs.org/en/download) 
+- [NodeJS 18.15.0](https://nodejs.org/en/download) 
 - [TypeOrm](https://typeorm.io/)
 - [Typescript](https://www.typescriptlang.org)
-- [Docker](https://www.docker.com)
 - [NextJS](https://nextjs.org/)
 
 ### Banco de dados
@@ -80,28 +79,8 @@ Visando solucionar esse problema e atender a demanda do Instituto da Computaçã
 - [DBeaver](https://dbeaver.io/download/) (gerenciador de banco de dados)
 
 ### Cloud
-
-- [Vercel](https://vercel.com/dashboard)
 - [Render](https://render.com)
 
-## Instalação
 
-
-```bash
-npm install
-# or
-yarn install
-# or
-pnpm install
-```
-
-## Execução
-
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+### Como Executar o Projeto ?
+- [Guia de Implantação](./Implantacao.md)
