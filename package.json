@@ -54,10 +54,10 @@
     "react-share": "^4.4.1",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.3.7",
-    "typescript": "5.0.2"
+    "typescript": "5.0.2",
+    "@svgr/webpack": "^8.0.1"
   },
   "devDependencies": {
-    "@svgr/webpack": "^8.0.1",
     "pre-commit": "^1.2.2"
   }
 }
