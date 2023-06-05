@@ -31,24 +31,16 @@ export const authOptions: NextAuthOptions = {
         if (!await checkPassword(password, usuario.senha))
           throw new Error("Credenciais inválidas.");
 
-          const { primeiroNome, segundoNome, permissao, fotoPerfil } = usuario;
+          const { primeiroNome, segundoNome, permissao } = usuario;
         return {
           id: usuario.id,
           email: usuario.email,
-          image: usuario.fotoPerfil,
-          primeiroNome, segundoNome, permissao, fotoPerfil ,
+          primeiroNome, segundoNome, permissao
         }
       }
     })
   ],
   callbacks: {
-    async signIn({ user }) {
-      console.log("\n======SIGIn CALLBACK=======")
-      console.log("Parâmetros do token")
-      console.log(user)
-      console.log(".......................\n")
-      return true;
-    },
     async session({ session }) {
       return getCustomSession(session);
     }

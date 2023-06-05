@@ -34,9 +34,8 @@ export default async function handler(
                     else{
                         usuario.primeiroNome = req.body.primeiro_nome;
                         usuario.segundoNome = req.body.segundo_nome;
-                        usuario.celular = req.body.celular;
-                        usuario.fotoPerfil = req.body.foto_perfil;
-                        usuario.cpf = req.body.cpf;
+                        if(req.body.foto_perfil)
+                            usuario.fotoPerfil = req.body.foto_perfil;
                         if(usuario.email != req.body.email){
                             //Se houve mudança de e-mail, notifica email antigo
                             await sendAlertChangeEmail(usuario.email);

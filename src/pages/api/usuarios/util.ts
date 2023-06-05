@@ -178,8 +178,7 @@ export class UsuarioValidator{
     /*
     * Campos para corpo de requisição alterar perfil
     */
-    static perfilBodyFields = ["primeiro_nome","segundo_nome",
-    "celular","foto_perfil","cpf"]
+    static perfilBodyFields = ["primeiro_nome","segundo_nome","foto_perfil"]
    
     /*
     * Valida corpo de requisição para cadastro de usuário
@@ -262,21 +261,6 @@ export class UsuarioValidator{
     static validateEmail(email: string): boolean {
         const regex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,})+$/;
         return regex.test(email);
-    }
-
-    /*
-     * Valida cpf do usuário
-     */
-    static validateCpf(cpf : string) : boolean{
-        if(cpf.length < 11)
-            return false;
-        if(/[a-zA-Z]/.test(cpf))
-            return false;
-        const digitsMatch = cpf.match(/\d/g);
-        const digits : number = digitsMatch? digitsMatch.length : 0;
-        if(digits < 11)
-            return false;
-        return true;
     }
 
     /*

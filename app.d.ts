@@ -11,8 +11,6 @@ interface Evento {
     createdAt: string
     updatedAt: string
     datafinal: string
-    linkImagem: string
-    linkTitulo: string
     tipo: string
     linkMaisInfomacoes: string
 }
@@ -63,7 +61,6 @@ interface EventoPostRequest {
     imagem?: string,
     data_final?: string,
     imagem_url: string,
-    link_titulo?: string,
     tipo: string,
     usuario_id: string,
     link_mais_informacoes?: string,
@@ -80,7 +77,6 @@ interface EventoPutRequest {
     imagem?: string,
     data_final?: string,
     imagem_url: string,
-    link_titulo?: string,
     tipo: string,
     usuario_id: string,
     link_mais_informacoes?: string,
@@ -120,9 +116,6 @@ interface UsuarioPostRequest {
     email: string,
     senha: string,
     permissao: Permissao,
-    celular?: string,
-    cpf?: string,
-    cep?: string,
     foto_perfil: string
 }
 

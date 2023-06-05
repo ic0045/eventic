@@ -9,7 +9,6 @@ declare module "next-auth"{
             primeiroNome:string,
             segundoNome:string,
             permissao: Permissao,
-            fotoPerfil: string | null,
         }
     }
 }
