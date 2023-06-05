@@ -10,12 +10,14 @@ import {
 import styles from "./cadastrousuarioform.module.css";
 import { CustomForm } from "@app/helpers/CustomForm";
 import { FunctionComponent } from "react";
+import { Usuario } from "@app/server/entities/usuario.entity";
 
 interface CadastroUsuarioFormProps {
   formInstance: CustomForm;
   isCadastroSuccess: boolean;
   onCadastroSubmit: any;
   errorMessage: string;
+  usuario?: Usuario;
 }
 
 export const CadastroUsuarioForm: FunctionComponent<
@@ -109,7 +111,7 @@ export const CadastroUsuarioForm: FunctionComponent<
           color="success"
           onClick={props.onCadastroSubmit}
         >
-          Cadastrar
+          { props.usuario ? 'Atualizar' : 'Cadastrar'}
         </Button>
       </div>
     </>

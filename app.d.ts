@@ -126,4 +126,18 @@ interface UsuarioPostRequest {
     foto_perfil: string
 }
 
+
+interface UsuarioPutRequest {
+    id: string,
+    primeiroNome: string,
+    segundoNome: string,
+    email: string,
+    senha: string,
+    permissao: Permissao,
+    celular?: string,
+    cpf?: string,
+    cep?: string,
+    fotoPerfil: string
+}
+
 type Permissao = 'admin'| 'servidor' | 'visitante';
