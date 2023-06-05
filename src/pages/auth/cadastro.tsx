@@ -145,14 +145,12 @@ const CadastroUsuario: NextPage<CadastroUsuarioProps> = (
     }
 
     const usuarioRequest: any = {
-      primeiroNome: formInstance.getValue("nome") as string,
       primeiro_nome: formInstance.getValue("nome") as string,
       segundo_nome: formInstance.getValue("sobrenome") as string,
-      segundoNome: formInstance.getValue("sobrenome") as string,
       email: formInstance.getValue("email") as string,
       senha: formInstance.getValue("senha") as string,
       permissao: "visitante",
-      fotoPerfil: base64 as string,
+      foto_perfil: base64 as string,
     };
 
     let usuarioRequestPromise =
