@@ -14,7 +14,7 @@ export class UsuarioAPI extends BaseAPI {
     }
 
     static async editar(usuario: UsuarioPutRequest){
-        const response = await fetch(`${this.apiURL}/admin/usuarios?id=${usuario.id}`, {
+        const response = await fetch(`${this.apiURL}/usuarios/perfil`, {
             method: 'PUT',
             body: JSON.stringify(usuario),
             headers: {"Content-type": "application/json; charset=UTF-8"}
