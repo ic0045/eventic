@@ -1,14 +1,8 @@
-import { MailService } from "@sendgrid/mail";
+import {mailService} from "../services/mailService";
 
 /*
 ------------------SENDGRID----------------------------------
 */
-
-/*
-* Serviço de e-mail send-grid
-*/
-const sgMail = new MailService();
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 /*
 * Função de envio de e-mail de aleta para troca de email
@@ -23,7 +17,7 @@ export async function sendAlertChangeEmail (email : string) :Promise<boolean>{
         null, null)
     }
     try{ 
-        let res = await sgMail.send(msg);
+        let res = await mailService.send(msg);
         if (res[0].statusCode == 202) return true;
         return false;
     }
@@ -43,7 +37,7 @@ export async function sendConfirmEmail (email : string, id : string) :Promise<bo
         "Verificar e-mail", redirectLink)
     }
     try{ 
-        let res = await sgMail.send(msg);
+        let res = await mailService.send(msg);
         if (res[0].statusCode == 202) return true;
         return false;
     }
@@ -63,7 +57,7 @@ export async function sendRecoveryEmail (email : string, id : string) :Promise<b
         "Alterar senha", redirectLink)
     }
     try{ 
-        let res = await sgMail.send(msg);
+        let res = await mailService.send(msg);
         if (res[0].statusCode == 202) return true;
         return false;
     }

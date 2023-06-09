@@ -14,18 +14,22 @@ export class Inscricao {
   @PrimaryGeneratedColumn("uuid", {name: "id", primaryKeyConstraintName: "inscricao_pkey"})
   id: string;
 
-  @Column("character varying", {
-    name: "notificar_em",
-    nullable: true,
-    length: 100,
-  })
-  notificarEm: NotificarEm | null;
+  @Column("bigint", { name: "notificar_em", nullable: true})
+  notificarEm: number | null;
 
   @Column("timestamp without time zone", { name: "created_at" })
   createdAt: Date;
 
   @Column("timestamp without time zone", { name: "updated_at", nullable: true })
   updatedAt: Date | null;
+
+  //Id do batch para envio programado
+  @Column("character varying", {name: "batch_id"})
+  batchId: string;
+
+  //Status do batch
+  @Column("character varying", {name: "batch_status", default: "active"})
+  batchStatus: string;
 
   @ManyToOne(() => Evento, (evento) => evento.inscricoes, {eager:true})
   @JoinColumn([{ 
