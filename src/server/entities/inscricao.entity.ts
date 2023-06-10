@@ -14,8 +14,8 @@ export class Inscricao {
   @PrimaryGeneratedColumn("uuid", {name: "id", primaryKeyConstraintName: "inscricao_pkey"})
   id: string;
 
-  @Column("bigint", { name: "notificar_em", nullable: true})
-  notificarEm: number | null;
+  @Column("character varying", { name: "notificar_em", nullable: true, length:100 })
+  notificarEm: NotificarEm | null;
 
   @Column("timestamp without time zone", { name: "created_at" })
   createdAt: Date;

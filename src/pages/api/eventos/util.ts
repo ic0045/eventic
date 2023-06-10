@@ -1,3 +1,4 @@
+import { NotificarEm } from "@app/common/constants";
 import {clientMailService, mailService } from "../services/mailService"; 
 
 /*
@@ -75,24 +76,32 @@ export class EventoMails {
     /*
     *   Envia e-mail de notificação
     */
-    static async sendScheduledEmail(email : string, batchId : string, title : string, start : Date, image : string) : Promise<boolean>{
+    static async sendScheduledEmail(email : string, batchId : string,
+         title : string, start : Date, image : string, notificationTime : string) : Promise<boolean>{
         //Cacula tempo para enviar e-mail
+        let notifyAt = start.getTime() - 3600; //uma hora antes
+        if(notificationTime === NotificarEm.um_dia_antes && (start.getTime() - 86400 > Date.now()))
+            notifyAt = start.getTime() - 86400;
         
-
-        const msg = {
-            to: email,
-            from: process.env.SENDGRID_EMAIL, 
-            subject: 'EventIC notificação de evento',
-            batchId: batchId,
-            // sendAt: calculateNotificationTime(start);
-            html: this.createSheduledEmailBody(start, title, image)
+        if(notifyAt <= Date.now()) //se já está menos de uma hora ou um dia, envio imediato
+         notifyAt = -1;
+        
+        const msg = notifyAt? 
+        {
+            to: email, from: process.env.SENDGRID_EMAIL, subject: 'EventIC notificação de evento',
+            batchId: batchId,html: this.createSheduledEmailBody(start, title, image)
         }
+        :
+        {
+            to: email, from: process.env.SENDGRID_EMAIL, subject: 'EventIC notificação de evento',
+            batchId: batchId, sendAt: notifyAt, html: this.createSheduledEmailBody(start, title, image)
+        };
+
         try{ 
             let res = await this.notificationMailService.send(msg);
             if (res[0].statusCode == 202) return true;
             return false;
-        }
-        catch(e){ return false; }
+        } catch(e){ return false; }
     }
 
     /*

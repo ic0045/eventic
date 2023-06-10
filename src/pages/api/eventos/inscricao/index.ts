@@ -5,6 +5,7 @@ import { Inscricao } from '@app/server/entities/inscricao.entity';
 import { getServerSession } from 'next-auth'
 import { authOptions } from '../../auth/[...nextauth]';
 import { EventoMails } from '../util';
+import { NotificarEm } from '@app/common/constants';
 
 /*
 *   Rota para inscrição em eventos.
@@ -26,7 +27,7 @@ export default async function handler(
         *   Body:           (Required): evento_id                 
         */
         if(req.method === 'POST'){
-            const {evento_id} = req.body;
+            const {evento_id, notificar_em} = req.body;
             if(evento_id != null){
                 try{
                     let evento = await EventoRepo.findOne({where: {id: evento_id}});
@@ -41,7 +42,7 @@ export default async function handler(
                                 //Faz requisição para setar status do batch como pause. Não deleta do banco
                                 if(await EventoMails.pauseBatch(inscricao.batchId)){
                                     inscricao.batchStatus = "paused";
-                                    await InscricaoRepo.save(inscricao)
+                                    await InscricaoRepo.save(inscricao);
                                 }
                                 res.status(200).json("Inscricao deletada");
                             }else{ res.status(400).json({errorMsg: "O usuario não possui inscrição no evento"})}
@@ -73,9 +74,13 @@ export default async function handler(
                                 inscricao.usuario = usuario;
                                 inscricao.createdAt = new Date();
                                 inscricao.batchId = batchId;
+                                if(notificar_em)
+                                    inscricao.notificarEm = notificar_em;
+                                else //por padrão notificar em uma hora antes
+                                    inscricao.notificarEm = NotificarEm.uma_hora_antes;
                                 await InscricaoRepo.save(inscricao);
-                                // await EventoMails.sendScheduledEmail(session.user.email, 
-                                //     batchId,evento.titulo, evento.dataInicial,evento.imagemUrl, notificar_em);
+                                await EventoMails.sendScheduledEmail(session.user.email, 
+                                    batchId,evento.titulo, evento.dataInicial,evento.imagemUrl, notificar_em);
                                 res.status(200).send(`Usuário ${usuario.primeiroNome} cadastrado no evento ${evento.titulo}.`)
                             }
                             else{ res.status(500).json({errorMsg: "Erro ao gerar notificação de evento."})}
