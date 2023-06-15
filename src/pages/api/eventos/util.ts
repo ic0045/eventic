@@ -82,24 +82,21 @@ export class EventoMails {
         let notifyAt = start.getTime() - 3600; //uma hora antes
         if(notificationTime === NotificarEm.um_dia_antes && (start.getTime() - 86400 > Date.now()))
             notifyAt = start.getTime() - 86400;
-        
+            
         if(notifyAt <= Date.now()) //se já está menos de uma hora ou um dia, envio imediato
          notifyAt = -1;
         
-        const msg = notifyAt? 
-        {
-            to: email, from: process.env.SENDGRID_EMAIL, subject: 'EventIC notificação de evento',
-            batchId: batchId,html: this.createSheduledEmailBody(start, title, image)
-        }
-        :
+        const msg = 
         {
             to: email, from: process.env.SENDGRID_EMAIL, subject: 'EventIC notificação de evento',
             batchId: batchId, sendAt: notifyAt, html: this.createSheduledEmailBody(start, title, image)
         };
-
         try{ 
             let res = await this.notificationMailService.send(msg);
-            if (res[0].statusCode == 202) return true;
+            if (res[0].statusCode == 202){
+                console.log(`[SENDGRID ENVIADO] => email==${msg.to} | sendAt==${new Date(msg.sendAt)}`);
+                return true;
+            }
             return false;
         } catch(e){ return false; }
     }

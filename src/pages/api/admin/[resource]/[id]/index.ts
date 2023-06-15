@@ -88,6 +88,7 @@ async function execute<T extends ObjectLiteral>(
             break;
         case 'PUT':
             if (id && data) { // Update
+                delete data.qtInscricoes;//Tira o campo qtInscrições pois é transiente
                 const categoria = await provider.update({ id: id, data, previousData: data });
                 return res.status(200).json(categoria);
             }

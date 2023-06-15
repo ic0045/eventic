@@ -53,7 +53,8 @@ const AddEditForm = ({ edit }: { edit: boolean }) => (
                 <DateTimeInput fullWidth source="datafinal" required={false} label="Fim do Evento" />
             </Box>
         </Box>
-        <TextInput fullWidth source="localizacao" type="address" helperText="Rua X, Bairro Y.. " label="Localização do Evento" />
+        <TextInput fullWidth source="localizacao" type="address" helperText="Rua X, Bairro Y.. " 
+        label="Localização do Evento" validate={[required()]}/>
 
         <Typography variant="h6" gutterBottom>
             Outras Informações
