@@ -1,4 +1,3 @@
-import { NotificarEm } from "@app/common/constants";
 import {clientMailService, mailService } from "../services/mailService"; 
 
 /*
@@ -8,6 +7,13 @@ export class EventoMails {
 
     static batchMailService = clientMailService;
     static notificationMailService = mailService;
+
+    /*
+    * Retorna o tempo em Unix Timestamp
+    */
+    static getUnixTimestamp(miliseconds = Date.now()) : number{
+        return Math.floor(miliseconds/1000);
+    }
 
     /*
     * Gera id de batch para a inscrição
@@ -77,28 +83,37 @@ export class EventoMails {
     *   Envia e-mail de notificação
     */
     static async sendScheduledEmail(email : string, batchId : string,
-         title : string, start : Date, image : string, notificationTime : string) : Promise<boolean>{
-        //Cacula tempo para enviar e-mail
-        let notifyAt = start.getTime() - 3600; //uma hora antes
-        if(notificationTime === NotificarEm.um_dia_antes && (start.getTime() - 86400 > Date.now()))
-            notifyAt = start.getTime() - 86400;
-            
-        if(notifyAt <= Date.now()) //se já está menos de uma hora ou um dia, envio imediato
-         notifyAt = -1;
+         title : string, start : Date, image : string) : Promise<boolean>{
+        //Cacula tempo para enviar e-mail: 1 hora antes do início do evento
+        const notificationDate = new Date(start.getFullYear(),start.getMonth(), start.getDate(),
+        start.getHours() -1, start.getMinutes());
+        let notifyAt;    
+        if(notificationDate.getTime() <= Date.now()) //se já está menos do tempo, envio no momento do evento
+            notifyAt = this.getUnixTimestamp(start.getTime());
+        else
+            notifyAt = this.getUnixTimestamp(notificationDate.getTime())    
         
         const msg = 
         {
-            to: email, from: process.env.SENDGRID_EMAIL, subject: 'EventIC notificação de evento',
-            batchId: batchId, sendAt: notifyAt, html: this.createSheduledEmailBody(start, title, image)
+            to: email,
+            from: {email: process.env.SENDGRID_EMAIL, name: 'EventIC'},
+            subject: 'EventIC notificação de evento',
+            batchId: batchId,
+            sendAt: notifyAt,
+            html: this.createSheduledEmailBody(start, title, image)
         };
+
         try{ 
             let res = await this.notificationMailService.send(msg);
             if (res[0].statusCode == 202){
-                console.log(`[SENDGRID ENVIADO] => email==${msg.to} | sendAt==${new Date(msg.sendAt)}`);
+                console.log(`[SENDGRID ENVIADO] => email==${msg.to} | sendAt==${msg.sendAt}`);
                 return true;
             }
+            console.log(`[SENDGRID NAO ENVIADO] => Status=${res[0].statusCode}, Body=${res[0].body}, Headers=${res[0].headers}`);
             return false;
-        } catch(e){ return false; }
+        } catch(e){ 
+            console.log(`[SENDGRID ERROR] => ${e}`);
+            return false; }
     }
 
     /*
@@ -112,12 +127,16 @@ export class EventoMails {
         <tbody>
             <tr>
                 <td align="left" style="box-sizing:border-box;padding:0;font-family:'Open Sans','Helvetica Neue','Helvetica',Helvetica,Arial,sans-serif;font-size:16px;vertical-align:top;text-align:left" valign="top">
-                    <span>
-                        <img alt="Eventic" height="50" 
+                    <div style="width:100%;background-color:#f9f6f6;display: flex;flex-direction: row;align-items: center; justify-content: space-between;">
+                        <img alt="Eventic"
+                        src="https://i.ibb.co/3hkLvmm/eventic-Logo.png"
+                        style="max-width:100%;border-style:none;width:200px;height:80px"
+                        >
+                        
+                        <img alt="IC-UFBA" 
                         src= "https://computacao.ufba.br/sites/computacao.ufba.br/files/logo_dcc_1.png"
-                        style="max-width:100%;border-style:none;width:137px;height:45px" width="137">
-                    </a>
-                    </span>
+                        style="max-width:100%;border-style:none;width:137px;height:45px">
+                    </div>
                 </td>
             </tr>
         </tbody>
@@ -132,19 +151,19 @@ export class EventoMails {
                 <table style="box-sizing:border-box;width:100%;border-spacing:0;border-collapse:separate!important" width="100%">
                     <tbody>
                         <tr style="display: flex;flex-direction: row;align-items: center; gap: 15px;">
-                            ${image? 
-                                `<td style="" valign="top">
-                                <img alt="Eventic" height="50" 
-                                src= ${image}
-                                style="max-width:100%;border-style:none;width:137px;height:45px" width="137">
-                                </td>`
-                                :
-                                ``
-                            }
+                            
+                            <td style="" valign="top">
+                            <img alt="Evento imagem" height="50" 
+                            src= ${image} style="max-width:100%;border-style:none;width:137px;height:45px" width="137">
+                            </td>
+                                
                             <td style="" valign="top">
                                 <h2 style="font-family:'Open Sans','Helvetica Neue','Helvetica',Helvetica,Arial,sans-serif;font-weight:300;line-height:1.5;font-size:24px;color:#294661!important">
-                                O evento ${title} começa em ${start}.
+                                O evento ${title} começa em uma hora.
                                 </h2>
+                                <h3 style="font-family:'Open Sans','Helvetica Neue','Helvetica',Helvetica,Arial,sans-serif;font-weight:100;line-height:1.0;font-size:20px;color:#294661!important">
+                                ${`${start.getHours()}:${start.getMinutes()} - ${start.getDate()}/${start.getMonth()}`}
+                                </h3>
                             </td>
                         </tr>
                     </tbody>
@@ -158,7 +177,7 @@ export class EventoMails {
     <div style="box-sizing:border-box;clear:both;width:100%">
     <table style="box-sizing:border-box;width:100%;border-spacing:0;font-size:12px;border-collapse:separate!important" width="100%">
         <tbody>
-            <tr style="font-size:12px">
+            <tr style="font-size:12px;background-color: #f9f6f6;">
                 <td align="center" style="box-sizing:border-box;font-family:'Open Sans','Helvetica Neue','Helvetica',Helvetica,Arial,sans-serif;vertical-align:top;font-size:12px;text-align:center;padding:20px 0" valign="top">
 
                 <p style="color:#294661;font-family:'Open Sans','Helvetica Neue','Helvetica',Helvetica,Arial,sans-serif;font-size:12px;font-weight:400;margin-bottom:5px;margin:10px 0 20px">Eventic</p>

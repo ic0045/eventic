@@ -31,7 +31,7 @@ export class Inscricao {
   @Column("character varying", {name: "batch_status", default: "active"})
   batchStatus: string;
 
-  @ManyToOne(() => Evento, (evento) => evento.inscricoes, {eager:true})
+  @ManyToOne(() => Evento, (evento) => evento.inscricoes, {eager:true, onDelete: 'CASCADE'})
   @JoinColumn([{ 
     name: "evento_id", 
     referencedColumnName: "id",
@@ -40,7 +40,7 @@ export class Inscricao {
   //@ts-ignore
   evento: Relation<Evento>;
 
-  @ManyToOne(() => Usuario, (usuario) => usuario.inscricaos, {eager:true})
+  @ManyToOne(() => Usuario, (usuario) => usuario.inscricaos, {eager:true, onDelete: 'CASCADE'})
   @JoinColumn([{ 
     name: "usuario_id", 
     referencedColumnName: "id",

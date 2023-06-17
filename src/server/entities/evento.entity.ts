@@ -77,7 +77,7 @@ export class Evento {
   })
   linkMaisInformacoes: string | null;
 
-  @ManyToOne(() => Usuario, (usuario) => usuario.eventos, { nullable: false })
+  @ManyToOne(() => Usuario, (usuario) => usuario.eventos, { nullable: false, onDelete: 'CASCADE' })
   @JoinColumn([{
     name: "criador_id",
     referencedColumnName: "id",

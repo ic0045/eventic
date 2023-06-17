@@ -27,7 +27,7 @@ export default async function handler(
         *   Body:           (Required): evento_id                 
         */
         if(req.method === 'POST'){
-            const {evento_id, notificar_em} = req.body;
+            const {evento_id} = req.body;
             if(evento_id != null){
                 try{
                     let evento = await EventoRepo.findOne({where: {id: evento_id}});
@@ -54,6 +54,14 @@ export default async function handler(
                                 res.status(400).json({errorMsg: "O evento já inicou ou já foi encerrado"});
                                 return;
                             }
+                            //Verifica se o evento está a mais de 3 dias a frente
+                            let now = new Date();
+                            let threeDaysAhead = new Date(now.getFullYear(), now.getMonth(),now.getDate() + 3,
+                                now.getHours(), now.getMinutes());
+                            if(evento.dataInicial.getTime() >= threeDaysAhead.getTime() ){
+                                res.status(400).json({errorMsg: "Este evento está muito longe. Só é possivel ser notificado em eventos com ate 3 dias de antecedência."});
+                                return;
+                            }
                             //Se já existe uma inscrição com batch pausado, reativa o batch
                             if(inscricao != null){
                                 if(inscricao.batchStatus != "active"){ //Se não ativa, reativa
@@ -74,13 +82,10 @@ export default async function handler(
                                 inscricao.usuario = usuario;
                                 inscricao.createdAt = new Date();
                                 inscricao.batchId = batchId;
-                                if(notificar_em)
-                                    inscricao.notificarEm = notificar_em;
-                                else //por padrão notificar em uma hora antes
-                                    inscricao.notificarEm = NotificarEm.uma_hora_antes;
+                                inscricao.notificarEm = NotificarEm.uma_hora_antes;
                                 await InscricaoRepo.save(inscricao);
                                 await EventoMails.sendScheduledEmail(session.user.email, 
-                                    batchId,evento.titulo, evento.dataInicial,evento.imagemUrl, notificar_em);
+                                    batchId,evento.titulo, evento.dataInicial,evento.imagemUrl);
                                 res.status(200).send(`Usuário ${usuario.primeiroNome} cadastrado no evento ${evento.titulo}.`)
                             }
                             else{ res.status(500).json({errorMsg: "Erro ao gerar notificação de evento."})}

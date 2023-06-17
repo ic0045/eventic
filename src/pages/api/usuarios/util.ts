@@ -79,13 +79,17 @@ function createEmailBody(
     <table style="box-sizing:border-box;width:100%;border-spacing:0;border-collapse:separate!important" width="100%">
         <tbody>
             <tr>
-                <td align="left" style="box-sizing:border-box;padding:0;font-family:'Open Sans','Helvetica Neue','Helvetica',Helvetica,Arial,sans-serif;font-size:16px;vertical-align:top;text-align:left" valign="top">
-                    <span>
-                        <img alt="Eventic" height="50" 
+                <td style="box-sizing:border-box;padding:0;font-family:'Open Sans','Helvetica Neue','Helvetica',Helvetica,Arial,sans-serif;font-size:16px;vertical-align:top;text-align:left" valign="top">
+                    <div style="width:100%;background-color:#f9f6f6;display:flex;flex-direction:row;align-items:center;justify-content:space-between;">
+                        <img alt="Eventic"
+                        src="https://i.ibb.co/3hkLvmm/eventic-Logo.png"
+                        style="max-width:100%;border-style:none;width:200px;height:80px"
+                        >
+                        
+                        <img alt="IC-UFBA" 
                         src= "https://computacao.ufba.br/sites/computacao.ufba.br/files/logo_dcc_1.png"
-                        style="max-width:100%;border-style:none;width:137px;height:45px" width="137">
-                    </a>
-                    </span>
+                        style="max-width:100%;border-style:none;width:137px;height:45px">
+                    </div>
                 </td>
             </tr>
         </tbody>
@@ -146,7 +150,7 @@ function createEmailBody(
     <div style="box-sizing:border-box;clear:both;width:100%">
     <table style="box-sizing:border-box;width:100%;border-spacing:0;font-size:12px;border-collapse:separate!important" width="100%">
         <tbody>
-            <tr style="font-size:12px">
+            <tr style="font-size:12px;background-color: #f9f6f6;">
                 <td align="center" style="box-sizing:border-box;font-family:'Open Sans','Helvetica Neue','Helvetica',Helvetica,Arial,sans-serif;vertical-align:top;font-size:12px;text-align:center;padding:20px 0" valign="top">
 
                 <p style="color:#294661;font-family:'Open Sans','Helvetica Neue','Helvetica',Helvetica,Arial,sans-serif;font-size:12px;font-weight:400;margin-bottom:5px;margin:10px 0 20px">Eventic</p>
