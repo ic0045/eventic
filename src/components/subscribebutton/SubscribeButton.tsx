@@ -127,7 +127,7 @@ export default function SubscribeButton({ eventoId, inscrito, idIncricoes, setId
             {session && subscribed ?
               <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                  Você será notificado por email 3 dias antes do evento
+                Você será lembrado por email uma hora antes do evento acontecer
                 </DialogContentText>
               </DialogContent>
               : <></>}

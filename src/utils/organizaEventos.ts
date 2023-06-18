@@ -56,24 +56,36 @@ function separaEventosPorPeriodo(eventos: Evento[], periodo: 'semana' | 'mes') {
         let nomePeriodo: string;
 
         if (periodo === 'semana') {
-            periodoIndex = moment(evento.dataInicial).week();
+            // periodoIndex = moment(evento.dataInicial).week();
             const dataInicioSemana = moment(evento.dataInicial).startOf('week').format('D [de] MMMM');
             const dataFimSemana = moment(evento.dataInicial).add(6, 'days').format('D [de] MMMM');
             nomePeriodo = `Semana de ${dataInicioSemana} a ${dataFimSemana}`;
         } else if (periodo === 'mes') {
-            periodoIndex = moment(evento.dataInicial).month();
+            // periodoIndex = moment(evento.dataInicial).month();
             nomePeriodo = moment(evento.dataInicial).format('MMMM YYYY');
         } else {
             throw new Error('Período inválido. Escolha entre "semana" e "mes".');
         }
 
-        if (!eventosPorPeriodo[periodoIndex]) {
-            eventosPorPeriodo[periodoIndex] = {
-                nome: nomePeriodo,
-                eventos: [],
-            };
-        }
-        eventosPorPeriodo[periodoIndex].eventos.push(evento);
+        if (!eventosPorPeriodo.find((p) => p.nome === nomePeriodo)) {
+            eventosPorPeriodo.push({
+              nome: nomePeriodo,
+              eventos: [],
+            });
+          }
+      
+          const periodoObj = eventosPorPeriodo.find((p) => p.nome === nomePeriodo);
+          if (periodoObj) {
+            periodoObj.eventos.push(evento);
+          }
+
+        // if (!eventosPorPeriodo[periodoIndex]) {
+        //     eventosPorPeriodo[periodoIndex] = {
+        //         nome: nomePeriodo,
+        //         eventos: [],
+        //     };
+        // }
+        // eventosPorPeriodo[periodoIndex].eventos.push(evento);
     });
 
     return eventosPorPeriodo;
