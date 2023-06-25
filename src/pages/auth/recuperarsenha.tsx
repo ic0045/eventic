@@ -38,6 +38,7 @@ const RecuperarSenha: NextPage = () => {
   const [openModal, setOpenModal] = useState(false);
   const [isRecuperarSenhaSuccess, setIsRecuperarSenhaSuccess] = useState(true);
   const router = useRouter();
+  const [formErrorMessage, setFormErrorMessage] = useState("");
   const formInstance = new CustomForm(formState, setFormState);
 
   const redirectoToLogin = () => {
@@ -57,7 +58,13 @@ const RecuperarSenha: NextPage = () => {
       .catch(() => {
         setIsRecuperarSenhaSuccess(false);
       })
-      .then(() => {
+      .then((response) => {
+        if (response.errorMsg) {
+          setIsRecuperarSenhaSuccess(false);
+          setFormErrorMessage(response.errorMsg);
+          return;
+        }
+
         setOpenModal(true);
       })
       .finally(() => {
@@ -98,6 +105,7 @@ const RecuperarSenha: NextPage = () => {
                 formInstance={formInstance}
                 onRecuperarSenhaSubmit={onRecuperarSenhaSubmit}
                 isFormSuccess={isRecuperarSenhaSuccess}
+                errorMessage={formErrorMessage}
               />
             )}
           </div>
