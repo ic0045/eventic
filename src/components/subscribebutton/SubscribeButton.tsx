@@ -88,7 +88,12 @@ export default function SubscribeButton({ eventoId, inscrito, idIncricoes, setId
           setSubscribed(true)
         }
       } else {
-        setMensagem("Erro no servidor")
+        if(response.status === 400){
+          let responseJson = await response.json();
+          setMensagem(responseJson.errorMsg)
+        }
+        else
+          setMensagem("Erro no servidor")
       }
     }
     else {

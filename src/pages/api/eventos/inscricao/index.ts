@@ -4,6 +4,8 @@ import { Usuario } from '@app/server/entities/usuario.entity';
 import { Inscricao } from '@app/server/entities/inscricao.entity';
 import { getServerSession } from 'next-auth'
 import { authOptions } from '../../auth/[...nextauth]';
+import { EventoMails } from '../util';
+import { NotificarEm } from '@app/common/constants';
 
 /*
 *   Rota para inscrição em eventos.
@@ -37,30 +39,59 @@ export default async function handler(
                                 evento: {id: evento.id}
                             }});
                             if(inscricao != null){
-                                await InscricaoRepo.delete(inscricao.id);
+                                //Faz requisição para setar status do batch como pause. Não deleta do banco
+                                if(await EventoMails.pauseBatch(inscricao.batchId)){
+                                    inscricao.batchStatus = "paused";
+                                    await InscricaoRepo.save(inscricao);
+                                }
                                 res.status(200).json("Inscricao deletada");
                             }else{ res.status(400).json({errorMsg: "O usuario não possui inscrição no evento"})}
                         }
                         else{//inscrever
                             let inscricao = await InscricaoRepo.findOne({where: {usuario: {id: usuario.id}, evento: {id:evento.id}}});
-                            if(inscricao != null){//Se usuário já inscrito
-                                res.status(200).json({msg: "Usuário já inscrito no evento"});
-                                return;
-                            }
-                            if(new Date(evento.dataInicial).getTime() < Date.now()){ //Verifica se o evento já passou
+                            //Verifica se o evento já passou
+                            if(new Date(evento.dataInicial).getTime() < Date.now()){ 
                                 res.status(400).json({errorMsg: "O evento já inicou ou já foi encerrado"});
                                 return;
                             }
-                            inscricao = new Inscricao();
-                            inscricao.evento = evento;
-                            inscricao.usuario = usuario;
-                            inscricao.createdAt = new Date();
-                            await InscricaoRepo.save(inscricao);
-                            res.status(200).send(`Usuário ${usuario.primeiroNome} cadastrado no evento ${evento.titulo}.`)
+                            //Verifica se o evento está a mais de 3 dias a frente
+                            let now = new Date();
+                            let threeDaysAhead = new Date(now.getFullYear(), now.getMonth(),now.getDate() + 3,
+                                now.getHours(), now.getMinutes());
+                            if(evento.dataInicial.getTime() >= threeDaysAhead.getTime() ){
+                                res.status(400).json({errorMsg: "Este evento está muito longe. Só é possivel ser notificado em eventos com ate 3 dias de antecedência."});
+                                return;
+                            }
+                            //Se já existe uma inscrição com batch pausado, reativa o batch
+                            if(inscricao != null){
+                                if(inscricao.batchStatus != "active"){ //Se não ativa, reativa
+                                    const activated = await EventoMails.reactivateBatch(inscricao.batchId);
+                                    if(activated){
+                                        inscricao.batchStatus = "active";
+                                        await InscricaoRepo.save(inscricao);
+                                    }
+                                }
+                                res.status(200).json({msg: "Usuário inscrito no evento"});
+                                return;
+                            }
+                            //Caso contrário, cria a inscrição
+                            const batchId = await EventoMails.createBatch();
+                            if(batchId != null){
+                                inscricao = new Inscricao();
+                                inscricao.evento = evento;
+                                inscricao.usuario = usuario;
+                                inscricao.createdAt = new Date();
+                                inscricao.batchId = batchId;
+                                inscricao.notificarEm = NotificarEm.uma_hora_antes;
+                                await InscricaoRepo.save(inscricao);
+                                await EventoMails.sendScheduledEmail(session.user.email, 
+                                    batchId,evento.titulo, evento.dataInicial,evento.imagemUrl);
+                                res.status(200).send(`Usuário ${usuario.primeiroNome} cadastrado no evento ${evento.titulo}.`)
+                            }
+                            else{ res.status(500).json({errorMsg: "Erro ao gerar notificação de evento."})}
                         } 
-                    }
-                    else{ res.status(400).send(`O id ${evento_id} não corresponde a nenhum evento.`)}
-                }catch(e){res.status(500).json(e)}
+                    } else{ res.status(400).send(`O id ${evento_id} não corresponde a nenhum evento.`)}
+                }catch(e){res.status(500).json({errorMsg: e})}
             }
             else{ res.status(400).send("ID de evento não informado.")}
         }

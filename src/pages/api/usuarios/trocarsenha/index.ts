@@ -29,7 +29,7 @@ export default async function handler(
                         res.status(200).json("Senha alterada com sucesso");
                     } else { res.status(400).json("Nenhum usuário encontrado para o id: " + session.user.id) }
                 } catch (e) { res.status(500).json(e) }
-            }else{res.status(400).send(" Senha inválida.")}
+            }else{res.status(400).json({errorMsg:"Senha muito fraca."})}
         }       
     }
 }

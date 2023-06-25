@@ -30,7 +30,7 @@ export default async function handler(
 
                 else if(req.method === 'PUT'){//Atualiza informações de perfil do usuário.
                     const [valid, errorMsg] = UsuarioValidator.validatePerfilReqBody(req.body);
-                    if(!valid) res.status(400).send(errorMsg);
+                    if(!valid) res.status(400).json({errorMsg: errorMsg});
                     else{
                         usuario.primeiroNome = req.body.primeiro_nome;
                         usuario.segundoNome = req.body.segundo_nome;
@@ -46,6 +46,6 @@ export default async function handler(
                     }
                 }
             }
-        }catch(e){res.status(500).json(e)}
+        }catch(e){res.status(500).json({errorMsg: e})}
     }
 }

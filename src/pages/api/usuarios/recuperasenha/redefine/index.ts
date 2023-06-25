@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { UsuarioRepo } from '@app/server/database'
 import { hashPassword } from '@app/pages/api/auth/auth';
+import { UsuarioValidator } from '../../util';
 
 /*
 *   Rota para confirmação de recuperação de senha
@@ -16,6 +17,8 @@ export default async function handler(
         if(!id || !senha) 
             res.status(400).send("Id ou senha de recuperação não informado.");
         else{
+            let valid = UsuarioValidator.validatePassword(req.body.senha);
+            if(valid){
                 try{
                     const user = await UsuarioRepo.findOne({where: {id: id}});
                     if (user != null) {
@@ -24,6 +27,7 @@ export default async function handler(
                         res.status(200).json("Senha alterada com sucesso.")
                     } else { res.status(400).json("Nenhum usuário encontrado para o id: " + id) }
                 } catch (e) { res.status(500).json(e) }
-            }
-        }       
+            }else{ res.status(400).json({errorMsg:"Senha muito fraca."}) }
+        }
+    }       
 }
