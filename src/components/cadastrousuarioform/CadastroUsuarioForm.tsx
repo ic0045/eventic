@@ -62,7 +62,7 @@ export const CadastroUsuarioForm: FunctionComponent<
           helperText={props.formInstance.getErrorMessage("email")}
           label="E-mail"
         />
-        <TextField
+        { !props.usuario && (<TextField
           sx={{marginTop:'1rem'}}
           error={!props.formInstance.isValid("senha")}
           id="senha"
@@ -71,7 +71,7 @@ export const CadastroUsuarioForm: FunctionComponent<
           helperText={props.formInstance.getErrorMessage("senha")}
           label="Senha"
           type="password"
-        />
+        />) }
         {/* <TextField
           error={!props.formInstance.isValid("celular")}
           id="celular"

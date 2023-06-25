@@ -51,6 +51,7 @@ Visando solucionar esse problema e atender a demanda do Instituto da Computaçã
 ## Diagramas
 
 - [Diagrama ER](./docs/diagrama.png)
+- [Arquitetura](./docs/SEICOMP%20-%20Arquitetura.drawio.png)
 - [Diagrama de Arquitetura](https://drive.google.com/file/d/10-xVgrojvI21lgaq-59pYKtRhihIcOBN/view?usp=sharing)
 
 ## Ambientes

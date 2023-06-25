@@ -7,6 +7,7 @@ interface RecuperarSenhaFormProps {
   formInstance: CustomForm;
   isFormSuccess: boolean;
   onRecuperarSenhaSubmit: any;
+  errorMessage: string;
 }
 
 export const RecuperarSenhaForm: FunctionComponent<RecuperarSenhaFormProps> = (
@@ -15,7 +16,7 @@ export const RecuperarSenhaForm: FunctionComponent<RecuperarSenhaFormProps> = (
   return (
     <>
       {!props.isFormSuccess && (
-        <Alert severity="error">Erro</Alert>
+        <Alert severity="error">{props.errorMessage}</Alert>
       )}
       <div className={styles.recuperarsenha}>
         <p>

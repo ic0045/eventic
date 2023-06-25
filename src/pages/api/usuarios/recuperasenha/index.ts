@@ -22,7 +22,7 @@ export default async function handler(
                         if(await sendRecoveryEmail(user.email, user.id))
                             res.status(200).json("E-mail enviado");
                         else res.status(500).json({errorMsg: "Erro ao enviar e-mail de recuperação."})
-                    } else { res.status(400).json("Nenhum usuário encontrado para o email: " + email) }
+                    } else { res.status(400).json({errorMsg:"Nenhum usuário encontrado para o email: " + email})}
                 } catch (e) { res.status(500).json(e) }
             }
         }       
