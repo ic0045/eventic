@@ -380,8 +380,8 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
                         <TabContext value={aba}>
                             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                                 <TabList onChange={(e, newValue) => { setAba(newValue) }}>
-                                    <Tab label='Anteriores' value='0'></Tab>
                                     <Tab label='Próximos' value='1'></Tab>
+                                    <Tab label='Anteriores' value='0'></Tab>
                                 </TabList>
 
                             </Box>
