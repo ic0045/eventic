@@ -85,3 +85,20 @@ Visando solucionar esse problema e atender a demanda do Instituto da Computaçã
 
 ### Como Executar o Projeto ?
 - [Guia de Implantação](./Implantacao.md)
+- 
+### Melhorias Futuras
+
+Na tela administrativa de cadastro de eventos:
+1. Renomear "Destaque" para "Em Destaque"
+1. Destaque: Deve aparecer sim ou não ao inves de icones nos valores.
+1. A descrição do evento quando passado de 50 caracteres deve exibir reticencias "..." e não o texto inteiro.
+1. Adicionar tipo evento: Online / Presencial
+1. Quando for Presencial notificar 4 horas antes.
+
+
+Em todas as telas administrativas:
+1. Todas as colunas de alteração ou remoção devem ter o header "Ação"
+1. Não exibir o ID do banco nas telas de alteração
+1. Os headers precisam estar em destaque. (Aumentar a fonte e colocar em negrito)
+1. Apos criar um registro exibir um popup perguntando se usuario quer criar um novo registro ou ir pra tela de exibição dos registros
+
