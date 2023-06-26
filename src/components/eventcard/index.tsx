@@ -67,7 +67,7 @@ export default function EventCard(props: Props) {
                 </Link>
             </Box>
 
-            <Box sx={{ flexGrow: 1 }} >
+            <Box sx={{display:'flex',flexDirection:'column', flexGrow: 1 }} >
                 <CardContent>
                     <Link style={{ color: "black" }} href={{
                         pathname: '/eventos/detalhes',
@@ -101,7 +101,7 @@ export default function EventCard(props: Props) {
                     </Box>
 
                 </CardContent>
-                <Box mb={1} sx={{ display: 'flex', justifyContent: 'flex-end', marginRight: '0.5rem' }}>
+                <Box mb={1} sx={{ display: 'flex', justifyContent: 'flex-end', marginRight: '0.5rem',marginTop:'auto' }}>
                     {props.subscribeButton && (props.isLoadingSubButton ? <CircularProgress size={28}/> : <SubscribeButton eventoId={props.eventoId} inscrito={props.inscrito} setIdIncricoes={props.setIdIncricoes} idIncricoes={props.idIncricoes} />)}
                     <ShareButton url={process.env.NEXT_PUBLIC_URL + "/eventos/detalhes?id=" + props.id} />
                 </Box>
