@@ -2,6 +2,7 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Relation, Unique } f
 import { Evento } from "@app/server/entities/evento.entity"
 import { Inscricao } from "@app/server/entities/inscricao.entity";
 import { PreferenciasUsuario } from "@app/server/entities/preferenciasusuario.entity";
+import { Avaliacao } from "./avaliacao.entity";
 
 @Entity("usuario", { schema: "public" })
 @Unique('email_unique', ['email'])
@@ -78,5 +79,11 @@ export class Usuario {
     (preferenciasUsuario) => preferenciasUsuario.usuario
   )
   preferenciasUsuarios: PreferenciasUsuario[];
+
+  @OneToMany(
+    () => Avaliacao,
+    (avaliacao) => avaliacao.usuario
+  )
+  avaliacoes: Avaliacao[];
 
 }

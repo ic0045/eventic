@@ -6,6 +6,7 @@ import { Evento, EventoSubscriber } from "@app/server/entities/evento.entity"
 import { Inscricao } from "@app/server/entities/inscricao.entity"
 import { PreferenciasUsuario } from "@app/server/entities/preferenciasusuario.entity"
 import { Categoria } from "@app/server/entities/categoria.entity"
+import { Avaliacao } from "@app/server/entities/avaliacao.entity"
 
 dotenv.config();
 
@@ -24,12 +25,13 @@ export const datasource = new DataSource({
         Categoria, 
         Inscricao, 
         PreferenciasUsuario,
+        Avaliacao
     ],
     migrations: [],
     subscribers: [EventoSubscriber],
-    ssl: { 
-        rejectUnauthorized: false
-    }
+    // ssl: { 
+    //     rejectUnauthorized: false
+    // }
 })
 
 try{
@@ -46,3 +48,4 @@ export const EventoRepo = datasource.getRepository(Evento);
 export const InscricaoRepo = datasource.getRepository(Inscricao);
 export const PrefsUsuarioRepo = datasource.getRepository(PreferenciasUsuario);
 export const CategoriaRepo = datasource.getRepository(Categoria);
+export const AvaliacaoRepo = datasource.getRepository(Avaliacao);
