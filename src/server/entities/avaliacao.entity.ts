@@ -9,6 +9,7 @@ import {
     Relation
 } from "typeorm";
 import { Usuario } from "./usuario.entity";
+import { Evento } from "./evento.entity";
 
 @Entity("avaliacao", { schema: "public" })
 export class Avaliacao{
@@ -29,6 +30,14 @@ export class Avaliacao{
       foreignKeyConstraintName: "usuario_fk"
     }])
     usuario: Relation<Usuario>[];
+
+    @ManyToOne(() => Evento, (evento) => evento.avaliacoes)
+    @JoinColumn([{ 
+      name: "evento_id",
+      referencedColumnName: "id",
+      foreignKeyConstraintName: "evento_fk"
+    }])
+    evento: Relation<Evento>[];
 
     @Column("timestamp", { name: "created_at" , nullable: false, default: () => 'CURRENT_TIMESTAMP'  })
     createdAt: Date;

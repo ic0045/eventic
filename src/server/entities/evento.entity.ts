@@ -13,6 +13,7 @@ import { Usuario } from "@app/server/entities/usuario.entity";
 import { Inscricao } from "@app/server/entities/inscricao.entity";
 import { Categoria } from "@app/server/entities/categoria.entity";
 import { InscricaoRepo } from "../database";
+import { Avaliacao } from "./avaliacao.entity";
 
 @Entity("evento", { schema: "public" })
 export class Evento {
@@ -97,6 +98,9 @@ export class Evento {
 
   @OneToMany(() => Inscricao, (inscricao) => inscricao.evento)
   inscricoes: Relation<Inscricao>[];
+
+  @OneToMany(() => Avaliacao, (avaliacao) => avaliacao.evento)
+  avaliacoes: Avaliacao[];
 
   qtInscricoes : number;
 
