@@ -103,25 +103,6 @@ export class Evento {
   avaliacoes: Avaliacao[];
 
   qtInscricoes : number;
-
-  // // readonly fieldTitle
-  // protected eventoTituloCompleto: String;
-
-  // @AfterLoad()
-  // getCalculatedFields() {
-  //   const inicio = moment(this.dataInicial);
-  //   if (this.dataInicial && this.datafinal) {
-  //     const fim = moment(this.dataInicial);
-
-  //     if (inicio.diff(fim, 'days') == 0) { //mesmo dia
-  //       this.eventoTituloCompleto = `${this.titulo} ${inicio.format('DD/MM/YY, hh:mm')} - ${fim.format('hh:mm')}`;
-  //     } else {
-  //       this.eventoTituloCompleto = `${this.titulo} ${inicio.format('DD/MM/YY, hh:mm')} - ${fim.format('DD/MM/YY, hh:mm')}`;
-  //     }
-  //   } else {
-  //     this.eventoTituloCompleto = `${this.titulo} ${inicio.format('DD/MM/YY, hh:mm')}`;
-  //   }
-  // }
 }
 
 @EventSubscriber()
@@ -138,10 +119,5 @@ export class EventoSubscriber implements EntitySubscriberInterface<Evento>{
                           .createQueryBuilder('inscricao')
                           .where("inscricao.evento = :eventoId", { eventoId: entity.id })
                           .getCount();
-    // entity.qtInscricoes =  await InscricaoRepo
-    //                       .createQueryBuilder('inscricao')
-    //                       .innerJoinAndSelect(Evento,'evento')
-    //                       .where("inscricao.evento = :eventoId", { idEvento })
-    //                       .getCount();
   }
 }

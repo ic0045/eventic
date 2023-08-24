@@ -39,4 +39,33 @@ export class EventoAPI extends BaseAPI {
 
         return await res.json();
     }
+
+    /**
+     *  Funcao avaliar um evento.
+     * @param avaliacao 
+     * @returns 
+     */
+    static async avaliar(avaliacao: AvaliacaoPostRequest) {
+        const response = await fetch(`${this.apiURL}/eventos/avaliar?evento_id=${avaliacao.evento_id}`, {
+            method: 'POST',
+            body: JSON.stringify(avaliacao),
+            headers: {"Content-type": "application/json; charset=UTF-8"}
+        })
+
+        return await response.json();
+    }
+
+    /**
+     *  Funcao avaliar obter avaliações de um evento.
+     * @param avaliacao 
+     * @returns 
+     */
+     static async getAvaliacoes(evento_id : string) {
+        const response = await fetch(`${this.apiURL}/eventos/avaliar?evento_id=${evento_id}`, {
+            method: 'GET',
+            headers: {"Content-type": "application/json; charset=UTF-8"}
+        })
+
+        return await response.json();
+    }
 }

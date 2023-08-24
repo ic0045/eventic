@@ -59,7 +59,7 @@ export default async function handler(
                 where.criador = {id: criador_id};
                 relations.criador = true;
             }
-        }
+        }   
         try{
             const eventos = await EventoRepo.find({
                 where: where, 

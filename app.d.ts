@@ -50,7 +50,12 @@ interface CategoriaGetRequest {
     id?: number
 }
 
-
+interface AvaliacaoPostRequest {
+    nota: number,
+    comentario?: string,
+    usuario_id: string,
+    evento_id: string
+}
 
 interface EventoPostRequest {
     descricao: string,
