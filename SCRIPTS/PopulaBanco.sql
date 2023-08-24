@@ -75,3 +75,17 @@ INSERT INTO public.avaliacao
 VALUES
 ('7044ed56-916f-45a9-a20c-a61510e31c2b', 5, 'Muito bom!', now()::timestamp, null, 
  '0e054aed-fa26-4280-9145-077595002527', '413b3a73-218c-4be6-a5ca-2756969a1990');
+
+ insert into public.avaliacao 
+ (usuario_id, evento_id, created_at, nota, comentario, id )
+ VALUES
+ ('0e054aed-fa26-4280-9145-077595002527','413b3a73-218c-4be6-a5ca-2756969a1990' '2023-08-21 11:50:01.24185', 3, 
+    'Faltou um pouco mais de organização, mas as discussões foram interessantes.',gen_random_uuid ()),
+ ('409c2cbf-6bbd-4539-b406-4234e40d3529','413b3a73-218c-4be6-a5ca-2756969a1990' '2023-08-22 11:50:01.24185', 4,
+    'Ótimo evento! Palestrantes incríveis.', gen_random_uuid ()),
+ ('7d325a33-5dcd-41e2-8e03-98198995fd46','413b3a73-218c-4be6-a5ca-2756969a1990' '2023-08-24 11:50:01.24185', 5,
+    'Adorei as atividades interativas. Aprendizado garantido.', gen_random_uuid ()),
+ ('822784a3-8612-4111-9283-89cae37af5c2','413b3a73-218c-4be6-a5ca-2756969a1990' '2023-08-23 11:50:01.24185', 1,
+    'Me decepcionei. Esperava mais conteúdo relevante.', gen_random_uuid ()),
+ ('00eec939-32e3-43df-b4b8-adcc1f32df81','413b3a73-218c-4be6-a5ca-2756969a1990' '2023-08-21 11:50:01.24185', 4,
+    'Ótimo',gen_random_uuid ());

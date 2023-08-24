@@ -66,6 +66,7 @@ export default async function handler(
 
                 const sql = AvaliacaoRepo.createQueryBuilder("avaliacao");
                 sql.leftJoinAndSelect('avaliacao.usuario','avaliador');
+                sql.innerJoinAndSelect('avaliacao.evento', "evento", "evento.id = :evento_id", {evento_id: evento.id})
                 sql.select(['avaliador.primeiroNome','avaliador.segundoNome', "avaliacao"]);
 
                 const avaliacoes = await sql.getMany();

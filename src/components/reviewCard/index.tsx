@@ -16,13 +16,12 @@ function getReviewDate(date : Date){
 
 export default function ReviewCard({props} : ReviewProps | any) {
   return (
-    <Box>
-      <Typography variant="subtitle1">{props.usuario.primeiroNome} {props.usuario.segundoNome}</Typography>
-      <Rating
-        name="read-only"
-        value={props.nota}
-        readOnly
-      />
+    <Box sx={{backgroundColor: '#8b98ad', width: 'auto'}}>
+      <Box sx= {{display:"flex", alignItems:"center", gap: '15px'}}>
+        <Typography variant="subtitle1">{props.usuario.primeiroNome} {props.usuario.segundoNome}</Typography>
+        <Rating name="read-only" value={props.nota} readOnly/>
+      </Box>
+
       <Typography variant="body1">{props.comentario}</Typography>
       <Typography variant="body2">{getReviewDate(new Date(props.updatedAt? props.updatedAt : props.createdAt))}</Typography>
     </Box>
