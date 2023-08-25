@@ -138,4 +138,13 @@ interface UsuarioPutRequest {
     fotoPerfil: string
 }
 
+interface AvaliacaoData{
+    comentario: string,
+    createdAt: string,
+    updatedAt: string,
+    id: string,
+    usuario : {primeiroNome : string, segundoNome:string, id :string},
+    nota : number
+}
+
 type Permissao = 'admin'| 'servidor' | 'visitante';

@@ -52,6 +52,35 @@ export default async function handler(
     }
 
     /*
+        Exclui avaliação do evento
+    */
+    else if(req.method === "DELETE"){
+        const session = await getServerSession(req,res,authOptions);
+
+        if (!session)
+            res.status(401).send("É necessário estar autenticado.");
+        else{
+            let {evento_id} = req.query;
+            if(evento_id == null){
+                res.status(400).json({errorMsg: "Falta id do evento"});
+                return;
+            }
+            if(typeof evento_id === 'object')
+                evento_id = evento_id[0];
+            else{
+                let avaliacao = await AvaliacaoRepo.findOne({where: {usuario: {id: session.user.id}, evento: {id:evento_id}}});
+                if(avaliacao != null){
+                    try{
+                        await AvaliacaoRepo.delete(avaliacao.id);
+                        res.status(200).json("Avaliação deletada com sucesso");
+                    }catch (e) { res.status(500).json(e); }
+                }else
+                    res.status(400).json({errorMsg: `User ${session.user.id} Evento ${evento_id}`});
+            }
+        }
+    }
+
+    /*
         Obtém avaliações do evento
     */
     else if(req.method === "GET"){
@@ -78,30 +107,3 @@ export default async function handler(
             res.status(400).json({errorMsg: "Falta id do evento nos parametros"})
     }
 }
-
-/*
- /*
-        Obtém avaliações do evento
-        else if(req.method === "GET"){
-            let {evento_id} = req.query;
-    
-            if(typeof evento_id === 'object')
-                evento_id = evento_id[0];
-    
-            if(evento_id != null){  
-                let evento = await EventoRepo.findOne({where: {id: evento_id}}) as Evento;
-                if(evento){
-                    const avaliacoes = await AvaliacaoRepo.find(
-                        {where: {evento: {id: evento_id} },
-                            relations: {evento: true}
-                        }
-                    );
-                    res.status(200).json(avaliacoes);
-                }
-                else
-                    res.status(400).json({errorMsg: `Nenhum evento encontrado para o id ${evento_id}`})
-            }else
-                res.status(400).json({errorMsg: "Falta id do evento nos parametros"})
-        }
-
-        */
