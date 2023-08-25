@@ -31,19 +31,28 @@ export default async function handler(
             }
             else{
                 let avaliacao = await AvaliacaoRepo.findOne({where: {usuario: {id: session.user.id}, evento: {id:evento_id}}});
-                if(avaliacao != null){
+                if(avaliacao != null){ //Atualização
                     avaliacao.comentario = comentario;
                     avaliacao.nota = nota;
                     avaliacao.updatedAt = new Date();
-                }else{
+                }else{ //Cadastro
                     let evento = await EventoRepo.findOne({where: {id: evento_id}}) as Evento;
-                    let usuario = await UsuarioRepo.findOne({where: {id: session.user.id}}) as Usuario;
-                    avaliacao = new Avaliacao();
-                    avaliacao.comentario = comentario;
-                    avaliacao.nota = nota;
-                    avaliacao.usuario = [usuario];
-                    avaliacao.evento = [evento];
-                    avaliacao.createdAt = new Date();
+                    if(Date.now() < evento.dataInicial.getTime() ){ //permite avaliar apenas eventos que já iniciaram
+                        res.status(400).json({errorMsg: "É possível avaliar apenas eventos que já iniciaram."});
+                        return;
+                    }
+                    else{
+                        let usuario = await UsuarioRepo.findOne({where: {id: session.user.id}}) as Usuario;
+                        avaliacao = new Avaliacao();
+                        avaliacao.comentario = comentario;
+                        avaliacao.nota = nota;
+                        // @ts-ignore
+                        avaliacao.usuario = usuario;
+                        // @ts-ignore
+                        avaliacao.evento = evento;
+                        avaliacao.createdAt = new Date();
+                        avaliacao.updatedAt = null;
+                    }
                 }
                 await AvaliacaoRepo.save(avaliacao);
                 res.status(200).json({msg: "Avaliação cadastrada"});

@@ -210,7 +210,17 @@ function EventDetails({ eventoData, avaliacaoData }: { eventoData: Evento[], ava
           </Box>
         </Grid>
 
-        <ReviewSection avaliacaoData={avaliacaoData}  evento_id={eventoData[0].id} session={session}/>
+
+        {
+          Date.now() < new Date(eventoData[0].dataInicial).getTime()?
+          <></>
+          :
+          <ReviewSection 
+          avaliacaoData={avaliacaoData} 
+          evento_id={eventoData[0].id} 
+          session={session}
+          />
+        }
 
       </Grid>
     </Box>
@@ -226,6 +236,9 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const eventoData = await res.json();
   res = await fetch(`${api}/api/eventos/avaliar?evento_id=${id}`);
   const avaliacaoData = await res.json();
+
+  console.log(eventoData[0].dataInicial);
+  console.log(typeof eventoData[0].dataInicial);
 
   return {
     props: {

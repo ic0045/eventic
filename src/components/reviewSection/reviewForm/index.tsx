@@ -42,6 +42,7 @@ export default function ReviewForm(props : Props) {
       .catch((err) => console.log("Erro ao deletar"))
       .then((res) => props.setReviewed(true));
     }
+    window.location.reload();
   };
 
   useEffect(() => {
@@ -79,7 +80,7 @@ export default function ReviewForm(props : Props) {
             props.isEdicao?
             <Grid container direction="row" spacing={3}>
               <Grid item>
-                <Button type="submit" variant="contained" color="primary"
+                <Button variant="contained" color="primary"
                   onClick={()=>handleButtonClick(true)}>
                   Avaliar
                 </Button>
@@ -92,7 +93,7 @@ export default function ReviewForm(props : Props) {
               </Grid>
             </Grid>
             :
-            <Button type="submit" variant="contained" color="primary"
+            <Button variant="contained" color="primary"
               onClick={()=>handleButtonClick(true)}>
               Avaliar
             </Button>

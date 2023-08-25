@@ -11,7 +11,7 @@ export default function ReviewSection(
     avaliacaoData,
     evento_id,
     session
-    } : {avaliacaoData : AvaliacaoData[], evento_id : string, session : SessionContextValue}
+    } : {avaliacaoData : AvaliacaoData[], evento_id : string,  session : SessionContextValue}
 ){
     
     const [reviewed, setReviewed] = useState(false);
@@ -67,7 +67,7 @@ export default function ReviewSection(
                             onClick={() => handleButtonClick()}>
                             Avaliar
                         </Button>
-                    }
+                    }                    
 
                 </Grid>
             </Grid>
@@ -102,7 +102,9 @@ export default function ReviewSection(
                   }
                 </Grid>
                 :
-                <></>
+               <Typography variant="body1" gutterBottom>
+                    Nenhuma avaliação
+                </Typography>
               }
             </Grid>
 
