@@ -19,7 +19,6 @@ import Link from "next/link";
 
 import MyIcon from './logoCalendar.svg';
 import ReviewForm from "@app/components/reviewForm";
-import { Avaliacao } from "@app/server/entities/avaliacao.entity";
 import ReviewCard from "@app/components/reviewCard";
 
 const CustomIcon = (props: React.ComponentProps<typeof SvgIcon>) => (
@@ -45,7 +44,15 @@ interface Evento {
   avaliacoes: []
 }
 
-function EventDetails({ eventoData, avaliacaoData }: { eventoData: Evento[], avaliacaoData: Avaliacao[] }) {
+interface AvaliacaoData{
+  comentario: string,
+  createdAt: string,
+  updatedAt: string,
+  id: string,
+  usuario : {primeiroNome : string, segundoNome:string, id :string}
+}
+
+function EventDetails({ eventoData, avaliacaoData }: { eventoData: Evento[], avaliacaoData: AvaliacaoData[] }) {
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -120,6 +127,16 @@ function EventDetails({ eventoData, avaliacaoData }: { eventoData: Evento[], ava
   useEffect(() => {
     getUserEvents()
   }, []);
+
+  const showReviewForm = () => {
+    if(!session.data?.user.id)
+      return false;
+    if(avaliacaoData && avaliacaoData.length > 0) 
+      for(let avaliacao of avaliacaoData)
+        if(avaliacao.usuario.id == session.data?.user.id)
+          return false;
+    return true;
+  }
 
 
   return (
@@ -217,23 +234,42 @@ function EventDetails({ eventoData, avaliacaoData }: { eventoData: Evento[], ava
         <Grid item md={12}>
          <Box sx={{ borderRadius: '0.3rem', backgroundColor: 'white', padding: '1rem', boxShadow: 3 }}>
 
-          <Typography variant="h6" gutterBottom>
-            Avaliações
-          </Typography>
-          
-          <ReviewForm userId={session.data?.user.id ?? "1"} eventId={eventoData[0].id}/>
+          <Grid container spacing={6}>
 
-          {
-            avaliacaoData && avaliacaoData.length > 0?
-            <>
-              {avaliacaoData.map(avaliacao=> <ReviewCard key={avaliacao.id} props={avaliacao}/>)}
-            </>
-            :
-            <></>
-          }
+            <Grid item md={12}>
+            {
+              showReviewForm()?
+                <ReviewForm userId={session.data!.user.id} eventId={eventoData[0].id}/>
+                :
+                <></>
+            }
+            </Grid>
+
+            <Grid item>
+              <Typography variant="h5" gutterBottom>
+                Avaliações
+              </Typography>
+
+              {
+                avaliacaoData && avaliacaoData.length > 0?
+                <Grid container spacing={3}>
+
+                  {avaliacaoData.map(avaliacao=> (
+                    <Grid key={avaliacao.id} item md={12}>
+                      <ReviewCard  props={avaliacao}/>
+                    </Grid>
+                  ))
+                  }
+                </Grid>
+                :
+                <></>
+              }
+            </Grid>
+
+          </Grid>
+
           </Box>
         </Grid>
-
       </Grid>
     </Box>
   );

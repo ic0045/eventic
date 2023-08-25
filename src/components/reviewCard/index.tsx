@@ -16,7 +16,7 @@ function getReviewDate(date : Date){
 
 export default function ReviewCard({props} : ReviewProps | any) {
   return (
-    <Box sx={{backgroundColor: '#8b98ad', width: 'auto'}}>
+    <Box sx={{ borderRadius: '0.3rem', backgroundColor: '#f2f6fc', padding: '1rem', boxShadow: 3 }}>
       <Box sx= {{display:"flex", alignItems:"center", gap: '15px'}}>
         <Typography variant="subtitle1">{props.usuario.primeiroNome} {props.usuario.segundoNome}</Typography>
         <Rating name="read-only" value={props.nota} readOnly/>

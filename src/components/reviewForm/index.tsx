@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Typography, TextField, Button, Rating, Box, Container } from '@mui/material';
-import { EventoAPI } from '@app/apis/EventoAPI';
+import { Typography, TextField, Button, Rating, Box, Grid } from '@mui/material';
 
 interface Props{
   userId: string,
@@ -45,34 +44,44 @@ export default function ReviewForm(props : Props) {
   };
 
   return (
-    <Container maxWidth="sm">
-      <Typography variant="h5" gutterBottom>
-        Avalie este evento
-      </Typography>
-      <Box component="form" onSubmit={handleSubmit}>
-        <Box mb={2}>
-          <Rating
-            name="rating"
-            value={rating}
-            defaultValue={3}
-            onChange={(event, newValue) => handleRatingChange(newValue? newValue : 3)}
-          />
+    <Grid container>
+
+      <Grid item md={12}>
+        <Typography variant="h6" gutterBottom>
+          Avalie este evento
+        </Typography>
+      </Grid>
+
+      <Grid item md={12} justifyContent="center" >
+        
+        <Box component="form" onSubmit={handleSubmit}>
+          <Box mb={2}>
+            <Rating
+              name="rating"
+              value={rating}
+              defaultValue={3}
+              onChange={(event, newValue) => handleRatingChange(newValue? newValue : 3)}
+            />
+          </Box>
+
+            <Box  mb={2}>
+              <TextField
+                label="Comentário"
+                multiline
+                rows={4}
+                fullWidth
+                variant="outlined"
+                value={comment}
+                onChange={handleCommentChange}
+              />
+            </Box>
+
+          <Button type="submit" variant="contained" color="primary">
+            Avaliar
+          </Button>
+
         </Box>
-        <Box mb={2}>
-          <TextField
-            label="Comentário"
-            multiline
-            rows={4}
-            fullWidth
-            variant="outlined"
-            value={comment}
-            onChange={handleCommentChange}
-          />
-        </Box>
-        <Button type="submit" variant="contained" color="primary">
-          Avaliar
-        </Button>
-      </Box>
-    </Container>
+      </Grid>
+    </Grid>
   );
 }
