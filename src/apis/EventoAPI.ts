@@ -75,8 +75,6 @@ export class EventoAPI extends BaseAPI {
      * @returns 
      */
      static async deleteAvaliacao(evento_id : string) {
-        console.log("----->")
-        console.log(evento_id);
         const response = await fetch(`${this.apiURL}/eventos/avaliar?evento_id=${evento_id}`, {
             method: 'DELETE',
             headers: {"Content-type": "application/json; charset=UTF-8"}

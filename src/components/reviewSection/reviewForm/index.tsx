@@ -34,12 +34,12 @@ export default function ReviewForm(props : Props) {
         evento_id: props.eventId
       });
       request
-      .catch((err) => console.log("Erro ao att"))
+      .catch((err) => {})
       .then((res) => props.setReviewed(true));
     }else{
       let request = EventoAPI.deleteAvaliacao(props.eventId);
       request
-      .catch((err) => console.log("Erro ao deletar"))
+      .catch((err) => {})
       .then((res) => props.setReviewed(true));
     }
     window.location.reload();

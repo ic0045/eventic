@@ -57,17 +57,24 @@ export default function ReviewSection(
                     </Typography>
 
                     {
-                        reviewed?
-                        <Button variant="outlined" startIcon={<EditIcon />}
-                            onClick={() => handleButtonClick()}>
-                            Editar avaliação
-                        </Button>
+                        session.data?.user?
+                        <>
+                         {
+                            reviewed?
+                            <Button variant="outlined" startIcon={<EditIcon />}
+                                onClick={() => handleButtonClick()}>
+                                Editar avaliação
+                            </Button>
+                            :
+                            <Button variant="outlined" startIcon={<RateReviewIcon />}
+                                onClick={() => handleButtonClick()}>
+                                Avaliar
+                            </Button>
+                        }  
+                        </>
                         :
-                        <Button variant="outlined" startIcon={<RateReviewIcon />}
-                            onClick={() => handleButtonClick()}>
-                            Avaliar
-                        </Button>
-                    }                    
+                        <></>
+                    }
 
                 </Grid>
             </Grid>
