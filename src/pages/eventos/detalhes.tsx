@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import SubscribeButton from "@app/components/subscribebutton/SubscribeButton"
 import ShareButton from "@app/components/sharebutton/ShareButton"
+import RecommendationSection from "@app/components/recommendationSection";
 
 import { GetServerSideProps } from 'next';
 
@@ -26,22 +27,6 @@ const CustomIcon = (props: React.ComponentProps<typeof SvgIcon>) => (
   </SvgIcon>
 );
 
-interface Evento {
-  id: string
-  descricao: string
-  localizacao: string
-  dataInicial: string
-  titulo: string
-  destaque: boolean
-  imagemUrl: string
-  createdAt: string
-  updatedAt: string
-  datafinal: string
-  tipo: string
-  linkMaisInformacoes: string
-  qtInscricoes: number
-  avaliacoes: []
-}
 
 function EventDetails({ eventoData, avaliacaoData }: { eventoData: Evento[], avaliacaoData: AvaliacaoData[] }) {
 
@@ -209,6 +194,11 @@ function EventDetails({ eventoData, avaliacaoData }: { eventoData: Evento[], ava
             ></iframe> 
           </Box>
         </Grid>
+
+        <RecommendationSection 
+          recommendationData = {[eventoData[0],eventoData[0],eventoData[0],eventoData[0]]}
+          inHomePage={false}
+          />
        
         <ReviewSection 
         avaliacaoData={avaliacaoData} 
@@ -220,7 +210,6 @@ function EventDetails({ eventoData, avaliacaoData }: { eventoData: Evento[], ava
     </Box>
   );
 };
-
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const id = query.id;

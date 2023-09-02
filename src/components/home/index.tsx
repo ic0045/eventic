@@ -21,6 +21,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { setCookie, getCookie } from '@app/utils/cookieUtils';
 
 import { criaListaCategorias } from '@app/utils/organizaEventos';
+import RecommendationSection from '../recommendationSection';
 
 
 export default function Home({ data, categorias, eventosCategoria, home }: { data?: Evento[], categorias?: Categoria[], eventosCategoria?: Array<EventoPorCategoria>, home: boolean }) {
@@ -135,7 +136,6 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
         }
 
         getUserEvents()
-
     }, []);
 
     function update(periodo: string = period) {
@@ -275,8 +275,23 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
 
                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
                             {eventosPorPeriodo.eventos.map((card: Evento) =>
-
-                                <EventCard isLoadingSubButton={isLoadingSubButton} idIncricoes={idIncricoes} setIdIncricoes={setIdIncricoes} inscrito={idIncricoes.includes(card.id)} key={card.id} eventoId={card.id} id={card.id} subscribeButton={hasSubscribeButton} image={card.imagemUrl} title={card.titulo} location={card.localizacao} initialDate={card.dataInicial} />
+                                (
+                                    <>
+                                    {/* Recomendações apenas para eventos futuros */}
+                                    {aba == '1'? 
+                                        <Grid container direction="row" alignItems="center" spacing={2}> 
+                                            <Grid item  xs={4}>
+                                                <EventCard isLoadingSubButton={isLoadingSubButton} idIncricoes={idIncricoes} setIdIncricoes={setIdIncricoes} inscrito={idIncricoes.includes(card.id)} key={card.id} eventoId={card.id} id={card.id} subscribeButton={hasSubscribeButton} image={card.imagemUrl} title={card.titulo} location={card.localizacao} initialDate={card.dataInicial} />
+                                            </Grid>
+                                            <Grid item xs={8}>
+                                                <RecommendationSection recommendationData={[card, card, card, card]} inHomePage={true}/>
+                                            </Grid>
+                                        </Grid>
+                                        :
+                                        <EventCard isLoadingSubButton={isLoadingSubButton} idIncricoes={idIncricoes} setIdIncricoes={setIdIncricoes} inscrito={idIncricoes.includes(card.id)} key={card.id} eventoId={card.id} id={card.id} subscribeButton={hasSubscribeButton} image={card.imagemUrl} title={card.titulo} location={card.localizacao} initialDate={card.dataInicial} />
+                                    }
+                                    </>
+                                )
                             )}
                         </Box>
                     </>

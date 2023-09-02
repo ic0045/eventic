@@ -12,7 +12,9 @@ interface Evento {
     updatedAt: string
     datafinal: string
     tipo: string
-    linkMaisInfomacoes: string
+    linkMaisInformacoes: string
+    qtInscricoes: number
+    avaliacoes: []
 }
 
 interface EventoPorPeriodo {

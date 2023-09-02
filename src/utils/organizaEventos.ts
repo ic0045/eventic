@@ -1,21 +1,6 @@
 import moment from 'moment'
 import 'moment/locale/pt-br';
 
-interface Evento {
-    id: string
-    descricao: string
-    localizacao: string
-    dataInicial: string
-    titulo: string
-    destaque: boolean
-    imagemUrl: string
-    createdAt: string
-    updatedAt: string
-    datafinal: string
-    tipo: string
-    linkMaisInfomacoes: string
-}
-
 interface EventoPorPeriodo {
     nome: string;
     eventos: Evento[];
