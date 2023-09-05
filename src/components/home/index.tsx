@@ -284,7 +284,7 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
                                                 <EventCard isLoadingSubButton={isLoadingSubButton} idIncricoes={idIncricoes} setIdIncricoes={setIdIncricoes} inscrito={idIncricoes.includes(card.id)} key={card.id} eventoId={card.id} id={card.id} subscribeButton={hasSubscribeButton} image={card.imagemUrl} title={card.titulo} location={card.localizacao} initialDate={card.dataInicial} />
                                             </Grid>
                                             <Grid item xs={8}>
-                                                <RecommendationSection recommendationData={[card, card, card, card]} inHomePage={true}/>
+                                                <RecommendationSection recommendationData={[card, card, card, card]} inHomePage={true} mainEvent={card} userId = {''}/>
                                             </Grid>
                                         </Grid>
                                         :

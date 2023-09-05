@@ -145,7 +145,7 @@ interface AvaliacaoData{
     createdAt: string,
     updatedAt: string,
     id: string,
-    usuario : {primeiroNome : string, segundoNome:string, id :string},
+    usuario : {primeiroNome : string, segundoNome:string, id :string, fotoPerfil : string|null},
     nota : number
 }
 

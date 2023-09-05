@@ -9,9 +9,9 @@ import RateReviewIcon from '@mui/icons-material/RateReview';
 export default function ReviewSection(
     {
     avaliacaoData,
-    evento_id,
+    evento,
     session
-    } : {avaliacaoData : AvaliacaoData[], evento_id : string,  session : SessionContextValue}
+    } : {avaliacaoData : AvaliacaoData[], evento : Evento,  session : SessionContextValue}
 ){
     
     const [reviewed, setReviewed] = useState(false);
@@ -53,7 +53,7 @@ export default function ReviewSection(
                 <Grid container  direction="row" justifyContent="space-between" alignItems="center">
 
                     <Typography variant="h5" gutterBottom>
-                        Avaliações
+                        Avaliações de {evento.titulo}
                     </Typography>
 
                     {
@@ -84,7 +84,7 @@ export default function ReviewSection(
                 <Grid item md={12}>
                     <ReviewForm 
                         userId={session.data!.user.id} 
-                        eventId={evento_id}
+                        eventId={evento.id}
                         comentario={reviewContent}
                         nota={reviewGrade}
                         isEdicao={reviewed}
@@ -99,11 +99,11 @@ export default function ReviewSection(
 
               {
                 avaliacaoData && avaliacaoData.length > 0?
-                <Grid container spacing={3}>
+                <Grid container spacing={1} alignItems='center'>
 
                   {avaliacaoData.map(avaliacao=> (
-                    <Grid key={avaliacao.id} item md={12}>
-                      <ReviewCard  props={avaliacao}/>
+                    <Grid key={avaliacao.id} item xs={6}>
+                      <ReviewCard props={avaliacao}/>
                     </Grid>
                   ))
                   }

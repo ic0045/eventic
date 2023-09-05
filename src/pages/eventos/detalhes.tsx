@@ -198,11 +198,13 @@ function EventDetails({ eventoData, avaliacaoData }: { eventoData: Evento[], ava
         <RecommendationSection 
           recommendationData = {[eventoData[0],eventoData[0],eventoData[0],eventoData[0]]}
           inHomePage={false}
+          mainEvent = {eventoData[0]}
+          userId = {session.data?.user.id? session.data.user.id : ''}
           />
        
         <ReviewSection 
         avaliacaoData={avaliacaoData} 
-        evento_id={eventoData[0].id} 
+        evento={eventoData[0]} 
         session={session}
         />
 
