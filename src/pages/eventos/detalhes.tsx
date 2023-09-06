@@ -9,6 +9,7 @@ import { useSession } from "next-auth/react";
 import SubscribeButton from "@app/components/subscribebutton/SubscribeButton"
 import ShareButton from "@app/components/sharebutton/ShareButton"
 import RecommendationSection from "@app/components/recommendationSection";
+import { EventoAPI } from "@app/apis/EventoAPI";
 
 import { GetServerSideProps } from 'next';
 
@@ -28,7 +29,8 @@ const CustomIcon = (props: React.ComponentProps<typeof SvgIcon>) => (
 );
 
 
-function EventDetails({ eventoData, avaliacaoData }: { eventoData: Evento[], avaliacaoData: AvaliacaoData[] }) {
+function EventDetails({ eventoData, avaliacaoData, recomendadosData } : 
+  { eventoData: Evento[], avaliacaoData: AvaliacaoData[], recomendadosData : Evento[] }) {
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -214,13 +216,15 @@ function EventDetails({ eventoData, avaliacaoData }: { eventoData: Evento[], ava
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const id = query.id;
+  let id = query.id;
+  if(Array.isArray(id))
+    id = id[0];
+  else if(typeof id === 'undefined')
+    id = '';
 
-  const api = process.env.PUBLIC_URL;
-  let res = await fetch(`${api}/api/eventos?id=${id}`);
-  const eventoData = await res.json();
-  res = await fetch(`${api}/api/eventos/avaliar?evento_id=${id}`);
-  const avaliacaoData = await res.json();
+  const eventoData = await EventoAPI.get(id);
+  const avaliacaoData = await EventoAPI.getAvaliacoes(id);
+ // const recomendadosData = await EventoAPI.getRecomendacoes(id);
   
   return {
     props: {

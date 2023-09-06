@@ -34,7 +34,7 @@ export class EventoAPI extends BaseAPI {
         return await res.json();
     }
 
-    static async get(eventoId: string): Promise<Evento[]>{
+    static async get(eventoId: string): Promise<Evento>{
         const res = await fetch(`${this.apiURL}/eventos?id=${eventoId}`)
 
         return await res.json();
@@ -56,22 +56,21 @@ export class EventoAPI extends BaseAPI {
     }
 
     /**
-     *  Funcao avaliar obter avaliações de um evento.
-     * @param avaliacao 
+     *  Requisicao para obter avaliações de um evento.
+     * @param evento_id 
      * @returns 
      */
-     static async getAvaliacoes(evento_id : string) {
+     static async getAvaliacoes(evento_id : string) : Promise<AvaliacaoData[]>{
         const response = await fetch(`${this.apiURL}/eventos/avaliar?evento_id=${evento_id}`, {
             method: 'GET',
             headers: {"Content-type": "application/json; charset=UTF-8"}
         })
-
         return await response.json();
     }
 
     /**
-     *  Funcao para deletar avaliação de um evento.
-     * @param avaliacao 
+     *  Requisicao para deletar avaliação de um evento.
+     * @param evento_id 
      * @returns 
      */
      static async deleteAvaliacao(evento_id : string) {
@@ -82,4 +81,19 @@ export class EventoAPI extends BaseAPI {
 
         return await response.json();
     }
+
+     /**
+     *  Requisicao para obter Recomendações de eventos similares
+     * @param evento_id 
+     * @returns 
+     */
+    static async getRecomendacoes(evento_id : string){
+        const response = await fetch(`${this.apiURL}/eventos/similares?evento_id=${evento_id}`, {
+            method: 'GET',
+            headers: {"Content-type": "application/json; charset=UTF-8"}
+        })
+        return await response.json();
+    }
+
+
 }
