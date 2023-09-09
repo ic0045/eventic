@@ -95,7 +95,7 @@ export default function ReviewSection(
                 <></>
             }
 
-            <Grid item>
+            <Grid item md={12}>
 
               {
                 avaliacaoData && avaliacaoData.length > 0?
