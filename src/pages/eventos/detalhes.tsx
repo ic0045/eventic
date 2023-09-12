@@ -103,6 +103,7 @@ function EventDetails({ eventoData, avaliacaoData, recomendadosData } :
   };
 
   useEffect(() => {
+    console.log(recomendadosData)
     getUserEvents()
   }, []);
 
@@ -198,7 +199,12 @@ function EventDetails({ eventoData, avaliacaoData, recomendadosData } :
         </Grid>
 
         <RecommendationSection 
-          recommendationData = {[eventoData[0],eventoData[0],eventoData[0],eventoData[0]]}
+          recommendationData = {
+            recomendadosData.length > 0?
+            recomendadosData 
+            :
+            [eventoData[0],eventoData[0],eventoData[0],eventoData[0]]
+          }
           inHomePage={false}
           mainEvent = {eventoData[0]}
           userId = {session.data?.user.id? session.data.user.id : ''}
@@ -224,12 +230,13 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
   const eventoData = await EventoAPI.get(id);
   const avaliacaoData = await EventoAPI.getAvaliacoes(id);
- // const recomendadosData = await EventoAPI.getRecomendacoes(id);
+  const recomendadosData = await EventoAPI.getRecomendacoes(id);
   
   return {
     props: {
       eventoData,
-      avaliacaoData
+      avaliacaoData,
+      recomendadosData
     },
   };
 };

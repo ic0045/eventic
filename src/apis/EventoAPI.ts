@@ -88,7 +88,7 @@ export class EventoAPI extends BaseAPI {
      * @returns 
      */
     static async getRecomendacoes(evento_id : string){
-        const response = await fetch(`${this.apiURL}/eventos/similares?evento_id=${evento_id}`, {
+        const response = await fetch(`${this.apiURL}/eventos/recomendar?evento_id=${evento_id}`, {
             method: 'GET',
             headers: {"Content-type": "application/json; charset=UTF-8"}
         })

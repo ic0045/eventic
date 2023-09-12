@@ -1,5 +1,6 @@
-import { AvaliacaoRepo } from '@app/server/database';
+import { AvaliacaoRepo, EventoRepo } from '@app/server/database';
 import type { NextApiRequest, NextApiResponse } from 'next'
+import {In} from 'typeorm'
 const ger = require('ger')
 
 /*
@@ -18,23 +19,45 @@ export default async function handler(
         //Gera recomendações de eventos similares a um evento
         if(evento_id){
             evento_id = evento_id as string;
-            const avaliacoes = await AvaliacaoRepo.find(
+            await recommender.initialize_namespace('eventos');
+            const avaliacoesEvento = await AvaliacaoRepo.find(
                 {where: {evento: {id: evento_id}},
                  relations: {usuario: true}
-                },);
-            await recommender.initialize_namespace('eventos');
-            for(let avaliacao of avaliacoes){
+                });
+            //Busca todas avaliacões de usuários que avaliaram este evento
+            const usuariosIds = [];
+            for(let avaliacao of avaliacoesEvento){
+                //@ts-ignore
+                usuariosIds.push(avaliacao.usuario.id);
+            }
+            const avaliacoesGeral = await AvaliacaoRepo.find(
+                {
+                    where: {usuario: {id: In(usuariosIds)}},
+                    relations: {usuario: true, evento: true}
+                }
+            );
+            for(let avaliacao of avaliacoesGeral){
                 if(avaliacao.nota >= 3)
                     gerEvents.push({
                         namespace: 'eventos',
                         //@ts-ignore
                         person: avaliacao.usuario.id,
                         action: 'likes',
-                        thing: evento_id
+                        //@ts-ignore
+                        thing: avaliacao.evento.id,
+                        expires_at: Date.now()+3600000
                     });
             }
             recommender.events(gerEvents);
-            res.status(200).json(await recommender.recommendations_for_thing('eventos',evento_id, {actions: {likes: 1}}));
+            let recommendations = (await recommender.recommendations_for_thing('eventos',evento_id, {actions: {likes: 1}})).recommendations;
+            if(recommendations.length > 0){
+                let recs = []
+                for(let rec of recommendations){
+                    recs.push(rec.thing)
+                }
+                recommendations = await EventoRepo.find({where: {id: In(recs)}});
+            }
+            res.status(200).json(recommendations);
         }
         //Gera recomendações de eventos para um dado usuario
         else if(usuario_id){
