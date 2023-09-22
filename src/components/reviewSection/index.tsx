@@ -53,7 +53,7 @@ export default function ReviewSection(
                 <Grid container  direction="row" justifyContent="space-between" alignItems="center">
 
                     <Typography variant="h5" gutterBottom>
-                        Avaliações de {evento.titulo}
+                        Avaliações sobre {`"${evento.titulo}"`}
                     </Typography>
 
                     {
@@ -63,7 +63,7 @@ export default function ReviewSection(
                             reviewed?
                             <Button variant="outlined" startIcon={<EditIcon />}
                                 onClick={() => handleButtonClick()}>
-                                Editar avaliação
+                                Editar sua avaliação
                             </Button>
                             :
                             <Button variant="outlined" startIcon={<RateReviewIcon />}

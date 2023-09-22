@@ -41,14 +41,17 @@ export default function RecommendedEventCard({eventData, userId} : {eventData: E
 
                 <Link href={{ pathname: '/eventos/detalhes',query: {id: eventData.id}}} style={{color: 'inherit'}}>
                     <CardContent sx={{alignSelf: 'center', }}> 
-                        <Typography gutterBottom variant="body2" fontWeight={'bold'} align={'center'}  component="div">
+                        <Typography gutterBottom variant="body2" fontWeight={'bold'} align={'center'}  component="div"
+                            style={{overflow: "hidden", textOverflow: "ellipsis",
+                                    display: "-webkit-box", WebkitLineClamp: 1, lineClamp: 1, WebkitBoxOrient: "vertical"
+                                }}>
                             {eventData.titulo}
                         </Typography>
                     </CardContent>
                 </Link> 
 
                 {userId && userId != ''?
-                    <Rating sx={{alignSelf:'flex-end'}} 
+                    <Rating sx={{alignSelf:'center'}} 
                         name="rating" value={rating} defaultValue={0}
                         onChange={(event, newValue) => handleRatingChange(newValue? newValue : 0)}
                     />

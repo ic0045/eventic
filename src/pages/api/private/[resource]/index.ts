@@ -9,6 +9,7 @@ import EventoDataProvider from "@app/server/services/eventodataprovider.service"
 import { getServerSession } from "next-auth";
 import InscricaoDataProvider from "@app/server/services/inscricaodataprovider.service";
 import UsuarioDataProvider from "@app/server/services/usuariodataprovider.service";
+import ParametroDataProvider from "@app/server/services/parametrodataprovider.service";
 
 /**
  *  @see https://www.npmjs.com/package/ra-data-simple-rest
@@ -43,6 +44,12 @@ export default async function handler(
         const provider = new InscricaoDataProvider(sessao);
         return await execute(req, res, provider);
     }
+
+    if (req.query.resource === ApiResource.PARAMETRO) {
+        const provider = new ParametroDataProvider(sessao);
+        return await execute(req, res, provider);
+    }
+
     res.status(400).send(`Falta definir um middleware para o recurso ${req.query.resource}`)
 }
 

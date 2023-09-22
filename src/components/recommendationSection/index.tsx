@@ -46,7 +46,7 @@ export default function RecommendationSection({recommendationData, inHomePage, m
     }
 
     //se na seção de detalhes do evento
-    while(recommendationData.length > 5)//limita a 5 eventos
+    while(recommendationData.length > 4)//limita a 4 eventos
             recommendationData.pop()
 
     return(
