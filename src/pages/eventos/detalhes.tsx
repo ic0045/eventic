@@ -5,11 +5,13 @@ import IconButton from '@mui/material/IconButton';
 import Image from 'next/image';
 import PlaceIcon from '@mui/icons-material/Place';
 import { useEffect, useState } from "react";
+import { getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
 import SubscribeButton from "@app/components/subscribebutton/SubscribeButton"
 import ShareButton from "@app/components/sharebutton/ShareButton"
 import RecommendationSection from "@app/components/recommendationSection";
 import { EventoAPI } from "@app/apis/EventoAPI";
+import { authOptions } from "../api/auth/[...nextauth]";
 
 import { GetServerSideProps } from 'next';
 
@@ -103,7 +105,6 @@ function EventDetails({ eventoData, avaliacaoData, recomendadosData } :
   };
 
   useEffect(() => {
-    console.log(recomendadosData)
     getUserEvents()
   }, []);
 
@@ -221,7 +222,8 @@ function EventDetails({ eventoData, avaliacaoData, recomendadosData } :
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+export const getServerSideProps: GetServerSideProps = async ({ query, req,res }) => {
+  const session = await getServerSession(req, res, authOptions);
   let id = query.id;
   if(Array.isArray(id))
     id = id[0];
@@ -230,7 +232,11 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
   const eventoData = await EventoAPI.get(id);
   const avaliacaoData = await EventoAPI.getAvaliacoes(id);
-  const recomendadosData = await EventoAPI.getRecomendacoes(id);
+  const recomendadosData = 
+  session != null?
+    await EventoAPI.getRecomendacoes(id, session.user.id) 
+    : 
+    await EventoAPI.getRecomendacoes(id, null);
   
   return {
     props: {

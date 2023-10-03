@@ -32,7 +32,7 @@ const AddEditForm = ({ edit }: { edit: boolean }) => (
     <SimpleForm sx={{ maxWidth: 500 }}>
         {edit && <TextInput fullWidth source="id" disabled />}
         <TextInput source="nome" fullWidth />
-        <SelectIconInput source="icone" />
+        <TextInput source="valor" fullWidth />
     </SimpleForm>
 )
 export const ParametroEdit = () => (

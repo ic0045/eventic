@@ -150,3 +150,7 @@ interface AvaliacaoData{
 }
 
 type Permissao = 'admin'| 'servidor' | 'visitante';
+
+enum ParametroName{
+    SIMILARIDADE_MIN = "similaridade_min"
+}

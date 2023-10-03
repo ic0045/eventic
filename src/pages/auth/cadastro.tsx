@@ -7,7 +7,6 @@ import { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { Layout } from "@app/components/common/layout/Layout";
 import { CadastroUsuarioForm } from "@app/components/cadastrousuarioform/CadastroUsuarioForm";
 import { UsuarioAPI } from "@app/apis/UsuarioAPI";
 import { toBase64 } from "@app/helpers/Helpers";

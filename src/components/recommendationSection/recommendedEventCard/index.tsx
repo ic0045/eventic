@@ -22,9 +22,10 @@ export default function RecommendedEventCard({eventData, userId} : {eventData: E
     };
 
     return(
-        <Grid item xs={3} key={eventData.id}>
-                <Card sx={{ display: 'flex', maxWidth: '420px', boxShadow: 3, 
-                    flexDirection:'column', flexGrow: 1, alignItems:'center', justifyContent: 'center'}}>
+        <Grid item xs={2} key={eventData.id}>
+                <Card sx={{ display: 'flex', maxWidth: '480px', boxShadow: 3, 
+                    flexDirection:'column', flexGrow: 1, alignItems:'center', justifyContent: 'center'}}
+                    title={eventData.titulo}>
                     
                     <Link href={{ pathname: '/eventos/detalhes',query: {id: eventData.id}}}>
                         <Box sx={{alignSelf: 'center'}}>

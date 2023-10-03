@@ -84,14 +84,18 @@ export class EventoAPI extends BaseAPI {
 
      /**
      *  Requisicao para obter Recomendações de eventos similares
-     * @param evento_id 
+     * @param evento_id
+     * @param user_id desconsidera eventos já avaliados pelo usuário
      * @returns 
      */
-    static async getRecomendacoes(evento_id : string){
-        const response = await fetch(`${this.apiURL}/eventos/recomendar?evento_id=${evento_id}`, {
+    static async getRecomendacoes(evento_id : string, usuario_id : string | null){
+        let route = `${this.apiURL}/eventos/recomendar?evento_id=${evento_id}`;
+        if(usuario_id != null)
+            route = route.concat(`&&usuario_id=${usuario_id}`);
+        const response = await fetch(route, {
             method: 'GET',
             headers: {"Content-type": "application/json; charset=UTF-8"}
-        })
+        });
         return await response.json();
     }
 

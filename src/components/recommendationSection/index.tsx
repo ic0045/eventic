@@ -21,7 +21,7 @@ export default function RecommendationSection({recommendationData, inHomePage, m
                 <Grid container spacing={3}>
                     {
                         recommendationData.map((rec) =>(
-                        <Grid item xs={3} key={rec.id} >
+                        <Grid item xs={3} key={rec.id} title={rec?.titulo} >
                             <Link href={{ pathname: '/eventos/detalhes',query: {id: rec.id}}}>
                                 <Card sx={{ display: 'flex', boxShadow: 3, 
                                     flexDirection:'column', flexGrow: 1 }}>
@@ -46,7 +46,7 @@ export default function RecommendationSection({recommendationData, inHomePage, m
     }
 
     //se na seção de detalhes do evento
-    while(recommendationData.length > 4)//limita a 4 eventos
+    while(recommendationData.length > 5)//limita a 5 eventos
             recommendationData.pop()
 
     return(
@@ -56,7 +56,8 @@ export default function RecommendationSection({recommendationData, inHomePage, m
                     Recomendações de eventos similares
                 </Typography>
 
-                <Grid container spacing={2}>
+                {/* <Grid container spacing={3} */}
+                <Grid container justifyContent={"space-evenly"}>
                 { recommendationData.map((rec) => <RecommendedEventCard key={rec.id} eventData={rec} userId={userId}  />)}
                 </Grid>
             </Box>
