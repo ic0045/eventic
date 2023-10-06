@@ -23,6 +23,9 @@ export const Header: FunctionComponent = () => {
       <Link href="/eventos">
         <Image width={300} height={80} src={"/images/logo.png"} alt="logo" />
       </Link>
+      <Link href="https://computacao.ufba.br/" target={"_blank"}>
+        <Image width={90} height={80} src={"/images/icLogoPequeno.png"} alt="logo Ic" />
+      </Link>
       <Box sx={{ marginLeft: "auto", alignSelf: "center" }}>
         {status == 'authenticated' && session ? (
           <AccountMenu session={session} />

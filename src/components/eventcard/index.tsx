@@ -49,7 +49,7 @@ export default function EventCard(props: Props) {
 
     return (
 
-        <Card sx={{ display: 'flex', maxWidth: '420px', boxShadow: 3, flexGrow: 1 }}>
+        <Card sx={{ display: 'flex', maxWidth: '420px', boxShadow: 3, flexGrow: 1, height: '240px' }}>
             <Box sx={{ alignSelf: 'center' }}>
                 <Link href={{
                     pathname: '/eventos/detalhes',
