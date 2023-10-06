@@ -262,15 +262,18 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
     const events = (eventList: Array<EventoPorPeriodo>, hasSubscribeButton: boolean) =>
     (
         eventList.map((eventosPorPeriodo) =>
-            <>
+            <div key={eventosPorPeriodo.nome}>
                 {listView ?
-                    <>
+                    <div key={eventosPorPeriodo.nome}>
                         <Typography variant="h5" mt={8} mb={3}>{eventosPorPeriodo.nome}</Typography>
                         {eventosPorPeriodo.eventos.map((card) =>
-                            <EventList isLoadingSubButton={isLoadingSubButton} idIncricoes={idIncricoes} setIdIncricoes={setIdIncricoes} inscrito={idIncricoes.includes(card.id)} key={card.id} eventoId={card.id} id={card.id} subscribeButton={hasSubscribeButton} title={card.titulo} location={card.localizacao} initialDate={card.dataInicial} />
+                            <div key={eventosPorPeriodo.nome}>
+                                <EventList isLoadingSubButton={isLoadingSubButton} idIncricoes={idIncricoes} setIdIncricoes={setIdIncricoes} inscrito={idIncricoes.includes(card.id)} key={card.id} eventoId={card.id} id={card.id} subscribeButton={hasSubscribeButton} title={card.titulo} location={card.localizacao} initialDate={card.dataInicial}  />
+                            </div>
                         )}
-                    </> :
-                    <>
+                    </div> 
+                    :
+                    <div key={eventosPorPeriodo.nome}>
                         <Typography variant="h5" mt={8} mb={3}>{eventosPorPeriodo.nome}</Typography>
 
 
@@ -305,9 +308,9 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
                                 }
                             </Grid>
                         }
-                    </>
+                    </div>
                 }
-            </>
+            </div>
         )
     )
 

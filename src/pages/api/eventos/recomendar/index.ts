@@ -1,7 +1,8 @@
-import { AvaliacaoRepo, EventoRepo } from '@app/server/database';
+import { AvaliacaoRepo, EventoRepo, ParametroRepo } from '@app/server/database';
+import { RecommendationService } from "@app/pages/api/services/recommendationService"
 import type { NextApiRequest, NextApiResponse } from 'next'
 import {In} from 'typeorm'
-const ger = require('ger')
+import { Evento } from '@app/server/entities/evento.entity';
 
 /*
 *   Rota para recomendações de eventos.
@@ -16,21 +17,18 @@ export default async function handler(
     if(req.method === "GET"){
         let {evento_id, usuario_id} = req.query;
         if(usuario_id) usuario_id = usuario_id as string;
-        const recommender = new ger.GER(new ger.MemESM());
-        const gerEvents = [];
-        let eventosAvaliados = null;
-        // const topWords = {};
+        let eventosAvaliados = [], similaridadeMinima = 0;
 
         //Gera recomendações de eventos similares a um evento
         if(evento_id){
             evento_id = evento_id as string;
-            await recommender.initialize_namespace('eventos');
+            let evento = await EventoRepo.findOne({where: {id:evento_id}, select: {titulo: true}}) as Evento;
             const avaliacoesEvento = await AvaliacaoRepo.find(
                 {where: {evento: {id: evento_id}},
                  relations: {usuario: true}
                 });
 
-            //Busca todas avaliacões de usuários que avaliaram este evento
+            //Para todo avaliador, busca as avaliações do avaliador em outros eventos
             const usuariosIds = [];
             for(let avaliacao of avaliacoesEvento){
                 //@ts-ignore
@@ -43,83 +41,40 @@ export default async function handler(
                 }
             );
 
-            //Conta palavras dos títulos de eventos que o usuário avaliou com nota 4 ou mais
-            // if(usuario_id){
-            //     const avaliacoesUsuario = await AvaliacaoRepo.find({
-            //         where: {usuario: {id: usuario_id}},
-            //         relations: {evento: true}
-            //     });
-            //     for(let avaliacao of avaliacoesUsuario){
-            //         if(avaliacao.nota >= 4){
-            //             //@ts-ignore
-            //             countWords(avaliacao.evento.titulo, topWords);
-            //         }
-            //     }
-            //  }
-
-            //Considera que o usuário gostou do evento apenas se a nota for >= 3
-
             //To-do:
             //Considerar apenas eventos cuja a similaridade do cosseno 
-            //entre o titulo do evento e os titulos dos eventos que o usuário gostou
+            //entre o titulo do evento e os titulos dos eventos que o usuário gostou (>=4)
             //seja maior que o parâmetro de similaridade minima 
             //definido no painel admnistrativo
 
-            //Se passado Id do usuário, filtra para não adicionar os eventos já avaliados
-            //pelo usuário na recomendação
+            //Busca eventos avaliados pelo usuário se passado id de usuário
             if(usuario_id){
+                let minimoParametro = await ParametroRepo.findOne(
+                    {where: {nome: ParametroName.SIMILARIDADE_MIN}, select: {valor: true}
+                })
+                if(minimoParametro) similaridadeMinima = Number(minimoParametro.valor);
                 let avaliacoesUsuario = 
                 await AvaliacaoRepo.find({
                     where: {usuario: {id: usuario_id}},
                     relations: {evento: true}
                 });
-                eventosAvaliados = [];
                 for(let av of avaliacoesUsuario){
                     //@ts-ignore
                     eventosAvaliados.push(av.evento.id);
                 }
             }
-
-            for(let avaliacao of avaliacoesGeral){
-                if(avaliacao.nota >= 3){
-                    //@ts-ignore
-                    if(!eventosAvaliados?.includes(avaliacao.evento.id))
-                        gerEvents.push({
-                            namespace: 'eventos',
-                            //@ts-ignore
-                            person: avaliacao.usuario.id,
-                            action: 'likes',
-                            //@ts-ignore
-                            thing: avaliacao.evento.id,
-                            expires_at: Date.now()+3600000
-                        });
-                }
-            }
-            recommender.events(gerEvents);
-            let recommendations = (await recommender.recommendations_for_thing('eventos',evento_id, {actions: {likes: 1}})).recommendations;
-            if(recommendations.length > 0){
-                let recs = []
-                for(let rec of recommendations){
-                    recs.push(rec.thing)
-                }
-                recommendations = await EventoRepo.find({where: {id: In(recs)}});
-            }
+            const recService = new RecommendationService(evento_id,usuario_id,
+                eventosAvaliados,avaliacoesGeral,evento.titulo,similaridadeMinima);
+            let recIds = await recService.generateRecs();
+            let recommendations: Evento[];
+            if(recIds.length > 0)
+                recommendations = await EventoRepo.find({where: {id: In(recIds)}});
+            else recommendations = [];               
             res.status(200).json(recommendations);
-        }
-        //Gera recomendações de eventos para um dado usuario
-        else if(usuario_id){
-            usuario_id = usuario_id as string;
+            
         }
         else{
             res.status(400).json({errorMsg: "Faltam parametros para gerar recomendações."})
         }
     }
 }
-
-// const countWords = (str : string, counter : {[key: string]:number}) : void => {
-//     let words = str.trim().split(' ');
-//     words.forEach((w)=>{
-//         if(w.length > 0)
-//         counter[w] = (counter[w] || 0) +1;
-//     });
-// }

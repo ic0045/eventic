@@ -147,6 +147,7 @@ interface AvaliacaoData{
     id: string,
     usuario : {primeiroNome : string, segundoNome:string, id :string, fotoPerfil : string|null},
     nota : number
+    evento : {id: string, descricao: string, titulo: string}
 }
 
 type Permissao = 'admin'| 'servidor' | 'visitante';

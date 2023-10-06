@@ -1,7 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Relation, Unique } from "typeorm";
 import { Evento } from "@app/server/entities/evento.entity"
 import { Inscricao } from "@app/server/entities/inscricao.entity";
-import { PreferenciasUsuario } from "@app/server/entities/preferenciasusuario.entity";
 import { Avaliacao } from "./avaliacao.entity";
 
 @Entity("usuario", { schema: "public" })
@@ -73,12 +72,6 @@ export class Usuario {
 
   @OneToMany(() => Inscricao, (inscricao) => inscricao.usuario)
   inscricaos: Inscricao[];
-
-  @OneToMany(
-    () => PreferenciasUsuario,
-    (preferenciasUsuario) => preferenciasUsuario.usuario
-  )
-  preferenciasUsuarios: PreferenciasUsuario[];
 
   @OneToMany(
     () => Avaliacao,
