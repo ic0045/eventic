@@ -3,6 +3,7 @@ import { RecommendationService } from "@app/pages/api/services/recommendationSer
 import type { NextApiRequest, NextApiResponse } from 'next'
 import {In} from 'typeorm'
 import { Evento } from '@app/server/entities/evento.entity';
+import { ParametroName } from '@app/common/constants';
 
 /*
 *   Rota para recomendações de eventos.
@@ -22,7 +23,7 @@ export default async function handler(
         //Gera recomendações de eventos similares a um evento
         if(evento_id){
             evento_id = evento_id as string;
-            let evento = await EventoRepo.findOne({where: {id:evento_id}, select: {titulo: true}}) as Evento;
+            let evento = await EventoRepo.findOne({where: {id:evento_id}}) as Evento;
             const avaliacoesEvento = await AvaliacaoRepo.find(
                 {where: {evento: {id: evento_id}},
                  relations: {usuario: true}

@@ -35,13 +35,30 @@ export class RecommendationService{
     }
 
 
+    /*
+    *   Retorna array com ids dos eventos a serem recomendados
+    */
     public async generateRecs() : Promise<string[]>{
         await this.recommender.initialize_namespace('events');
+
+        //Debug lines
+        console.log(`\nEvento base = ${this.eventTitle}, similaridade_min = ${this.minimumSimilarity}`);
+        console.log("User Rated Events = ",this.userRatedEvents);
+        console.log("General ratings = ");
+        for(let rating of this.generalRatings){
+            //@ts-ignore
+            console.log(`${rating.nota}, ${rating.usuario.primeiroNome} em --> ${rating.evento.titulo} (${rating.evento.id})`)
+        }
+        console.log("\n")
+
+
         for(let rating of this.generalRatings){
             if(rating.nota >= 3){
                 if(this.userId){
                     //Gerar recomendações para usuário logado
                     //Recomendar eventos que tenham valor de simliaridade de pelo menos o definido em parâmetro
+                    //@ts-ignore
+                    console.log("[DEBUG] ==> Evento = "+rating.evento.titulo+ " -- Valor similaridade: "+this.getCosineSimilarity(this.eventTitle,rating.evento.titulo));
                     //@ts-ignore
                     if(this.getCosineSimilarity(this.eventTitle,rating.evento.titulo) >= this.minimumSimilarity){
                         //Não recomendar eventos já avaliados pelo usuário
@@ -56,6 +73,8 @@ export class RecommendationService{
                                 thing: rating.evento.id,
                                 expires_at: Date.now()+3600000
                             });
+                        }else{
+                            console.log("[DEBUG] ==> Evento não recomendado pois já avaliado pelo usuário");
                         }
                     }
                 }

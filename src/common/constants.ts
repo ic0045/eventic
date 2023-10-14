@@ -21,6 +21,13 @@ export enum PermissaoEnum {
     visitante = 'Visitante',
 }
 
+/*
+* Nome dos parâmetros em banco
+*/
+export enum ParametroName{
+    SIMILARIDADE_MIN = "similaridade_min"
+}
+
 
 export enum NotificarEm {
     uma_hora_antes = 'Uma hora antes do evento',
