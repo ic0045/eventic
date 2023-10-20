@@ -42,6 +42,7 @@ export class RecommendationService{
         await this.recommender.initialize_namespace('events');
 
         //Debug lines
+        console.log("\n=====\n[DEBUG]")
         console.log(`\nEvento base = ${this.eventTitle}, similaridade_min = ${this.minimumSimilarity}`);
         console.log("User Rated Events = ",this.userRatedEvents);
         console.log("General ratings = ");
@@ -50,7 +51,6 @@ export class RecommendationService{
             console.log(`${rating.nota}, ${rating.usuario.primeiroNome} em --> ${rating.evento.titulo} (${rating.evento.id})`)
         }
         console.log("\n")
-
 
         for(let rating of this.generalRatings){
             if(rating.nota >= 3){
@@ -73,10 +73,11 @@ export class RecommendationService{
                                 thing: rating.evento.id,
                                 expires_at: Date.now()+3600000
                             });
+                            console.log("           (V) Evento adicionado no GER")
                         }else{
-                            console.log("[DEBUG] ==> Evento não recomendado pois já avaliado pelo usuário");
+                            console.log("           (X) Evento não recomendado pois já avaliado pelo usuário");
                         }
-                    }
+                    }else{console.log("           (X) Evento não recomendado por ter similaridade baixa")}
                 }
                 else{
                     //Gerar recomendações para usuário não logado

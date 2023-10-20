@@ -200,12 +200,7 @@ function EventDetails({ eventoData, avaliacaoData, recomendadosData } :
         </Grid>
 
         <RecommendationSection 
-          recommendationData = {
-            recomendadosData.length > 0?
-            recomendadosData 
-            :
-            [eventoData[0],eventoData[0],eventoData[0],eventoData[0]]
-          }
+          recommendationData = { recomendadosData }
           inHomePage={false}
           mainEvent = {eventoData[0]}
           userId = {session.data?.user.id? session.data.user.id : ''}

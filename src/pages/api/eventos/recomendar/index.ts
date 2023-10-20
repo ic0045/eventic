@@ -1,7 +1,7 @@
-import { AvaliacaoRepo, EventoRepo, ParametroRepo } from '@app/server/database';
+import { AvaliacaoRepo, EventoRepo, ParametroRepo, CategoriaRepo } from '@app/server/database';
 import { RecommendationService } from "@app/pages/api/services/recommendationService"
 import type { NextApiRequest, NextApiResponse } from 'next'
-import {In} from 'typeorm'
+import {In, Not} from 'typeorm'
 import { Evento } from '@app/server/entities/evento.entity';
 import { ParametroName } from '@app/common/constants';
 
@@ -53,6 +53,7 @@ export default async function handler(
                 let minimoParametro = await ParametroRepo.findOne(
                     {where: {nome: ParametroName.SIMILARIDADE_MIN}, select: {valor: true}
                 })
+                //similaridadeMinima = 0 se não logado
                 if(minimoParametro) similaridadeMinima = Number(minimoParametro.valor);
                 let avaliacoesUsuario = 
                 await AvaliacaoRepo.find({
@@ -67,12 +68,32 @@ export default async function handler(
             const recService = new RecommendationService(evento_id,usuario_id,
                 eventosAvaliados,avaliacoesGeral,evento.titulo,similaridadeMinima);
             let recIds = await recService.generateRecs();
-            let recommendations: Evento[];
-            if(recIds.length > 0)
+            let recommendations: Evento[] = [];
+            if(recIds.length != 0)
                 recommendations = await EventoRepo.find({where: {id: In(recIds)}});
-            else recommendations = [];               
+
+            //Se houver menos que 5 eventos recomendados, completa com categorias diversas
+            if(recIds.length < 5){
+                console.log("[DEBUG] ==> Não foram recomendados eventos suficentes. Preechendo com eventos de categorias diversas");                let categoriesIds = await CategoriaRepo.find({select:{id: true}});
+                let missingEvents = 5 - recIds.length;
+
+                //Desconsiderar eventos avaliados e já na lista de recomendações
+                let skipIds = eventosAvaliados.concat(recIds);
+                for(let cat of categoriesIds){//Encontra evento por categoria
+                    if(missingEvents == 0)
+                        break;
+
+                    //@ts-ignore
+                    let ev = await EventoRepo.findOne({where: {
+                        id: Not(In(skipIds)), categoria: {id: cat.id}}});
+                    if(ev != null){
+                        missingEvents -= 1;
+                        recommendations.push(ev);
+                    }
+                }
+            }
+
             res.status(200).json(recommendations);
-            
         }
         else{
             res.status(400).json({errorMsg: "Faltam parametros para gerar recomendações."})

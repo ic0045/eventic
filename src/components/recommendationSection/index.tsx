@@ -57,9 +57,17 @@ export default function RecommendationSection({recommendationData, inHomePage, m
                 </Typography>
 
                 {/* <Grid container spacing={3} */}
-                <Grid container justifyContent={"space-evenly"}>
-                { recommendationData.map((rec) => <RecommendedEventCard key={rec.id} eventData={rec} userId={userId}  />)}
-                </Grid>
+
+                {recommendationData.length != 0?
+                    <Grid container justifyContent={"space-evenly"}>
+                    { recommendationData.map((rec) => <RecommendedEventCard key={rec.id} eventData={rec} userId={userId}  />)}
+                    </Grid>
+                :
+                <Typography variant='body1'>
+                    Nenhum evento similar.
+                </Typography>
+                }
+
             </Box>
         </Grid>
     )
