@@ -8,6 +8,8 @@ import { PreferenciasUsuario } from "@app/server/entities/preferenciasusuario.en
 import { Categoria } from "@app/server/entities/categoria.entity"
 import { Avaliacao } from "@app/server/entities/avaliacao.entity"
 import { Parametro } from "@app/server/entities/parametro.entity"
+import { Recomendacao } from "../entities/recomendacao.entity"
+import { EventoRecomendado } from "../entities/eventorecomendacao.entity"
 
 dotenv.config();
 
@@ -27,7 +29,9 @@ export const datasource = new DataSource({
         Inscricao, 
         PreferenciasUsuario,
         Avaliacao,
-        Parametro
+        Parametro,
+        Recomendacao,
+        EventoRecomendado
     ],
     migrations: [],
     subscribers: [EventoSubscriber],
@@ -52,3 +56,5 @@ export const PrefsUsuarioRepo = datasource.getRepository(PreferenciasUsuario);
 export const CategoriaRepo = datasource.getRepository(Categoria);
 export const AvaliacaoRepo = datasource.getRepository(Avaliacao);
 export const ParametroRepo = datasource.getRepository(Parametro);
+export const RecomendacaoRepo = datasource.getRepository(Recomendacao);
+export const EventoRecomendadoRepo = datasource.getRepository(EventoRecomendado);
