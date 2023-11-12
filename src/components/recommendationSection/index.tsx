@@ -1,12 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, Grid, Typography, Card} from "@mui/material";
 import RecommendedEventCard from './recommendedEventCard/index';
 
 import Image from 'next/image'
 import Link from 'next/link';
+import { RecomendacaoAPI } from '@app/apis/RecomendacaoAPI';
 
 export default function RecommendationSection({recommendationData, inHomePage, mainEvent, userId} : 
     {recommendationData : Evento[], inHomePage : boolean, mainEvent : Evento, userId : string}){
+
+    //Indica se já foi persistida uma recomendação para a instância de recomendação atual
+    const [recAlredyStored, setRecAlredyStored] = useState(false);
+
+    const storeRec = async () => {
+        if(!recAlredyStored){
+            let res = await RecomendacaoAPI.cadastrar({usuario_id: userId});
+            for(let ev of recommendationData){
+                await RecomendacaoAPI.insereEventoRecomendacao({recomendacao_id: res.id, evento_id: ev.id});
+            }
+                        
+            setRecAlredyStored(true);
+        }
+    }
 
     if(inHomePage){ //Seção de recomendação na home page
 
@@ -60,7 +75,7 @@ export default function RecommendationSection({recommendationData, inHomePage, m
 
                 {recommendationData.length != 0?
                     <Grid container justifyContent={"space-evenly"}>
-                    { recommendationData.map((rec) => <RecommendedEventCard key={rec.id} eventData={rec} userId={userId}  />)}
+                        {recommendationData.map((rec) => <RecommendedEventCard key={rec.id} eventData={rec} userId={userId} storeRec={storeRec} /> )}
                     </Grid>
                 :
                 <Typography variant='body1'>

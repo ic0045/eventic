@@ -23,13 +23,4 @@ export class EventoRecomendado{
       foreignKeyConstraintName: "evento_fk"
     })
     evento: Evento;
-
-    @PrimaryColumn({name: "avaliacao_id", type: "uuid", unique:false, nullable:false})
-    @ManyToOne(() => Avaliacao)
-    @JoinColumn({
-      name:"avaliacao_id", 
-      referencedColumnName: "id",
-      foreignKeyConstraintName: "avaliacao_fk"
-    })
-    avaliacao: Avaliacao;
 }

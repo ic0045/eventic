@@ -1,5 +1,6 @@
-import { Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Usuario } from "./usuario.entity";
+import { Evento } from "./evento.entity";
 
 @Entity("recomendacao", { schema: "public" })
 export class Recomendacao{
@@ -13,6 +14,8 @@ export class Recomendacao{
       foreignKeyConstraintName: "usuario_fk"
     })
     usuario: Usuario;
+
+    eventosRecomendados: Evento[];
 
     precisao: number;
 }

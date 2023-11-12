@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { Box, Grid, Typography, Card, CardContent, Rating} from "@mui/material";
 import { EventoAPI } from '@app/apis/EventoAPI';
+import { RecomendacaoAPI } from '@app/apis/RecomendacaoAPI';
 import Image from 'next/image'
 import Link from 'next/link';
 
-export default function RecommendedEventCard({eventData, userId} : {eventData: Evento, userId : string}){
+export default function RecommendedEventCard({ eventData, userId, storeRec }: 
+    { eventData: Evento, userId: string, storeRec: () => void }) {
 
     const [rating, setRating] = useState(0);
+
     
     const handleRatingChange = (newValue: number) => {
-        setRating(newValue);
         let request = EventoAPI.avaliar({
             nota: newValue,
             comentario: '',
@@ -18,7 +20,10 @@ export default function RecommendedEventCard({eventData, userId} : {eventData: E
           });
           request
           .catch((err) => {})
-          .then((res) => {});
+          .then((res) => {
+            setRating(newValue);
+            storeRec();
+        });
     };
 
     return(
