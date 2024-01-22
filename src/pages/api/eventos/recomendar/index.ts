@@ -72,9 +72,16 @@ export default async function handler(
             if(recIds.length != 0)
                 recommendations = await EventoRepo.find({where: {id: In(recIds)}});
 
+            // console.log("Recomendados buscados")
+            // let stringFin = "";
+            // for(let ev of recommendations)
+            //     stringFin += ev.titulo + " || ";
+            // console.log(stringFin)
+
             //Se houver menos que 5 eventos recomendados, completa com categorias diversas
             if(recIds.length < 5){
-                console.log("[DEBUG] ==> Não foram recomendados eventos suficentes. Preechendo com eventos de categorias diversas");                let categoriesIds = await CategoriaRepo.find({select:{id: true}});
+                console.log("[DEBUG] ==> Não foram recomendados eventos suficentes. Preechendo com eventos de categorias diversas");                
+                let categoriesIds = await CategoriaRepo.find({select:{id: true}});
                 let missingEvents = 5 - recIds.length;
 
                 //Desconsiderar eventos avaliados e já na lista de recomendações
@@ -86,7 +93,7 @@ export default async function handler(
                     //@ts-ignore
                     let ev = await EventoRepo.findOne({where: {
                         id: Not(In(skipIds)), categoria: {id: cat.id}}});
-                    if(ev != null){
+                    if(ev != null && ev.id != evento_id){
                         missingEvents -= 1;
                         recommendations.push(ev);
                     }

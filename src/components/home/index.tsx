@@ -314,21 +314,6 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
         )
     )
 
-    const buscaFalhou = (
-        <Box sx={{ textAlign: 'center' }}>
-            <Typography variant="h5" >Nenhum resultado encontrado</Typography>
-            <Typography variant="body1" mb={2} >Tente diminuir ou reescrever seus termos de pesquisa.</Typography>
-            <Image
-                height={200}
-                width={200}
-                src="/images/search.png"
-                alt='evento-imagem'
-            />
-        </Box>
-    )
-
-
-
     const mobile = useMediaQuery('(max-width: 720px)');
     return (
         <Box mt={5} style={{marginTop: '3rem'}}>

@@ -34,65 +34,54 @@ export class RecommendationService{
             this.minimumSimilarity = minumumSimilarity;
     }
 
-
     /*
     *   Retorna array com ids dos eventos a serem recomendados
     */
     public async generateRecs() : Promise<string[]>{
         await this.recommender.initialize_namespace('events');
 
-        //Debug lines
-        console.log("\n=====\n[DEBUG]")
-        console.log(`\nEvento base = ${this.eventTitle}, similaridade_min = ${this.minimumSimilarity}`);
-        console.log("User Rated Events = ",this.userRatedEvents);
-        console.log("General ratings = ");
-        for(let rating of this.generalRatings){
-            //@ts-ignore
-            console.log(`${rating.nota}, ${rating.usuario.primeiroNome} em --> ${rating.evento.titulo} (${rating.evento.id})`)
-        }
-        console.log("\n")
+        //--------Debug lines--------//
+        // console.log("\n=====\n[DEBUG]")
+        // console.log(`\nEvento base = ${this.eventTitle}, similaridade_min = ${this.minimumSimilarity}`);
+        // console.log("User Rated Events = ",this.userRatedEvents);
+        // console.log("General ratings = ");
+        // for(let rating of this.generalRatings){
+        //     //@ts-ignore
+        //     console.log(`${rating.nota}, ${rating.usuario.primeiroNome} em --> ${rating.evento.titulo} (${rating.evento.id})`)
+        // }
+        //console.log("\n")
 
         for(let rating of this.generalRatings){
             if(rating.nota >= 3){
-                if(this.userId){
-                    //Gerar recomendações para usuário logado
-                    //Recomendar eventos que tenham valor de simliaridade de pelo menos o definido em parâmetro
-                    //@ts-ignore
-                    console.log("[DEBUG] ==> Evento = "+rating.evento.titulo+ " -- Valor similaridade: "+this.getCosineSimilarity(this.eventTitle,rating.evento.titulo));
-                    //@ts-ignore
-                    if(this.getCosineSimilarity(this.eventTitle,rating.evento.titulo) >= this.minimumSimilarity){
-                        //Não recomendar eventos já avaliados pelo usuário
-                        //@ts-ignore
-                        if(!this.userRatedEvents.includes(rating.evento.id)){
-                            this.gerEvents.push({
-                                namespace: 'events',
-                                //@ts-ignore
-                                person: rating.usuario.id,
-                                action: 'likes',
-                                //@ts-ignore
-                                thing: rating.evento.id,
-                                expires_at: Date.now()+3600000
-                            });
-                            console.log("           (V) Evento adicionado no GER")
-                        }else{
-                            console.log("           (X) Evento não recomendado pois já avaliado pelo usuário");
-                        }
-                    }else{console.log("           (X) Evento não recomendado por ter similaridade baixa")}
+                
+                //@ts-ignore
+                //console.log("==> Evento = " + rating.evento.titulo + this.userId? " -- Valor similaridade: "+this.getCosineSimilarity(this.eventTitle,rating.evento.titulo) : "");
+
+                //@ts-ignore
+                if(this.userId && (this.getCosineSimilarity(this.eventTitle,rating.evento.titulo) < this.minimumSimilarity)){
+                    //console.log("           (X) Evento não adicionado")}
+                    continue;
                 }
-                else{
-                    //Gerar recomendações para usuário não logado
-                    this.gerEvents.push({
-                        namespace: 'events',
-                        //@ts-ignore
-                        person: rating.usuario.id,
-                        action: 'likes',
-                        //@ts-ignore
-                        thing: rating.evento.id,
-                        expires_at: Date.now()+3600000
-                    });
-                }
+
+                /*
+                * Adiciona evento na base do GER apenas se usuário não logado ou estiver logado e
+                * os eventos possuem similaridade cosseno de pelo menos o definido em parâmetro
+                */
+
+                this.gerEvents.push({
+                    namespace: 'events',
+                    //@ts-ignore
+                    person: rating.usuario.id,
+                    action: 'likes',
+                    //@ts-ignore
+                    thing: rating.evento.id,
+                    expires_at: Date.now()+3600000
+                });
+
+                //console.log("           (V) Evento adicionado no GER")
             }
         }
+        
         //Gera recomendações com o GER
         this.recommender.events(this.gerEvents);
         let recIds = []
@@ -100,9 +89,17 @@ export class RecommendationService{
             'events',this.eventId, {actions: {likes: 1}})).recommendations;
         if(recommendations.length > 0){ //Obtém os ids dos eventos recomendados
             for(let rec of recommendations){
-                recIds.push(rec.thing)
+                //Não recomendar eventos já avaliados pelo usuário
+                //@ts-ignore
+                if(!this.userRatedEvents.includes(rec.thing)){
+                    recIds.push(rec.thing)
+                }else{
+                    console.log(`(${rec.thing}) não recomendado pois já avaliado pelo usuário`);
+                }
             }
         }
+        // console.log("ids finais")
+        // console.log(recIds);
         return recIds;
     }
 
