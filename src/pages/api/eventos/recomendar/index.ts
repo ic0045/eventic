@@ -6,6 +6,41 @@ import { Evento } from '@app/server/entities/evento.entity';
 import { ParametroName } from '@app/common/constants';
 
 /*
+* Retorna eventos de categorias diversas cujo id não esteja incluso numa lista passada
+*/
+const findEventosDiversos = async (numeroEventos : number, skipEventosIds : string[] = []) : Promise<Evento[]> => {
+   //seleciona eventos de categorias distintas
+    let eventosDiversos = await EventoRepo
+        .createQueryBuilder('evento')
+        // .select(['DISTINCT evento.categoria_id', 'evento'])
+        .distinctOn(['evento.categoria_id'])
+        .where('evento.id NOT IN (:...ids)', { ids: skipEventosIds })
+        .limit(numeroEventos)
+        .getMany();
+
+    let eventosSelecionados = eventosDiversos.length >= numeroEventos ? eventosDiversos.slice(0,numeroEventos) : eventosDiversos; 
+   
+    numeroEventos -= eventosSelecionados.length;
+
+    //Completa com demais eventos de categorias diversas caso primeira busca não retorne o suficiente
+    if(numeroEventos > 0){
+        eventosDiversos = await EventoRepo
+        .createQueryBuilder('evento')
+        // .select(['DISTINCT evento.categoria_id', 'evento'])
+        .distinctOn(['evento.categoria_id'])
+        .where('evento.id NOT IN (:...ids)', { ids: skipEventosIds })
+        .offset(eventosSelecionados.length)
+        .limit(eventosSelecionados.length)
+        .getMany();
+        eventosSelecionados = eventosDiversos.length <= numeroEventos?
+            eventosSelecionados.concat(eventosDiversos)
+            :
+            eventosSelecionados.concat(eventosDiversos.slice(numeroEventos-1));
+    }
+    return eventosSelecionados;
+}
+
+/*
 *   Rota para recomendações de eventos.
 *   Query:  
 *        evento_id para recomendar baseado no evento
@@ -81,23 +116,17 @@ export default async function handler(
             //Se houver menos que 5 eventos recomendados, completa com categorias diversas
             if(recIds.length < 5){
                 console.log("[DEBUG] ==> Não foram recomendados eventos suficentes. Preechendo com eventos de categorias diversas");                
-                let categoriesIds = await CategoriaRepo.find({select:{id: true}});
-                let missingEvents = 5 - recIds.length;
 
-                //Desconsiderar eventos avaliados e já na lista de recomendações
+                //Desconsiderar evento atual, já avaliados e já na lista de recomendações
                 let skipIds = eventosAvaliados.concat(recIds);
-                for(let cat of categoriesIds){//Encontra evento por categoria
-                    if(missingEvents == 0)
-                        break;
+                skipIds.push(evento_id);
+                
+                // console.log("Skipids = ")
+                // console.log(skipIds)
+                // console.log("Resultado da chamada");
+                // console.log(await (await findEventosDiversos(5-recommendations.length,skipIds)).forEach(ev => console.log(ev.titulo)))
 
-                    //@ts-ignore
-                    let ev = await EventoRepo.findOne({where: {
-                        id: Not(In(skipIds)), categoria: {id: cat.id}}});
-                    if(ev != null && ev.id != evento_id){
-                        missingEvents -= 1;
-                        recommendations.push(ev);
-                    }
-                }
+                recommendations = recommendations.concat(await findEventosDiversos(5-recommendations.length,skipIds));                
             }
 
             res.status(200).json(recommendations);

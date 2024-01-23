@@ -87,20 +87,20 @@ export class RecommendationService{
         let recIds = []
         let recommendations = (await this.recommender.recommendations_for_thing(
             'events',this.eventId, {actions: {likes: 1}})).recommendations;
-        if(recommendations.length > 0){ //Obtém os ids dos eventos recomendados
+        if(recommendations.length > 0){ 
             for(let rec of recommendations){
                 //Não recomendar eventos já avaliados pelo usuário
                 //@ts-ignore
-                if(!this.userRatedEvents.includes(rec.thing)){
+                if(!this.userRatedEvents.includes(rec.thing))
                     recIds.push(rec.thing)
-                }else{
-                    console.log(`(${rec.thing}) não recomendado pois já avaliado pelo usuário`);
-                }
+                // else{
+                //     console.log(`(${rec.thing}) não recomendado pois já avaliado pelo usuário`);
+                // }
             }
         }
         // console.log("ids finais")
         // console.log(recIds);
-        return recIds;
+        return recIds; //Retorna os ids dos eventos recomendados
     }
 
     /*
