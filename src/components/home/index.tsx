@@ -68,12 +68,9 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
             ],
         }
     }
-    // let [listaCategorias, setListaCategorias] = useState(criaListaCategorias(eventosCategoria, data));
-    // const listaCategoriasBackup = criaListaCategorias(eventosCategoria, data)
 
     let [listaCategorias, setListaCategorias] = useState((data && categorias && eventosCategoria && home) ? criaListaCategorias(eventosCategoria, data) : listaVazia);
     const listaCategoriasBackup = (data && categorias && eventosCategoria && home) ? criaListaCategorias(eventosCategoria, data) : listaVazia
-
 
     // Controla os filtros categoria e periodo
     const [category, setCategory] = useState('Todas');
@@ -187,7 +184,6 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
             setEventToMapNew(listaCategorias[evento].eventosPorDiaNovos);
         }
     }
-
 
     // Faz a busca na api 
     const handleClick = async () => {

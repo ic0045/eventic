@@ -9,8 +9,6 @@ import Cosine from "string-comparison"
 export class RecommendationService{
 
     private baseEvent : Evento  //Evento base
-    //private eventId : string;                         //Id Evento base
-   // private eventTitle : string;                         //Nome Evento base
     private userId : String | undefined;             //Id do usuário
     private userRatedEvents : string[];             //Eventos avaliados pelo usuário
     private generalRatings : Avaliacao[];     //Avaliações de outros eventos
@@ -38,25 +36,10 @@ export class RecommendationService{
     public async generateRecs() : Promise<string[]>{
         await this.recommender.initialize_namespace('events');
 
-        //--------Debug lines--------//
-        // console.log("\n=====\n[DEBUG]")
-        // console.log(`\nEvento base = ${this.eventTitle}, similaridade_min = ${this.minimumSimilarity}`);
-        // console.log("User Rated Events = ",this.userRatedEvents);
-        // console.log("General ratings = ");
-        // for(let rating of this.generalRatings){
-        //     //@ts-ignore
-        //     console.log(`${rating.nota}, ${rating.usuario.primeiroNome} em --> ${rating.evento.titulo} (${rating.evento.id})`)
-        // }
-        //console.log("\n")
-
         for(let rating of this.generalRatings){
             if(rating.nota >= 3){
-                
                 //@ts-ignore
-                //console.log("==> Evento = " + rating.evento.titulo + this.userId? " -- Valor similaridade: "+this.getCosineSimilarity(this.eventTitle,rating.evento.titulo) : "");
-
-                //@ts-ignore
-                if(this.userId && (this.getCosineSimilarity(rating.evento.titulo) < this.minimumSimilarity)){
+                if(this.userId && (this.getCosineSimilarity(rating.evento) < this.minimumSimilarity)){
                     //console.log("           (X) Evento não adicionado")}
                     continue;
                 }
@@ -65,7 +48,6 @@ export class RecommendationService{
                 * Adiciona evento na base do GER apenas se usuário não logado ou estiver logado e
                 * os eventos possuem similaridade cosseno de pelo menos o definido em parâmetro
                 */
-
                 this.gerEvents.push({
                     namespace: 'events',
                     //@ts-ignore
@@ -75,8 +57,6 @@ export class RecommendationService{
                     thing: rating.evento.id,
                     expires_at: Date.now()+3600000
                 });
-
-                //console.log("           (V) Evento adicionado no GER")
             }
         }
         
@@ -91,13 +71,8 @@ export class RecommendationService{
                 //@ts-ignore
                 if(!this.userRatedEvents.includes(rec.thing))
                     recIds.push(rec.thing)
-                // else{
-                //     console.log(`(${rec.thing}) não recomendado pois já avaliado pelo usuário`);
-                // }
             }
         }
-        // console.log("ids finais")
-        // console.log(recIds);
         return recIds; //Retorna os ids dos eventos recomendados
     }
 
@@ -109,11 +84,9 @@ export class RecommendationService{
     public async generateRecsWithoutRatings(eventsArray : Evento[]) :  Promise<string[]> {
         let eventsSimilarity : {id: string, similarity: number}[] = [];
 
-        /*
-        console.log("\n-----------Comparando---------------");
-        console.log(this.getCleanText(this.baseEvent.titulo) + " " + this.getCleanText(this.baseEvent.descricao));
-        console.log("-------------------\n");
-        */
+        // console.log("\n-----------Comparando---------------");
+        // console.log(this.getCleanText(this.baseEvent.titulo) + " " + this.getCleanText(this.baseEvent.descricao));
+        // console.log("-------------------\n");
 
         eventsArray.forEach(event => {
             let similarity = this.getCosineSimilarity(event);
@@ -134,7 +107,7 @@ export class RecommendationService{
     private getCosineSimilarity (event : Evento) : number{
         const words1 = this.getCleanText(this.baseEvent.titulo) + " " + this.getCleanText(this.baseEvent.descricao);
         const words2 = this.getCleanText(event.titulo) + " " + this.getCleanText(event.descricao);
-
+        
         let simValue = Cosine.cosine.similarity(words1,words2);
         return simValue;
     }
