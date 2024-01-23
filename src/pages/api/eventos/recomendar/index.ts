@@ -9,7 +9,8 @@ import { ParametroName } from '@app/common/constants';
 * Retorna eventos de categorias diversas cujo id não esteja incluso numa lista passada
 */
 const findEventosDiversos = async (numeroEventos : number, skipEventosIds : string[] = []) : Promise<Evento[]> => {
-   //seleciona eventos de categorias distintas
+   console.log("envetos diversos desconsiderar -> " + skipEventosIds)
+    //seleciona eventos de categorias distintas
     let eventosDiversos = await EventoRepo
         .createQueryBuilder('evento')
         // .select(['DISTINCT evento.categoria_id', 'evento'])
@@ -21,6 +22,7 @@ const findEventosDiversos = async (numeroEventos : number, skipEventosIds : stri
     let eventosSelecionados = eventosDiversos.length >= numeroEventos ? eventosDiversos.slice(0,numeroEventos) : eventosDiversos; 
    
     numeroEventos -= eventosSelecionados.length;
+    console.log("#2 num eventos = " + numeroEventos)
 
     //Completa com demais eventos de categorias diversas caso primeira busca não retorne o suficiente
     if(numeroEventos > 0){
@@ -88,7 +90,6 @@ export default async function handler(
                 let minimoParametro = await ParametroRepo.findOne(
                     {where: {nome: ParametroName.SIMILARIDADE_MIN}, select: {valor: true}
                 })
-                //similaridadeMinima = 0 se não logado
                 if(minimoParametro) similaridadeMinima = Number(minimoParametro.valor);
                 let avaliacoesUsuario = 
                 await AvaliacaoRepo.find({
@@ -100,18 +101,30 @@ export default async function handler(
                     eventosAvaliados.push(av.evento.id);
                 }
             }
-            const recService = new RecommendationService(evento_id,usuario_id,
-                eventosAvaliados,avaliacoesGeral,evento.titulo,similaridadeMinima);
-            let recIds = await recService.generateRecs();
+
+            //similaridadeMinima = 0 se não logado
+            const recService = new RecommendationService(evento, usuario_id,
+                eventosAvaliados, avaliacoesGeral, similaridadeMinima);
+            let recIds;
+            
+            //Evento sem avaliações e usuário logado, aplica apenas similaridade cosseno
+            if(avaliacoesGeral.length == 0 && usuario_id){ 
+                let eventosDiversos = await findEventosDiversos(15,eventosAvaliados.concat(evento_id));
+                console.log("==> Cosseno puro: \n -> encontra " + eventosDiversos.length + " eventos diversos")
+                recIds = await recService.generateRecsWithoutRatings(eventosDiversos);
+            }
+            else // Caso contrário, híbrido, se logado, apenas colaborativa, se deslogado
+                recIds = await recService.generateRecs();
+
             let recommendations: Evento[] = [];
             if(recIds.length != 0)
                 recommendations = await EventoRepo.find({where: {id: In(recIds)}});
 
-            // console.log("Recomendados buscados")
-            // let stringFin = "";
-            // for(let ev of recommendations)
-            //     stringFin += ev.titulo + " || ";
-            // console.log(stringFin)
+            console.log("Recomendados buscados")
+            let stringFin = "";
+            for(let ev of recommendations)
+                stringFin += ev.titulo + " || ";
+            console.log(stringFin)
 
             //Se houver menos que 5 eventos recomendados, completa com categorias diversas
             if(recIds.length < 5){
@@ -119,13 +132,7 @@ export default async function handler(
 
                 //Desconsiderar evento atual, já avaliados e já na lista de recomendações
                 let skipIds = eventosAvaliados.concat(recIds);
-                skipIds.push(evento_id);
-                
-                // console.log("Skipids = ")
-                // console.log(skipIds)
-                // console.log("Resultado da chamada");
-                // console.log(await (await findEventosDiversos(5-recommendations.length,skipIds)).forEach(ev => console.log(ev.titulo)))
-
+                skipIds.push(evento_id);                
                 recommendations = recommendations.concat(await findEventosDiversos(5-recommendations.length,skipIds));                
             }
 
