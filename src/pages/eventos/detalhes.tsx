@@ -23,8 +23,7 @@ import Link from "next/link";
 
 import MyIcon from './logoCalendar.svg';
 import ReviewSection from "@app/components/reviewSection";
-import { AvaliacaoData } from "../../../app";
-import { Evento } from "@app/server/entities/evento.entity";
+import { AvaliacaoData, Evento } from "../../../app";
 
 const CustomIcon = (props: React.ComponentProps<typeof SvgIcon>) => (
   <SvgIcon {...props}>
@@ -201,10 +200,9 @@ function EventDetails({ eventoData, avaliacaoData, recomendadosData, tipoRecomen
           </Box>
         </Grid>
 
-        <RecommendationSection 
-          recommendationData = { recomendadosData }
+        {/* @ts-ignore */}
+        <RecommendationSection recommendationData = { recomendadosData }  mainEvent = {eventoData[0]}
           inHomePage={false}
-          mainEvent = {eventoData[0]}
           tipoRecomendacao = {tipoRecomendacao}
           userId = {session.data?.user.id? session.data.user.id : ''}
           />

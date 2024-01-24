@@ -27,7 +27,7 @@ export class Recomendacao{
     quantidadeRecomendados: number;
 
     @OneToMany(() => EventoRecomendado, (eventoRecomendado) => eventoRecomendado.recomendacao)
-    eventosRecomendados: Evento[];
+    eventosRecomendados: EventoRecomendado[];
 
 
     /* 

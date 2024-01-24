@@ -26,7 +26,7 @@ export default async function handler(
             recomendacao.usuario = usuario;
             recomendacao.tipoRecomendacao = tipoRecomendacao;
             recomendacao.quantidadeRecomendados= eventosIds.length;
-            recomendacao.precisao = nota >= 3? 1/5 : 0;
+            recomendacao.precisao = nota >= 3? 1/eventosIds.length : 0;
             recomendacao = await RecomendacaoRepo.save(recomendacao);
 
             let evento = new Evento();
@@ -34,7 +34,7 @@ export default async function handler(
                 let eventoRecomendado = new EventoRecomendado();
                 evento.id = id;
                 eventoRecomendado.evento = evento;
-                recomendacao = recomendacao;
+                eventoRecomendado.recomendacao = recomendacao;
                 await EventoRecomendadoRepo.save(eventoRecomendado);
             }
 
@@ -49,16 +49,16 @@ export default async function handler(
         let { recomendacaoId } : { recomendacaoId: string} = req.body;
 
         try {
-            let recomendacao = (await RecomendacaoRepo.findOne({ where: { id: recomendacaoId }, relations: { usuario: true, eventosRecomendados: true } }))!;
+            let recomendacao = (await RecomendacaoRepo.findOne({ where: { id: recomendacaoId }, relations: ["usuario", "eventosRecomendados", "eventosRecomendados.evento"] }))!;
            //Alternativa 2
            /*
             const eventosIds = recomendacao.eventosRecomendados.map(eventoRecomendacao => eventoRecomendacao.envento.id);
            */
-            const eventosIds = recomendacao.eventosRecomendados.map(evento => evento.id);
-            const avaliacoes = await AvaliacaoRepo.find({where: {id: In(eventosIds), usuario: {id: recomendacao.usuario.id}}, relations:{evento: true}});
+            const eventosIds = recomendacao.eventosRecomendados.map(eventoRecomendado => eventoRecomendado.evento.id);
+            const avaliacoes = await AvaliacaoRepo.find({where: {evento: {id:  In(eventosIds)}, usuario: {id: recomendacao.usuario.id}}, relations:{evento: true}});
             let eventosApreciados = avaliacoes.filter(avaliacao => avaliacao.nota >= 3).length;
 
-            recomendacao.precisao = eventosApreciados/avaliacoes.length;
+            recomendacao.precisao = eventosApreciados/recomendacao.quantidadeRecomendados;
             await RecomendacaoRepo.save(recomendacao)
 
             res.status(200).json({eventosAvaliados: avaliacoes.length, precisao: recomendacao.precisao});
@@ -68,41 +68,41 @@ export default async function handler(
     }
 
     
-    else if(req.method === 'GET'){
-        let {recomendacao_id} = req.query;
-        let gostou;
-        //Get by id
-        if(recomendacao_id){
-            recomendacao_id = recomendacao_id as string;
-            const rec = await RecomendacaoRepo.findOne({where: {id: recomendacao_id}, relations: {usuario: true}});
-            if(rec != null){
-                gostou = 0;
-                const avaliador = (await UsuarioRepo.findOne({where: {id: rec.usuario.id}})) as Usuario;
-                const evRecs = await EventoRecomendadoRepo.find({where: {recomendacao: {id: rec.id}}, relations: {evento: true}});
-                for(let ev of evRecs){
-                    const avaliacao = (await AvaliacaoRepo.findOne({where: {evento: {id: ev.evento.id},  usuario: {id: avaliador.id} }})) as Avaliacao;
-                    if(avaliacao.nota >= 3) gostou++;
-                    rec.eventosRecomendados.push(ev.evento);
-                }
-                rec.precisao = evRecs.length/gostou;
-            }
-            res.status(200).json(rec);
-        }
-        //Get all
-        else{
-            const recs = await RecomendacaoRepo.find({relations: {usuario: true}});
-            recs.map(async (rec) =>  {
-                gostou = 0;
-                const avaliador = (await UsuarioRepo.findOne({where: {id: rec.usuario.id}})) as Usuario;
-                const evRecs = await EventoRecomendadoRepo.find({where: {recomendacao: {id: rec.id}}, relations: {evento: true}});
-                for(let ev of evRecs){
-                    const avaliacao = (await AvaliacaoRepo.findOne({where: {evento: {id: ev.evento.id},  usuario: {id: avaliador.id} }})) as Avaliacao;
-                    if(avaliacao.nota >= 3) gostou++;
-                    rec.eventosRecomendados.push(ev.evento);
-                }
-                rec.precisao = evRecs.length/gostou;
-            })
-            res.status(200).json(recs);
-        }
-    }
+    // else if(req.method === 'GET'){
+    //     let {recomendacao_id} = req.query;
+    //     let gostou;
+    //     //Get by id
+    //     if(recomendacao_id){
+    //         recomendacao_id = recomendacao_id as string;
+    //         const rec = await RecomendacaoRepo.findOne({where: {id: recomendacao_id}, relations: {usuario: true}});
+    //         if(rec != null){
+    //             gostou = 0;
+    //             const avaliador = (await UsuarioRepo.findOne({where: {id: rec.usuario.id}})) as Usuario;
+    //             const evRecs = await EventoRecomendadoRepo.find({where: {recomendacao: {id: rec.id}}, relations: {evento: true}});
+    //             for(let ev of evRecs){
+    //                 const avaliacao = (await AvaliacaoRepo.findOne({where: {evento: {id: ev.evento.id},  usuario: {id: avaliador.id} }})) as Avaliacao;
+    //                 if(avaliacao.nota >= 3) gostou++;
+    //                 rec.eventosRecomendados.push(ev.evento);
+    //             }
+    //             rec.precisao = evRecs.length/gostou;
+    //         }
+    //         res.status(200).json(rec);
+    //     }
+    //     //Get all
+    //     else{
+    //         const recs = await RecomendacaoRepo.find({relations: {usuario: true}});
+    //         recs.map(async (rec) =>  {
+    //             gostou = 0;
+    //             const avaliador = (await UsuarioRepo.findOne({where: {id: rec.usuario.id}})) as Usuario;
+    //             const evRecs = await EventoRecomendadoRepo.find({where: {recomendacao: {id: rec.id}}, relations: {evento: true}});
+    //             for(let ev of evRecs){
+    //                 const avaliacao = (await AvaliacaoRepo.findOne({where: {evento: {id: ev.evento.id},  usuario: {id: avaliador.id} }})) as Avaliacao;
+    //                 if(avaliacao.nota >= 3) gostou++;
+    //                 rec.eventosRecomendados.push(ev.evento);
+    //             }
+    //             rec.precisao = evRecs.length/gostou;
+    //         })
+    //         res.status(200).json(recs);
+    //     }
+    // }
 }
