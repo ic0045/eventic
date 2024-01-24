@@ -5,22 +5,22 @@ import RecommendedEventCard from './recommendedEventCard/index';
 import Image from 'next/image'
 import Link from 'next/link';
 import { RecomendacaoAPI } from '@app/apis/RecomendacaoAPI';
-import { Evento } from "../../../app";
+import { Evento } from '@app/server/entities/evento.entity';
 
 export default function RecommendationSection({recommendationData, inHomePage, mainEvent, userId, tipoRecomendacao} : 
     {recommendationData : Evento[], inHomePage : boolean, mainEvent : Evento, userId : string, tipoRecomendacao : number}){
 
     //Indica se já foi persistida uma recomendação para a instância de recomendação atual
-    const [recAlredyStored, setRecAlredyStored] = useState(false);
+    // const [recAlredyStored, setRecAlredyStored] = useState(false);
+    const [recommendationId, setRecommendationId] = useState(null);
 
-    const storeRec = async () => {
-        if(!recAlredyStored){
-            let res = await RecomendacaoAPI.cadastrar({usuario_id: userId});
-            for(let ev of recommendationData){
-                await RecomendacaoAPI.insereEventoRecomendacao({recomendacao_id: res.id, evento_id: ev.id});
-            }
-                        
-            setRecAlredyStored(true);
+    const storeRec = async (nota : number) => {
+        if(!recommendationId){
+            let res = await RecomendacaoAPI.cadastrar(userId, tipoRecomendacao, nota, recommendationData.map(evento => evento.id));                        
+            // setRecAlredyStored(true);
+            setRecommendationId(res.id);
+        }else{
+            await RecomendacaoAPI.updateRecomendacao(recommendationId);
         }
     }
 

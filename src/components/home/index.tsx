@@ -1,5 +1,3 @@
-import styles from './home.module.css'
-import Navbar from "@app/components/common/navbar/Navbar";
 import { Box, Container, Grid, FormControl, InputLabel, MenuItem, TextField, InputAdornment, Button, IconButton, Paper, InputBase } from "@mui/material";
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
@@ -303,7 +301,7 @@ export default function Home({ data, categorias, eventosCategoria, home, userId 
                                             <EventCard isLoadingSubButton={isLoadingSubButton} idIncricoes={idIncricoes} setIdIncricoes={setIdIncricoes} inscrito={idIncricoes.includes(card.evento.id)} key={card.evento.id} eventoId={card.evento.id} id={card.evento.id} subscribeButton={hasSubscribeButton} image={card.evento.imagemUrl} title={card.evento.titulo} location={card.evento.localizacao} initialDate={card.evento.dataInicial} />
                                         </Grid>
                                         <Grid item xs={8}>
-                                            <RecommendationSection recommendationData={card.recomendacoes} inHomePage={true} mainEvent={card.evento} userId = {''}/>
+                                            <RecommendationSection recommendationData={card.recomendacoes} inHomePage={true} mainEvent={card.evento} userId = {''} tipoRecomendacao={0}/>
                                         </Grid>
                                     </Grid>
                                     )

@@ -23,7 +23,8 @@ import Link from "next/link";
 
 import MyIcon from './logoCalendar.svg';
 import ReviewSection from "@app/components/reviewSection";
-import { AvaliacaoData, Evento } from "../../../app";
+import { AvaliacaoData } from "../../../app";
+import { Evento } from "@app/server/entities/evento.entity";
 
 const CustomIcon = (props: React.ComponentProps<typeof SvgIcon>) => (
   <SvgIcon {...props}>

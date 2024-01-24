@@ -4,9 +4,10 @@ import { EventoAPI } from '@app/apis/EventoAPI';
 import { RecomendacaoAPI } from '@app/apis/RecomendacaoAPI';
 import Image from 'next/image'
 import Link from 'next/link';
+import { Evento } from '@app/server/entities/evento.entity';
 
 export default function RecommendedEventCard({ eventData, userId, storeRec }: 
-    { eventData: Evento, userId: string, storeRec: () => void }) {
+    { eventData: Evento, userId: string, storeRec: (nota : number) => void }) {
 
     const [rating, setRating] = useState(0);
 
@@ -22,7 +23,7 @@ export default function RecommendedEventCard({ eventData, userId, storeRec }:
           .catch((err) => {})
           .then((res) => {
             setRating(newValue);
-            storeRec();
+            storeRec(newValue);
         });
     };
 
