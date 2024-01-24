@@ -32,8 +32,8 @@ const CustomIcon = (props: React.ComponentProps<typeof SvgIcon>) => (
 );
 
 
-function EventDetails({ eventoData, avaliacaoData, recomendadosData } : 
-  { eventoData: Evento[], avaliacaoData: AvaliacaoData[], recomendadosData : Evento[] }) {
+function EventDetails({ eventoData, avaliacaoData, recomendadosData, tipoRecomendacao } : 
+  { eventoData: Evento[], avaliacaoData: AvaliacaoData[], recomendadosData : Evento[],tipoRecomendacao : number }) {
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -204,6 +204,7 @@ function EventDetails({ eventoData, avaliacaoData, recomendadosData } :
           recommendationData = { recomendadosData }
           inHomePage={false}
           mainEvent = {eventoData[0]}
+          tipoRecomendacao = {tipoRecomendacao}
           userId = {session.data?.user.id? session.data.user.id : ''}
           />
        
@@ -228,7 +229,8 @@ export const getServerSideProps: GetServerSideProps = async ({ query, req,res })
 
   const eventoData = await EventoAPI.get(id);
   const avaliacaoData = await EventoAPI.getAvaliacoes(id);
-  const recomendadosData = 
+
+  const responseData = 
   session != null?
     await EventoAPI.getRecomendacoes(id, session.user.id) 
     : 
@@ -238,7 +240,8 @@ export const getServerSideProps: GetServerSideProps = async ({ query, req,res })
     props: {
       eventoData,
       avaliacaoData,
-      recomendadosData
+      recomendadosData: responseData.recommendations,
+      tipoRecomendacao: responseData.tipoRecomendacao
     },
   };
 };

@@ -5,9 +5,10 @@ import RecommendedEventCard from './recommendedEventCard/index';
 import Image from 'next/image'
 import Link from 'next/link';
 import { RecomendacaoAPI } from '@app/apis/RecomendacaoAPI';
+import { Evento } from "../../../app";
 
-export default function RecommendationSection({recommendationData, inHomePage, mainEvent, userId} : 
-    {recommendationData : Evento[], inHomePage : boolean, mainEvent : Evento, userId : string}){
+export default function RecommendationSection({recommendationData, inHomePage, mainEvent, userId, tipoRecomendacao} : 
+    {recommendationData : Evento[], inHomePage : boolean, mainEvent : Evento, userId : string, tipoRecomendacao : number}){
 
     //Indica se já foi persistida uma recomendação para a instância de recomendação atual
     const [recAlredyStored, setRecAlredyStored] = useState(false);

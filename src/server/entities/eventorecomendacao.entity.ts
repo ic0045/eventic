@@ -1,26 +1,28 @@
-import { Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
-import { Avaliacao } from "./avaliacao.entity";
+import { Entity, JoinColumn, ManyToOne, Column, PrimaryGeneratedColumn, Relation } from "typeorm";
 import { Evento } from "./evento.entity";
 import { Recomendacao } from "./recomendacao.entity";
 
 @Entity("evento_recomendado", { schema: "public" })
 export class EventoRecomendado{
 
-    @PrimaryColumn({name: "recomendacao_id", type: "uuid", unique:false, nullable:false})
-    @ManyToOne(() => Recomendacao)
+    @PrimaryGeneratedColumn("uuid", {name: "id", primaryKeyConstraintName: "evento_recomendado_pkey"})
+    id: string;
+
+    @ManyToOne(() => Recomendacao, {cascade: ["insert", "remove"]})
     @JoinColumn({
       name:"recomendacao_id", 
       referencedColumnName: "id",
       foreignKeyConstraintName: "recomendacao_fk"
     })
-    recomendacao: Recomendacao;
+    //@ts-ignore
+    recomendacao: Relation<Recomendacao>;
 
-    @PrimaryColumn({name: "evento_id", type: "uuid", unique:false, nullable:false})
-    @ManyToOne(() => Evento)
+    @ManyToOne(() => Evento, {onDelete: 'CASCADE'})
     @JoinColumn({
       name:"evento_id", 
       referencedColumnName: "id",
       foreignKeyConstraintName: "evento_fk"
     })
-    evento: Evento;
+    //@ts-ignore
+    evento: Relation<Evento>;
 }

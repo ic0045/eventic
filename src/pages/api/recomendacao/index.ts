@@ -3,7 +3,9 @@ import { Avaliacao } from '@app/server/entities/avaliacao.entity';
 import { EventoRecomendado } from '@app/server/entities/eventorecomendacao.entity';
 import { Recomendacao } from '@app/server/entities/recomendacao.entity';
 import { Usuario } from '@app/server/entities/usuario.entity';
+import { Evento } from '@app/server/entities/evento.entity';
 import type { NextApiRequest, NextApiResponse } from 'next'
+import {In} from 'typeorm'
 
 /*
 *   Rotas para entidade recomendação
@@ -13,15 +15,29 @@ export default async function handler(
     res: NextApiResponse<any>
 ) {
     //Cadastra recomendação
+    //Chamado ao avaliar ao menos um evento da recomendacao
     if (req.method === 'POST') {
-        let { usuario_id } = req.body;
-        usuario_id = usuario_id as string;
+        let { usuarioId, tipoRecomendacao, nota, eventosIds } 
+            : { usuarioId: string, tipoRecomendacao: number, nota: number, eventosIds: string[] } = req.body;
         try {
-            let usuario = await UsuarioRepo.findOne({ where: { id: usuario_id } });
-            usuario = usuario as Usuario;
+            let usuario : Usuario = (await UsuarioRepo.findOne({ where: { id: usuarioId } }))!;
+
             let recomendacao = new Recomendacao();
             recomendacao.usuario = usuario;
+            recomendacao.tipoRecomendacao = tipoRecomendacao;
+            recomendacao.quantidadeRecomendados= eventosIds.length;
+            recomendacao.precisao = nota >= 3? 1/5 : 0;
             recomendacao = await RecomendacaoRepo.save(recomendacao);
+
+            let evento = new Evento();
+            for(let id of eventosIds){
+                let eventoRecomendado = new EventoRecomendado();
+                evento.id = id;
+                eventoRecomendado.evento = evento;
+                recomendacao = recomendacao;
+                await EventoRecomendadoRepo.save(eventoRecomendado);
+            }
+
             res.status(200).json({ "id": recomendacao.id });
         } catch (e) {
             res.status(500).json({ e });
@@ -30,23 +46,22 @@ export default async function handler(
 
     //Insere evento_recomendacao
     else if (req.method === 'PUT') {
-        let { recomendacao_id, evento_id } = req.body;
-        recomendacao_id = recomendacao_id as string;
-        evento_id = evento_id as string;
+        let { recomendacaoId } : { recomendacaoId: string} = req.body;
 
         try {
-            let recomendacao = await RecomendacaoRepo.findOne({ where: { id: recomendacao_id }, relations: { usuario: true } });
-            let evento = await EventoRepo.findOne({ where: { id: evento_id } });
+            let recomendacao = (await RecomendacaoRepo.findOne({ where: { id: recomendacaoId }, relations: { usuario: true, eventosRecomendados: true } }))!;
+           //Alternativa 2
+           /*
+            const eventosIds = recomendacao.eventosRecomendados.map(eventoRecomendacao => eventoRecomendacao.envento.id);
+           */
+            const eventosIds = recomendacao.eventosRecomendados.map(evento => evento.id);
+            const avaliacoes = await AvaliacaoRepo.find({where: {id: In(eventosIds), usuario: {id: recomendacao.usuario.id}}, relations:{evento: true}});
+            let eventosApreciados = avaliacoes.filter(avaliacao => avaliacao.nota >= 3).length;
 
-            if(recomendacao == null || evento == null){
-                res.status(400).json({Reason: "não encontrada recomendacao ou evento"});
-            }else{
-                let eventoRec = new EventoRecomendado();
-                eventoRec.recomendacao = recomendacao;
-                eventoRec.evento = evento;
-                eventoRec = await EventoRecomendadoRepo.save(eventoRec);
-                res.status(200).json(eventoRec);
-            }
+            recomendacao.precisao = eventosApreciados/avaliacoes.length;
+            await RecomendacaoRepo.save(recomendacao)
+
+            res.status(200).json({eventosAvaliados: avaliacoes.length, precisao: recomendacao.precisao});
         } catch (e) {
             res.status(500).json({ e });
         }

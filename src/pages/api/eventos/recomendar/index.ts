@@ -3,7 +3,7 @@ import { RecommendationService } from "@app/pages/api/services/recommendationSer
 import type { NextApiRequest, NextApiResponse } from 'next'
 import {In, Not} from 'typeorm'
 import { Evento } from '@app/server/entities/evento.entity';
-import { ParametroName } from '@app/common/constants';
+import { ParametroName, TipoRecomendacao } from '@app/common/constants';
 
 /*
 * Retorna eventos de categorias diversas cujo id não esteja incluso numa lista passada
@@ -56,6 +56,7 @@ export default async function handler(
         let {evento_id, usuario_id} = req.query;
         if(usuario_id) usuario_id = usuario_id as string;
         let eventosAvaliados = [], similaridadeMinima = 0;
+        let tipoRecomendacao : number;
 
         //Gera recomendações de eventos similares a um evento
         if(evento_id){
@@ -78,12 +79,6 @@ export default async function handler(
                     relations: {usuario: true, evento: true}
                 }
             );
-
-            //To-do:
-            //Considerar apenas eventos cuja a similaridade do cosseno 
-            //entre o titulo do evento e os titulos dos eventos que o usuário gostou (>=4)
-            //seja maior que o parâmetro de similaridade minima 
-            //definido no painel admnistrativo
 
             //Busca eventos avaliados pelo usuário se passado id de usuário
             if(usuario_id){
@@ -112,9 +107,12 @@ export default async function handler(
                 let eventosDiversos = await findEventosDiversos(15,eventosAvaliados.concat(evento_id));
                 // console.log("==> Cosseno puro: \n -> encontra " + eventosDiversos.length + " eventos diversos")
                 recIds = await recService.generateRecsWithoutRatings(eventosDiversos);
+                tipoRecomendacao = TipoRecomendacao.SIMLIARIDADE_COSSENO;
             }
-            else // Caso contrário, híbrido, se logado, apenas colaborativa, se deslogado
+            else{ // Caso contrário, híbrido, se logado, apenas colaborativa, se deslogado
                 recIds = await recService.generateRecs();
+                tipoRecomendacao = usuario_id? TipoRecomendacao.HIBRIDA : TipoRecomendacao.FILTRAGEM_COLABORATIVA;
+            }
 
             let recommendations: Evento[] = [];
             if(recIds.length != 0)
@@ -130,13 +128,22 @@ export default async function handler(
             if(recIds.length < 5){
                 // console.log("[DEBUG] ==> Não foram recomendados eventos suficentes. Preechendo com eventos de categorias diversas");                
 
+                if(recIds.length == 0)
+                    tipoRecomendacao = TipoRecomendacao.DIVERSOS;
+                else if(tipoRecomendacao == TipoRecomendacao.SIMLIARIDADE_COSSENO)
+                    tipoRecomendacao = TipoRecomendacao.SIMLIARIDADE_COSSENO_DIVERSOS;
+                else if(tipoRecomendacao == TipoRecomendacao.HIBRIDA)
+                    tipoRecomendacao = TipoRecomendacao.HIBRIDA_DIVERSOS;
+                else
+                    tipoRecomendacao = TipoRecomendacao.FILTRAGEM_COLABORATIVA_DIVERSOS;
+
                 //Desconsiderar evento atual, já avaliados e já na lista de recomendações
                 let skipIds = eventosAvaliados.concat(recIds);
                 skipIds.push(evento_id);                
                 recommendations = recommendations.concat(await findEventosDiversos(5-recommendations.length,skipIds));                
             }
 
-            res.status(200).json(recommendations);
+            res.status(200).json({recommendations, tipoRecomendacao});
         }
         else{
             res.status(400).json({errorMsg: "Faltam parametros para gerar recomendações."})
