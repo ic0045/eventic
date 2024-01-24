@@ -1,15 +1,7 @@
 import moment from 'moment'
 import 'moment/locale/pt-br';
+import { EventoPorCategoriaRecomendacao, EventoPorPeriodoRecomendacao, EventoRecomendacao } from '../../app';
 
-interface EventoPorPeriodo {
-    nome: string;
-    eventos: Evento[];
-}
-
-interface EventoPorCategoria {
-    nome: string;
-    eventos: Evento[];
-}
 
 interface Categoria {
     id: string
@@ -18,12 +10,12 @@ interface Categoria {
 }
 
 interface ObjetoCategoria {
-    eventosPorDiaAnteriores: Array<EventoPorPeriodo>
-    eventosPorDiaNovos: Array<EventoPorPeriodo>
-    eventosPorSemanaAnteriores: Array<EventoPorPeriodo>
-    eventosPorSemanaNovos: Array<EventoPorPeriodo>
-    eventosPorMesAnteriores: Array<EventoPorPeriodo>
-    eventosPorMesNovos: Array<EventoPorPeriodo>
+    eventosPorDiaAnteriores: Array<EventoPorPeriodoRecomendacao>
+    eventosPorDiaNovos: Array<EventoPorPeriodoRecomendacao>
+    eventosPorSemanaAnteriores: Array<EventoPorPeriodoRecomendacao>
+    eventosPorSemanaNovos: Array<EventoPorPeriodoRecomendacao>
+    eventosPorMesAnteriores: Array<EventoPorPeriodoRecomendacao>
+    eventosPorMesNovos: Array<EventoPorPeriodoRecomendacao>
 }
 
 interface ListaCategorias {
@@ -32,9 +24,9 @@ interface ListaCategorias {
 
 
 
-function separaEventosPorPeriodo(eventos: Evento[], periodo: 'semana' | 'mes') {
+function separaEventosPorPeriodo(eventos: EventoRecomendacao[], periodo: 'semana' | 'mes') {
     moment.locale('pt-br');
-    const eventosPorPeriodo: Array<EventoPorPeriodo> = [];
+    const eventosPorPeriodo: Array<EventoPorPeriodoRecomendacao> = [];
 
     eventos.forEach((evento) => {
         let periodoIndex: number;
@@ -42,12 +34,12 @@ function separaEventosPorPeriodo(eventos: Evento[], periodo: 'semana' | 'mes') {
 
         if (periodo === 'semana') {
             // periodoIndex = moment(evento.dataInicial).week();
-            const dataInicioSemana = moment(evento.dataInicial).startOf('week').format('D [de] MMMM');
-            const dataFimSemana = moment(evento.dataInicial).add(6, 'days').format('D [de] MMMM');
+            const dataInicioSemana = moment(evento.evento.dataInicial).startOf('week').format('D [de] MMMM');
+            const dataFimSemana = moment(evento.evento.dataInicial).add(6, 'days').format('D [de] MMMM');
             nomePeriodo = `Semana de ${dataInicioSemana} a ${dataFimSemana}`;
         } else if (periodo === 'mes') {
             // periodoIndex = moment(evento.dataInicial).month();
-            nomePeriodo = moment(evento.dataInicial).format('MMMM YYYY');
+            nomePeriodo = moment(evento.evento.dataInicial).format('MMMM YYYY');
         } else {
             throw new Error('Período inválido. Escolha entre "semana" e "mes".');
         }
@@ -77,16 +69,16 @@ function separaEventosPorPeriodo(eventos: Evento[], periodo: 'semana' | 'mes') {
 }
 
 
-function organizaEventos(eventos: Evento[]) {
+function organizaEventos(eventos: EventoRecomendacao[]) {
 
     // Ordena os eventos por data
-    eventos = eventos.sort((a, b) =>
-        new Date(a.dataInicial).getTime() -
-        new Date(b.dataInicial).getTime()
+    eventos = eventos.sort((a :EventoRecomendacao , b : EventoRecomendacao) =>
+        new Date(a.evento.dataInicial).getTime() -
+        new Date(b.evento.dataInicial).getTime()
     );  
     // Separando os eventos em dois arrays: um para as datas que já passaram e outro para as novas datas
-    const eventosAntigos: Evento[] = eventos.filter(evento => new Date(evento.dataInicial).getTime() < Date.now());
-    const eventosNovos: Evento[] = eventos.filter(evento => new Date(evento.dataInicial).getTime() >= Date.now());
+    const eventosAntigos: EventoRecomendacao[] = eventos.filter(evento => new Date(evento.evento.dataInicial).getTime() < Date.now());
+    const eventosNovos: EventoRecomendacao[] = eventos.filter(evento => new Date(evento.evento.dataInicial).getTime() >= Date.now());
 
     let eventosPorDiaAnteriores = [{ nome: '', eventos: [...eventosAntigos] }]
     let eventosPorDiaNovos = [{ nome: '', eventos: [...eventosNovos] }]
@@ -101,7 +93,7 @@ function organizaEventos(eventos: Evento[]) {
 }
 
 
-export function criaListaCategorias(eventosCategoria: Array<EventoPorCategoria>, data: Evento[]) {
+export function criaListaCategorias(eventosCategoria: Array<EventoPorCategoriaRecomendacao>, data: EventoRecomendacao[]) {
 
     const eventosOrganizados = organizaEventos(data)
     let [eventosPorDiaAnteriores, eventosPorDiaNovos, eventosPorSemanaAnteriores, eventosPorSemanaNovos, eventosPorMesAnteriores, eventosPorMesNovos] = eventosOrganizados

@@ -19,12 +19,15 @@ import Image from 'next/image';
 import CircularProgress from '@mui/material/CircularProgress';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { setCookie, getCookie } from '@app/utils/cookieUtils';
+import { EventoAPI } from '@app/apis/EventoAPI';
 
 import { criaListaCategorias } from '@app/utils/organizaEventos';
 import RecommendationSection from '../recommendationSection';
+import { Categoria, EventoPorCategoriaRecomendacao, EventoPorPeriodoRecomendacao, EventoRecomendacao, ListaCategorias } from '../../../app';
+import { Evento } from '@app/server/entities/evento.entity';
 
 
-export default function Home({ data, categorias, eventosCategoria, home }: { data?: Evento[], categorias?: Categoria[], eventosCategoria?: Array<EventoPorCategoria>, home: boolean }) {
+export default function Home({ data, categorias, eventosCategoria, home, userId }: { data?: EventoRecomendacao[], categorias?: Categoria[], eventosCategoria?: Array<EventoPorCategoriaRecomendacao>, home: boolean, userId : string | null }) {
 
     // Cria listas de eventos para cada categoria
     const listaVazia: ListaCategorias =
@@ -200,8 +203,24 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
         if (categorias) {
             for (const categoria of categorias) {
                 const res = await fetch(`${api}/api/eventos?categoria_id=${categoria.id}&q=${inputValue}`);
-                const newData = await res.json();
-                eventosCategoria.push({ nome: categoria.nome, eventos: newData })
+                const newData : Evento[] = await res.json();
+                // const eventosRecs : EventoRecomendacao[] = await newData.map( async (evento: Evento) : Promise<EventoRecomendacao> => {
+                //     const recs : Evento[] =  userId != null?
+                //     await EventoAPI.getRecomendacoes(evento.id, userId) 
+                //     : 
+                //     await EventoAPI.getRecomendacoes(evento.id, null);
+                //     return {evento: evento, recomendacoes: recs};
+                // })
+                // eventosCategoria.push({ nome: categoria.nome, eventos: eventosRecs })
+                let eventosArray = [];
+                for(let evento of newData){
+                    let recs : Evento[] =  userId != null?
+                    await EventoAPI.getRecomendacoes(evento.id, userId) 
+                    : 
+                    await EventoAPI.getRecomendacoes(evento.id, null);
+                    eventosArray.push({evento: evento, recomendacoes: recs});
+                }
+                eventosCategoria.push({nome: categoria.nome, eventos: eventosArray});
             }
         }
 
@@ -255,36 +274,36 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
     };
 
 
-    const events = (eventList: Array<EventoPorPeriodo>, hasSubscribeButton: boolean) =>
+    const events = (eventList: Array<EventoPorPeriodoRecomendacao>, hasSubscribeButton: boolean) =>
     (
-        eventList.map((eventosPorPeriodo) =>
-            <div key={eventosPorPeriodo.nome}>
+        eventList.map((eventoPeriodoRec) =>
+            <div key={eventoPeriodoRec.nome}>
                 {listView ?
-                    <div key={eventosPorPeriodo.nome}>
-                        <Typography variant="h5" mt={8} mb={3}>{eventosPorPeriodo.nome}</Typography>
-                        {eventosPorPeriodo.eventos.map((card) =>
-                            <div key={eventosPorPeriodo.nome}>
-                                <EventList isLoadingSubButton={isLoadingSubButton} idIncricoes={idIncricoes} setIdIncricoes={setIdIncricoes} inscrito={idIncricoes.includes(card.id)} key={card.id} eventoId={card.id} id={card.id} subscribeButton={hasSubscribeButton} title={card.titulo} location={card.localizacao} initialDate={card.dataInicial}  />
+                    <div key={eventoPeriodoRec.nome}>
+                        <Typography variant="h5" mt={8} mb={3}>{eventoPeriodoRec.nome}</Typography>
+                        {eventoPeriodoRec.eventos.map((card) =>
+                            <div key={eventoPeriodoRec.nome}>
+                                <EventList isLoadingSubButton={isLoadingSubButton} idIncricoes={idIncricoes} setIdIncricoes={setIdIncricoes} inscrito={idIncricoes.includes(card.evento.id)} key={card.evento.id} eventoId={card.evento.id} id={card.evento.id} subscribeButton={hasSubscribeButton} title={card.evento.titulo} location={card.evento.localizacao} initialDate={card.evento.dataInicial}  />
                             </div>
                         )}
                     </div> 
                     :
-                    <div key={eventosPorPeriodo.nome}>
-                        <Typography variant="h5" mt={8} mb={3}>{eventosPorPeriodo.nome}</Typography>
+                    <div key={eventoPeriodoRec.nome}>
+                        <Typography variant="h5" mt={8} mb={3}>{eventoPeriodoRec.nome}</Typography>
 
 
                         {/* Recomendações apenas para eventos futuros */}
                         {aba == '1'? 
                             // Eventos FUTUROS
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '1rem'}}>
-                                {eventosPorPeriodo.eventos.map((card: Evento) =>
+                                {eventoPeriodoRec.eventos.map((card) =>
                                     (
-                                    <Grid container direction="row" alignItems="center" spacing={2} key={card.id}> 
+                                    <Grid container direction="row" alignItems="center" spacing={2} key={card.evento.id}> 
                                         <Grid item  xs={4}>
-                                            <EventCard isLoadingSubButton={isLoadingSubButton} idIncricoes={idIncricoes} setIdIncricoes={setIdIncricoes} inscrito={idIncricoes.includes(card.id)} key={card.id} eventoId={card.id} id={card.id} subscribeButton={hasSubscribeButton} image={card.imagemUrl} title={card.titulo} location={card.localizacao} initialDate={card.dataInicial} />
+                                            <EventCard isLoadingSubButton={isLoadingSubButton} idIncricoes={idIncricoes} setIdIncricoes={setIdIncricoes} inscrito={idIncricoes.includes(card.evento.id)} key={card.evento.id} eventoId={card.evento.id} id={card.evento.id} subscribeButton={hasSubscribeButton} image={card.evento.imagemUrl} title={card.evento.titulo} location={card.evento.localizacao} initialDate={card.evento.dataInicial} />
                                         </Grid>
                                         <Grid item xs={8}>
-                                            <RecommendationSection recommendationData={[card, card, card, card]} inHomePage={true} mainEvent={card} userId = {''}/>
+                                            <RecommendationSection recommendationData={card.recomendacoes} inHomePage={true} mainEvent={card.evento} userId = {''}/>
                                         </Grid>
                                     </Grid>
                                     )
@@ -294,10 +313,10 @@ export default function Home({ data, categorias, eventosCategoria, home }: { dat
                             :
                             //Eventos Anteriores
                             <Grid container direction="row" alignItems="center" spacing={2}>
-                                {eventosPorPeriodo.eventos.map((card: Evento) =>
+                                {eventoPeriodoRec.eventos.map((card) =>
                                     (
-                                        <Grid item xs={4} key={card.id}>
-                                            <EventCard isLoadingSubButton={isLoadingSubButton} idIncricoes={idIncricoes} setIdIncricoes={setIdIncricoes} inscrito={idIncricoes.includes(card.id)} key={card.id} eventoId={card.id} id={card.id} subscribeButton={hasSubscribeButton} image={card.imagemUrl} title={card.titulo} location={card.localizacao} initialDate={card.dataInicial} />
+                                        <Grid item xs={4} key={card.evento.id}>
+                                            <EventCard isLoadingSubButton={isLoadingSubButton} idIncricoes={idIncricoes} setIdIncricoes={setIdIncricoes} inscrito={idIncricoes.includes(card.evento.id)} key={card.evento.id} eventoId={card.evento.id} id={card.evento.id} subscribeButton={hasSubscribeButton} image={card.evento.imagemUrl} title={card.evento.titulo} location={card.evento.localizacao} initialDate={card.evento.dataInicial} />
                                         </Grid>
                                     )
                                     )

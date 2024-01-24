@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt'
 import { authOptions } from './[...nextauth]';
 import { getServerSession , Session } from 'next-auth';
 import { UsuarioRepo } from '@app/server/database';
+import { Permissao } from '../../../../app';
 
 
 /*

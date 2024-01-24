@@ -6,6 +6,6 @@ import styles from "./minhasinscricoes.module.css";
 export default function MinhasInscricoes() {
 
   return (
-    <Home home={false}></Home>
+    <Home home={false} userId={null}></Home>
   );
 };

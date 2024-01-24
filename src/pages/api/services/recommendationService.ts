@@ -90,7 +90,7 @@ export class RecommendationService{
 
         eventsArray.forEach(event => {
             let similarity = this.getCosineSimilarity(event);
-            console.log(this.getCleanText(event.titulo) + " " + this.getCleanText(event.descricao) + " :::>> " + similarity)
+            // console.log(this.getCleanText(event.titulo) + " " + this.getCleanText(event.descricao) + " :::>> " + similarity)
             if(similarity >= this.minimumSimilarity)
                 eventsSimilarity.push({
                     id: event.id,

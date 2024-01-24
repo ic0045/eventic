@@ -9,7 +9,7 @@ import { ParametroName } from '@app/common/constants';
 * Retorna eventos de categorias diversas cujo id não esteja incluso numa lista passada
 */
 const findEventosDiversos = async (numeroEventos : number, skipEventosIds : string[] = []) : Promise<Evento[]> => {
-   console.log("envetos diversos desconsiderar -> " + skipEventosIds)
+//    console.log("envetos diversos desconsiderar -> " + skipEventosIds)
     //seleciona eventos de categorias distintas
     let eventosDiversos = await EventoRepo
         .createQueryBuilder('evento')
@@ -22,7 +22,7 @@ const findEventosDiversos = async (numeroEventos : number, skipEventosIds : stri
     let eventosSelecionados = eventosDiversos.length >= numeroEventos ? eventosDiversos.slice(0,numeroEventos) : eventosDiversos; 
    
     numeroEventos -= eventosSelecionados.length;
-    console.log("#2 num eventos = " + numeroEventos)
+    // console.log("#2 num eventos = " + numeroEventos)
 
     //Completa com demais eventos de categorias diversas caso primeira busca não retorne o suficiente
     if(numeroEventos > 0){
@@ -110,7 +110,7 @@ export default async function handler(
             //Evento sem avaliações e usuário logado, aplica apenas similaridade cosseno
             if(avaliacoesGeral.length == 0 && usuario_id){ 
                 let eventosDiversos = await findEventosDiversos(15,eventosAvaliados.concat(evento_id));
-                console.log("==> Cosseno puro: \n -> encontra " + eventosDiversos.length + " eventos diversos")
+                // console.log("==> Cosseno puro: \n -> encontra " + eventosDiversos.length + " eventos diversos")
                 recIds = await recService.generateRecsWithoutRatings(eventosDiversos);
             }
             else // Caso contrário, híbrido, se logado, apenas colaborativa, se deslogado
@@ -120,15 +120,15 @@ export default async function handler(
             if(recIds.length != 0)
                 recommendations = await EventoRepo.find({where: {id: In(recIds)}});
 
-            console.log("Recomendados buscados")
-            let stringFin = "";
-            for(let ev of recommendations)
-                stringFin += ev.titulo + " || ";
-            console.log(stringFin)
+            // console.log("Recomendados buscados")
+            // let stringFin = "";
+            // for(let ev of recommendations)
+            //     stringFin += ev.titulo + " || ";
+            // console.log(stringFin)
 
             //Se houver menos que 5 eventos recomendados, completa com categorias diversas
             if(recIds.length < 5){
-                console.log("[DEBUG] ==> Não foram recomendados eventos suficentes. Preechendo com eventos de categorias diversas");                
+                // console.log("[DEBUG] ==> Não foram recomendados eventos suficentes. Preechendo com eventos de categorias diversas");                
 
                 //Desconsiderar evento atual, já avaliados e já na lista de recomendações
                 let skipIds = eventosAvaliados.concat(recIds);

@@ -1,3 +1,6 @@
+import { Evento } from "@app/server/entities/evento.entity"
+import { EventoRecomendado } from "@app/server/entities/eventorecomendacao.entity"
+
 declare module 'bcrypt';
 
 interface Evento {
@@ -17,14 +20,29 @@ interface Evento {
     avaliacoes: []
 }
 
+interface EventoRecomendacao{
+    evento: Evento;
+    recomendacoes: Evento[];
+}
+
 interface EventoPorPeriodo {
     nome: string;
     eventos: Evento[];
 }
 
+interface EventoPorPeriodoRecomendacao {
+    nome: string;
+    eventos: {evento: Evento, recomendacoes: Evento[]}[];
+}
+
 interface EventoPorCategoria {
     nome: string;
     eventos: Evento[];
+}
+
+interface EventoPorCategoriaRecomendacao {
+    nome: string;
+    eventos: {evento: Evento, recomendacoes: Evento[]}[];
 }
 
 interface Categoria {
@@ -34,12 +52,12 @@ interface Categoria {
 }
 
 interface ObjetoCategoria {
-    eventosPorDiaAnteriores: Array<EventoPorPeriodo>
-    eventosPorDiaNovos: Array<EventoPorPeriodo>
-    eventosPorSemanaAnteriores: Array<EventoPorPeriodo>
-    eventosPorSemanaNovos: Array<EventoPorPeriodo>
-    eventosPorMesAnteriores: Array<EventoPorPeriodo>
-    eventosPorMesNovos: Array<EventoPorPeriodo>
+    eventosPorDiaAnteriores: Array<EventoPorPeriodoRecomendacao>
+    eventosPorDiaNovos: Array<EventoPorPeriodoRecomendacao>
+    eventosPorSemanaAnteriores: Array<EventoPorPeriodoRecomendacao>
+    eventosPorSemanaNovos: Array<EventoPorPeriodoRecomendacao>
+    eventosPorMesAnteriores: Array<EventoPorPeriodoRecomendacao>
+    eventosPorMesNovos: Array<EventoPorPeriodoRecomendacao>
 }
 
 interface ListaCategorias {
