@@ -1,5 +1,6 @@
 import { DataProvider, fetchUtils } from 'react-admin';
 import { stringify } from 'query-string';
+import { ApiResource } from '@app/common/constants';
 
 const apiUrl = `${process.env.NEXT_PUBLIC_URL}/api/admin`;
 const httpClient = fetchUtils.fetchJson;
@@ -14,7 +15,7 @@ const ClientDataProvider: DataProvider = {
         const url = `${apiUrl}/${resource}?${stringify(query)}`;
         
         return httpClient(url).then(({ headers, json }) => {
-         const contentRange = headers.get('content-range') || '0';
+         const contentRange = resource == ApiResource.RECOMENDACOES? json.length : headers.get('content-range') || '0';
           return {
                 data: json,
                 total: parseInt(contentRange, 10),

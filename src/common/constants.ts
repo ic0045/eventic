@@ -5,6 +5,7 @@ export enum ApiResource {
     EVENTOS = 'eventos',
     INSCRICOES = 'inscricoes',
     PARAMETRO = 'parametro',
+    RECOMENDACOES = 'recomendacoes'
 }
 
 export enum FormMode {

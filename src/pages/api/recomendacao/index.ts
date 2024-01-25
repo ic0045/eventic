@@ -1,11 +1,11 @@
-import { AvaliacaoRepo, EventoRecomendadoRepo, EventoRepo, RecomendacaoRepo, UsuarioRepo } from '@app/server/database';
-import { Avaliacao } from '@app/server/entities/avaliacao.entity';
+import { AvaliacaoRepo, EventoRecomendadoRepo, RecomendacaoRepo, UsuarioRepo } from '@app/server/database';
 import { EventoRecomendado } from '@app/server/entities/eventorecomendacao.entity';
 import { Recomendacao } from '@app/server/entities/recomendacao.entity';
 import { Usuario } from '@app/server/entities/usuario.entity';
 import { Evento } from '@app/server/entities/evento.entity';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import {In} from 'typeorm'
+import { TipoRecomendacao } from '@app/common/constants';
 
 /*
 *   Rotas para entidade recomendação
@@ -50,10 +50,6 @@ export default async function handler(
 
         try {
             let recomendacao = (await RecomendacaoRepo.findOne({ where: { id: recomendacaoId }, relations: ["usuario", "eventosRecomendados", "eventosRecomendados.evento"] }))!;
-           //Alternativa 2
-           /*
-            const eventosIds = recomendacao.eventosRecomendados.map(eventoRecomendacao => eventoRecomendacao.envento.id);
-           */
             const eventosIds = recomendacao.eventosRecomendados.map(eventoRecomendado => eventoRecomendado.evento.id);
             const avaliacoes = await AvaliacaoRepo.find({where: {evento: {id:  In(eventosIds)}, usuario: {id: recomendacao.usuario.id}}, relations:{evento: true}});
             let eventosApreciados = avaliacoes.filter(avaliacao => avaliacao.nota >= 3).length;
@@ -63,6 +59,18 @@ export default async function handler(
 
             res.status(200).json({eventosAvaliados: avaliacoes.length, precisao: recomendacao.precisao});
         } catch (e) {
+            res.status(500).json({ e });
+        }
+    }
+
+    /*
+    * Obtém estatísticas de precisão das recomendações
+    */
+    else if (req.method === 'GET') {
+        try {
+            const response = await getEstatisticasRecomedacoes();
+            res.status(200).json(response);
+        }catch (e) {
             res.status(500).json({ e });
         }
     }
@@ -105,4 +113,33 @@ export default async function handler(
     //         res.status(200).json(recs);
     //     }
     // }
+}
+
+/*
+* Obtém estatísticas de precisão das recomendações
+*/
+export async function getEstatisticasRecomedacoes(){
+    const recomendacoesFC = await RecomendacaoRepo.find({where:
+        { quantidadeRecomendados: 5, tipoRecomendacao: TipoRecomendacao.FILTRAGEM_COLABORATIVA }});
+    const recomendacoesSC = await RecomendacaoRepo.find({where:
+        { quantidadeRecomendados: 5, tipoRecomendacao: TipoRecomendacao.SIMLIARIDADE_COSSENO }});
+    const recomendacoesHB = await RecomendacaoRepo.find({where:
+        { quantidadeRecomendados: 5, tipoRecomendacao: TipoRecomendacao.HIBRIDA }});
+
+    const buildEstatisticas = (tipoRecomendacaoArray : Recomendacao[], nome : String) => {
+        return {
+            id: nome,
+            total: tipoRecomendacaoArray.length,
+            precisaoMedia: tipoRecomendacaoArray.length == 0?
+                0
+                :
+                tipoRecomendacaoArray.reduce((total, rec : Recomendacao) => rec.precisao+total, 0)/tipoRecomendacaoArray.length
+        }
+    };
+
+    return [
+        buildEstatisticas(recomendacoesFC, "Filtragem Colaborativa"),
+        buildEstatisticas(recomendacoesSC, "Similaridade Cosseno"),
+        buildEstatisticas(recomendacoesHB, "Híbrida") ,
+    ];
 }

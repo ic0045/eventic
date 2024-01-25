@@ -5,10 +5,11 @@ import { Usuario } from "@app/server/entities/usuario.entity";
 import { ApiResource } from "@app/common/constants";
 import ServerAbstractDataProvider from "@app/server/services/abstractdataprovider.service";
 import { NextApiRequest, NextApiResponse } from "next";
-import { DataProvider, PaginationPayload, SortPayload } from "react-admin";
-import { EntitySchema, ObjectLiteral, Repository } from "typeorm";
+import {  PaginationPayload, SortPayload } from "react-admin";
+import {  ObjectLiteral } from "typeorm";
 import { Inscricao } from "@app/server/entities/inscricao.entity";
 import { Parametro } from "@app/server/entities/parametro.entity";
+import { getEstatisticasRecomedacoes } from "../../recomendacao";
 
 /**
  *  @see https://www.npmjs.com/package/ra-data-simple-rest
@@ -20,7 +21,6 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<any>
 ) {
-
     if (req.query.resource === ApiResource.CATEGORIAS) {
         const provider = new ServerAbstractDataProvider<Categoria>(CategoriaRepo);
         return await execute(req, res, provider);
@@ -44,6 +44,17 @@ export default async function handler(
     if (req.query.resource === ApiResource.PARAMETRO) {
         const provider = new ServerAbstractDataProvider<Parametro>(ParametroRepo);
         return await execute(req, res, provider);
+    }
+
+    if (req.query.resource === ApiResource.RECOMENDACOES) {
+        try{
+            const data = await getEstatisticasRecomedacoes();
+            res.setHeader('content-range', data.length);
+            return res.status(200).json(data);
+        }catch(e){
+            console.log(e);
+            return res.status(500);
+        }
     }
 
     res.status(400).send(`Falta definir um middleware para o recurso ${req.query.resource}`)

@@ -1,6 +1,5 @@
 import { Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn , Column, Relation, OneToMany} from "typeorm";
 import { Usuario } from "./usuario.entity";
-import { Evento } from "./evento.entity";
 import { EventoRecomendado } from "./eventorecomendacao.entity";
 
 @Entity("recomendacao", { schema: "public" })
@@ -28,11 +27,4 @@ export class Recomendacao{
 
     @OneToMany(() => EventoRecomendado, (eventoRecomendado) => eventoRecomendado.recomendacao)
     eventosRecomendados: EventoRecomendado[];
-
-
-    /* 
-    //Alternativa 2
-    @OneToMany(() => EventoRecomendado, (eventoRecomendado) => eventoRecomendado.recomendacao)
-    eventosRecomendados: EventoRecomendado[];
-    */
 }
