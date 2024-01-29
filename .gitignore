@@ -39,3 +39,6 @@ src/pages/api/login/index.ts
 
 # lock files
 yarn.lock
+
+#data set out files
+SCRIPTS/dataset/out
