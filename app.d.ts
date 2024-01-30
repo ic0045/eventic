@@ -20,6 +20,16 @@ interface Evento {
     avaliacoes: []
 }
 
+interface EventoComRecomendacoes{
+    evento: Evento;
+    recomendacoes: Evento[];
+}
+
+interface PeriodosComEventosRecomendacoes{
+    periodo: string;
+    eventosRecomendacoes: EventoComRecomendacoes[] 
+}
+
 interface EventoRecomendacao{
     evento: Evento;
     recomendacoes: Evento[];
@@ -62,12 +72,6 @@ interface ObjetoCategoria {
 
 interface ListaCategorias {
     [key: string]: ObjetoCategoria;
-}
-
-
-interface CategoriaGetRequest {
-    nome?: string,
-    id?: number
 }
 
 interface AvaliacaoPostRequest {

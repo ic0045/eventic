@@ -22,8 +22,6 @@ interface ListaCategorias {
     [key: string]: ObjetoCategoria;
 }
 
-
-
 function separaEventosPorPeriodo(eventos: EventoRecomendacao[], periodo: 'semana' | 'mes') {
     moment.locale('pt-br');
     const eventosPorPeriodo: Array<EventoPorPeriodoRecomendacao> = [];
