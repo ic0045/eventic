@@ -1,11 +1,11 @@
-import { EventoAPI } from '@app/apis/EventoAPI';
-import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]";
-import { GetServerSideProps } from 'next';
-import Home from '@app/components/home';
-import { EventoRecomendacao, EventoPorCategoriaRecomendacao, Categoria, EventoComRecomendacoes } from '../../../app';
-import { Evento } from '@app/server/entities/evento.entity';
 import { CategoriaAPI } from '@app/apis/CategoriaAPI';
+import { EventoAPI } from '@app/apis/EventoAPI';
+import Home from '@app/components/home';
+import { Evento } from '@app/server/entities/evento.entity';
+import { GetServerSideProps } from 'next';
+import { getServerSession } from "next-auth";
+import { Categoria, EventoComRecomendacoes } from '../../../app';
+import { authOptions } from "../api/auth/[...nextauth]";
 
 const NUMERO_EVENTOS_PAGINA = 15;
 
@@ -17,7 +17,7 @@ export default function HomePage({ eventos, categorias, userId }: { eventos: Eve
 
 export const getServerSideProps: GetServerSideProps = async ({query, req,res }) => {
     const session = await getServerSession(req, res, authOptions);
-    let categoriaId = query.categoria, buscaTexto = query.q;
+    let categoriaId = query.categoriaId, buscaTexto = query.q;
 
     const categorias = await CategoriaAPI.getCategorias();
     

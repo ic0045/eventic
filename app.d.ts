@@ -20,9 +20,14 @@ interface Evento {
     avaliacoes: []
 }
 
+interface RecomendacaoObj{
+    tipoRecomendacao: number;
+    recommendations: Evento[];
+}
+
 interface EventoComRecomendacoes{
     evento: Evento;
-    recomendacoes: Evento[];
+    recomendacoes: RecomendacaoObj;
 }
 
 interface PeriodosComEventosRecomendacoes{
@@ -30,44 +35,10 @@ interface PeriodosComEventosRecomendacoes{
     eventosRecomendacoes: EventoComRecomendacoes[] 
 }
 
-interface EventoRecomendacao{
-    evento: Evento;
-    recomendacoes: Evento[];
-}
-
-interface EventoPorPeriodo {
-    nome: string;
-    eventos: Evento[];
-}
-
-interface EventoPorPeriodoRecomendacao {
-    nome: string;
-    eventos: {evento: Evento, recomendacoes: Evento[]}[];
-}
-
-interface EventoPorCategoria {
-    nome: string;
-    eventos: Evento[];
-}
-
-interface EventoPorCategoriaRecomendacao {
-    nome: string;
-    eventos: {evento: Evento, recomendacoes: Evento[]}[];
-}
-
 interface Categoria {
     id: string
     nome: string
     icone: string
-}
-
-interface ObjetoCategoria {
-    eventosPorDiaAnteriores: Array<EventoPorPeriodoRecomendacao>
-    eventosPorDiaNovos: Array<EventoPorPeriodoRecomendacao>
-    eventosPorSemanaAnteriores: Array<EventoPorPeriodoRecomendacao>
-    eventosPorSemanaNovos: Array<EventoPorPeriodoRecomendacao>
-    eventosPorMesAnteriores: Array<EventoPorPeriodoRecomendacao>
-    eventosPorMesNovos: Array<EventoPorPeriodoRecomendacao>
 }
 
 interface ListaCategorias {

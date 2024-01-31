@@ -13,17 +13,19 @@ import Typography from "@mui/material/Typography";
 import moment from 'moment';
 import 'moment/locale/pt-br';
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 import { getCookie, setCookie } from '@app/utils/cookieUtils';
 import CircularProgress from '@mui/material/CircularProgress';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 import { UsuarioAPI } from "@app/apis/UsuarioAPI";
-import { useNavigate } from "react-router-dom";
 import { Categoria, EventoComRecomendacoes, PeriodosComEventosRecomendacoes } from '../../../app';
 import RecommendationSection from '../recommendationSection';
 
 export default function Home({ eventos, categorias, home, userId }: { eventos: EventoComRecomendacoes[], categorias: Categoria[], home: boolean, userId : string | null }) {
+
+    const router = useRouter();
 
     // Controla o filtro de periodo
     const [periodo, setPeriodo] = useState('1');
@@ -53,22 +55,20 @@ export default function Home({ eventos, categorias, home, userId }: { eventos: E
 
     moment.locale('pt-br');
 
-    const navigate = useNavigate();
-
     function ordenaEventosPorPeriodo(valorPeriodo : string) : void{
         //Ordena os eventos da aba selecionada,anteriores ou posteriores
         let nomePeriodo : string;
 
         let eventosOrdenados =  aba == '1'?
-            eventos.filter(evento => new Date(evento.evento.dataInicial).getTime() < Date.now())
+            eventos.filter(evento => new Date(evento.evento.dataInicial).getTime() >= Date.now())
             :
-            eventos.filter(evento => new Date(evento.evento.dataInicial).getTime() >= Date.now());
+            eventos.filter(evento => new Date(evento.evento.dataInicial).getTime() < Date.now());
 
         eventosOrdenados = eventosOrdenados.sort((a :EventoComRecomendacoes , b : EventoComRecomendacoes) => new Date(a.evento.dataInicial).getTime() - new Date(b.evento.dataInicial).getTime())
 
         const periodosMap =  new Map<string,EventoComRecomendacoes[]>();
 
-        if(valorPeriodo == '3')//Por dia
+        if(valorPeriodo == '1')//Por dia
             periodosMap.set('',eventosOrdenados);
         else if(valorPeriodo == '2'){//Por semana
             let dataInicioSemana, dataFimSemana;
@@ -101,7 +101,7 @@ export default function Home({ eventos, categorias, home, userId }: { eventos: E
         if(aba == '1')
             setEventosPosteriores(eventosPorPeriodos);
         else
-            setEventosPosteriores(eventosPorPeriodos);
+            setEventosAnteriores(eventosPorPeriodos);
     }
 
     // Ao carregar o componente
@@ -119,6 +119,8 @@ export default function Home({ eventos, categorias, home, userId }: { eventos: E
         ordenaEventosPorPeriodo(savedPeriod || periodo);
         //Obtém ids dos eventos avalidos pelo usuário
         getUsuarioEventosIds();
+        // console.log(eventosAnteriores.length);
+        // console.log(eventosPosteriores.length)
     }, []);
 
     function handlePeriodChange(event: SelectChangeEvent) {
@@ -129,13 +131,13 @@ export default function Home({ eventos, categorias, home, userId }: { eventos: E
     }
 
     function handleCategoriaChange(event: SelectChangeEvent) {
-        const idCategoria = event.target.value
-        navigate(`/eventos?categoriaId=${idCategoria}`);
+        const idCategoria = event.target.value;
+        router.push(`/eventos?categoriaId=${idCategoria}`);
     }
 
     // Redireciona para fazer busca na api
     const handleClick = async () => {
-        navigate(`/eventos?q=${inputValue}`)
+        router.push(`/eventos?q=${inputValue}`);
     };
 
     //Obtém Ids dos eventos que o usuário logado se inscreveu
@@ -190,7 +192,7 @@ export default function Home({ eventos, categorias, home, userId }: { eventos: E
                                             <EventCard isLoadingSubButton={isLoadingSubButton} idIncricoes={idIncricoes} setIdIncricoes={setIdIncricoes} inscrito={idIncricoes.includes(eventoRec.evento.id)} key={eventoRec.evento.id} eventoId={eventoRec.evento.id} id={eventoRec.evento.id} subscribeButton={hasSubscribeButton} image={eventoRec.evento.imagemUrl} title={eventoRec.evento.titulo} location={eventoRec.evento.localizacao} initialDate={eventoRec.evento.dataInicial} />
                                         </Grid>
                                         <Grid item xs={8}>
-                                            <RecommendationSection recommendationData={eventoRec.recomendacoes} inHomePage={true} mainEvent={eventoRec.evento} userId = {''} tipoRecomendacao={0}/>
+                                            <RecommendationSection recommendationData={eventoRec.recomendacoes} inHomePage={true} mainEvent={eventoRec.evento} userId = {''}/>
                                         </Grid>
                                     </Grid>
                                     )
@@ -270,7 +272,7 @@ export default function Home({ eventos, categorias, home, userId }: { eventos: E
                                 inputProps={{ MenuProps: { disableScrollLock: true } }}
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
-                                // value={categoria}
+                                value={"Todas"}
                                 label="Categoria"
                                 onChange={handleCategoriaChange}
                             >
@@ -313,6 +315,5 @@ export default function Home({ eventos, categorias, home, userId }: { eventos: E
                 }
             </Box>
         </Box>
-
     )
 }
